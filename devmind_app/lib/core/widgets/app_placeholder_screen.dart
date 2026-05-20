@@ -15,6 +15,7 @@ class AppPlaceholderScreen extends StatelessWidget {
     required this.description,
     required this.icon,
     this.actions = const [],
+    this.bottomNavigationBar,
     super.key,
   });
 
@@ -22,11 +23,13 @@ class AppPlaceholderScreen extends StatelessWidget {
   final String description;
   final IconData icon;
   final List<AppPlaceholderAction> actions;
+  final Widget? bottomNavigationBar;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('DevMind AI')),
+      bottomNavigationBar: bottomNavigationBar,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRemoteDataSource {
+  static const _googleServerClientId =
+      '209608465249-n0mfq8hubkbmndne3bgr8tqclr3rr4se.apps.googleusercontent.com';
+
   AuthRemoteDataSource({
     FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firestore,
@@ -67,9 +70,16 @@ class AuthRemoteDataSource {
 
     final googleUser = await GoogleSignIn.instance.authenticate();
     final googleAuth = googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
-    );
+    final idToken = googleAuth.idToken;
+
+    if (idToken == null || idToken.isEmpty) {
+      throw const GoogleSignInException(
+        code: GoogleSignInExceptionCode.providerConfigurationError,
+        description: 'Google Sign-In did not return an idToken.',
+      );
+    }
+
+    final credential = GoogleAuthProvider.credential(idToken: idToken);
 
     final userCredential = await _firebaseAuth.signInWithCredential(credential);
     final user = userCredential.user;
@@ -95,7 +105,9 @@ class AuthRemoteDataSource {
   }
 
   Future<void> _ensureGoogleSignInInitialized() {
-    return _googleSignInInitialization ??= GoogleSignIn.instance.initialize();
+    return _googleSignInInitialization ??= GoogleSignIn.instance.initialize(
+      serverClientId: _googleServerClientId,
+    );
   }
 
   Future<void> _upsertUserProfile({

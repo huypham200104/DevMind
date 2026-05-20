@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
 import '../../../../core/widgets/app_placeholder_screen.dart';
+import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 import '../controllers/auth_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -33,6 +34,7 @@ class ProfileScreen extends StatelessWidget {
       description:
           '${user.displayName?.isNotEmpty == true ? user.displayName : 'Người dùng DevMind'}\n${user.email ?? 'Không có email'}',
       icon: Icons.account_circle_outlined,
+      bottomNavigationBar: const HomeBottomNavigation(),
       actions: [
         AppPlaceholderAction(
           label: 'Về trang chủ',

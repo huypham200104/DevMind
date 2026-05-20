@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/router.dart';
 import '../../../../core/widgets/app_placeholder_screen.dart';
+import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 
 class CvScannerScreen extends StatelessWidget {
   const CvScannerScreen({super.key});
@@ -14,6 +15,7 @@ class CvScannerScreen extends StatelessWidget {
       description:
           'Tính năng này sẽ nhập nội dung CV, gọi AI phân tích và trừ lượt quét theo hạn mức ví.',
       icon: Icons.document_scanner_outlined,
+      bottomNavigationBar: const HomeBottomNavigation(),
       actions: [
         AppPlaceholderAction(
           label: 'Về trang chủ',

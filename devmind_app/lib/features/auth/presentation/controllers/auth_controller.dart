@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../data/sources/auth_remote_data_source.dart';
 
@@ -86,6 +87,9 @@ class AuthController extends ChangeNotifier {
     } on FirebaseAuthException catch (error) {
       _errorMessage = _friendlyAuthError(error);
       return false;
+    } on GoogleSignInException catch (error) {
+      _errorMessage = _friendlyGoogleSignInError(error);
+      return false;
     } catch (_) {
       _errorMessage = 'Đã có lỗi xảy ra. Vui lòng thử lại.';
       return false;
@@ -117,6 +121,22 @@ class AuthController extends ChangeNotifier {
         return 'Không thể kết nối mạng. Kiểm tra Internet rồi thử lại.';
       default:
         return 'Không thể xác thực tài khoản. Vui lòng thử lại.';
+    }
+  }
+
+  String _friendlyGoogleSignInError(GoogleSignInException error) {
+    switch (error.code) {
+      case GoogleSignInExceptionCode.canceled:
+        return 'Đăng nhập Google đã bị hủy hoặc thiết bị không trả về tài khoản Google. Nếu bạn không tự bấm hủy, hãy thêm SHA-1/SHA-256 trong Firebase rồi tải lại google-services.json.';
+      case GoogleSignInExceptionCode.clientConfigurationError:
+      case GoogleSignInExceptionCode.providerConfigurationError:
+        return 'Cấu hình Google Sign-In chưa đúng. Hãy kiểm tra Google provider, SHA-1/SHA-256 và google-services.json.';
+      case GoogleSignInExceptionCode.uiUnavailable:
+        return 'Không thể mở giao diện chọn tài khoản Google trên thiết bị này.';
+      case GoogleSignInExceptionCode.interrupted:
+        return 'Đăng nhập Google bị gián đoạn. Vui lòng thử lại.';
+      default:
+        return 'Không thể đăng nhập bằng Google. Vui lòng thử lại.';
     }
   }
 

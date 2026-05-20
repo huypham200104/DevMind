@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../features/auth/data/sources/auth_remote_data_source.dart';
 import '../features/auth/presentation/controllers/auth_controller.dart';
+import '../features/home/data/repositories/firebase_home_profile_repository.dart';
+import '../features/home/domain/repositories/home_profile_repository.dart';
+import '../features/home/presentation/controllers/home_controller.dart';
 
 class AppProviders extends StatelessWidget {
   const AppProviders({required this.child, super.key});
@@ -16,6 +19,12 @@ class AppProviders extends StatelessWidget {
         Provider<AuthRemoteDataSource>(create: (_) => AuthRemoteDataSource()),
         ChangeNotifierProvider<AuthController>(
           create: (context) => AuthController(context.read()),
+        ),
+        Provider<HomeProfileRepository>(
+          create: (_) => FirebaseHomeProfileRepository(),
+        ),
+        ChangeNotifierProvider<HomeController>(
+          create: (context) => HomeController(context.read()),
         ),
       ],
       child: child,
