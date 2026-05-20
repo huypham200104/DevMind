@@ -43,3 +43,20 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Seed tool secrets and private data
+tools/seed/node_modules/
+tools/seed/serviceAccountKey.json
+tools/seed/.env*
+tools/seed/*.env
+tools/seed/*service-account*.json
+tools/seed/*serviceAccount*.json
+tools/seed/*private*.json
+tools/seed/*secret*.json
+tools/seed/*credential*.json
+tools/seed/data/sample_users.js
+tools/seed/data/sample_transactions.js
+tools/seed/data/*real*.js
+tools/seed/data/*private*.js
+tools/seed/data/*secret*.js
+tools/seed/data/*local*.js

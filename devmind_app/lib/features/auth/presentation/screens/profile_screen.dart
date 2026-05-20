@@ -6,13 +6,42 @@ import '../../../../app/router.dart';
 import '../../../../core/widgets/app_placeholder_screen.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/profile_controller.dart';
+import '../widgets/profile_app_bar.dart';
+import '../widgets/profile_header.dart';
+import '../widgets/profile_history_section.dart';
+import '../widgets/profile_learning_stats_card.dart';
+import '../widgets/profile_wallet_card.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  int _selectedHistoryIndex = 0;
+  String? _loadedUid;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final uid = context.read<AuthController>().currentUser?.uid;
+    if (uid == null || _loadedUid == uid) {
+      return;
+    }
+
+    _loadedUid = uid;
+    final profileController = context.read<ProfileController>();
+    Future.microtask(() => profileController.loadProfile(uid));
+  }
 
   @override
   Widget build(BuildContext context) {
     final authController = context.watch<AuthController>();
+    final profileController = context.watch<ProfileController>();
     final user = authController.currentUser;
 
     if (user == null) {
@@ -29,29 +58,112 @@ class ProfileScreen extends StatelessWidget {
       );
     }
 
-    return AppPlaceholderScreen(
-      title: 'Hồ sơ cá nhân',
-      description:
-          '${user.displayName?.isNotEmpty == true ? user.displayName : 'Người dùng DevMind'}\n${user.email ?? 'Không có email'}',
-      icon: Icons.account_circle_outlined,
+    final displayName = user.displayName?.trim().isNotEmpty == true
+        ? user.displayName!.trim()
+        : 'Huy Pham';
+    final email = user.email?.trim().isNotEmpty == true
+        ? user.email!.trim()
+        : 'huypham@devmind.com';
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF6F7F8),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            ProfileAppBar(
+              onLogoutPressed: () async {
+                await context.read<AuthController>().signOut();
+                if (context.mounted) {
+                  context.goNamed(AppRouteNames.welcome);
+                }
+              },
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(26, 28, 26, 28),
+                child: Column(
+                  children: [
+                    ProfileHeader(
+                      displayName: displayName,
+                      email: email,
+                      photoUrl: user.photoURL,
+                      onEditProfile: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    if (profileController.isLoading) ...[
+                      const SizedBox(height: 18),
+                      const CircularProgressIndicator(),
+                    ],
+                    if (profileController.errorMessage != null) ...[
+                      const SizedBox(height: 18),
+                      _ProfileErrorMessage(
+                        message: profileController.errorMessage!,
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                    ProfileLearningStatsCard(
+                      stats: profileController.profileData?.learningStats,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 10),
+                    ProfileWalletCard(
+                      explainCredits:
+                          profileController.profileData?.wallet.explainCredits,
+                      cvScanCredits:
+                          profileController.profileData?.wallet.cvScanCredits,
+                      onTopUp: () => context.goNamed(AppRouteNames.payment),
+                    ),
+                    const SizedBox(height: 34),
+                    ProfileHistorySection(
+                      selectedIndex: _selectedHistoryIndex,
+                      questions:
+                          profileController.profileData?.questionHistory ??
+                          const [],
+                      payments:
+                          profileController.profileData?.paymentHistory ??
+                          const [],
+                      onTabChanged: (index) {
+                        setState(() {
+                          _selectedHistoryIndex = index;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: const HomeBottomNavigation(),
-      actions: [
-        AppPlaceholderAction(
-          label: 'Về trang chủ',
-          onPressed: () => context.goNamed(AppRouteNames.home),
+    );
+  }
+}
+
+class _ProfileErrorMessage extends StatelessWidget {
+  const _ProfileErrorMessage({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF7ED),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFFED7AA)),
+      ),
+      child: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: const Color(0xFF9A3412),
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0,
         ),
-        AppPlaceholderAction(
-          label: authController.isLoading ? 'Đang đăng xuất...' : 'Đăng xuất',
-          onPressed: authController.isLoading
-              ? () {}
-              : () async {
-                  await context.read<AuthController>().signOut();
-                  if (context.mounted) {
-                    context.goNamed(AppRouteNames.welcome);
-                  }
-                },
-        ),
-      ],
+      ),
     );
   }
 }
