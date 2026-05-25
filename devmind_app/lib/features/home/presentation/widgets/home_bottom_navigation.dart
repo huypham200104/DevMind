@@ -10,7 +10,10 @@ class HomeBottomNavigation extends StatelessWidget {
   int _getSelectedIndex(BuildContext context) {
     final path = GoRouterState.of(context).uri.path;
 
-    if (path == AppRoutePaths.technicalQuiz) return 1;
+    if (path == AppRoutePaths.technicalQuiz ||
+        path.startsWith('${AppRoutePaths.technicalQuiz}/')) {
+      return 1;
+    }
     if (path == AppRoutePaths.ranking) return 2;
     if (path == AppRoutePaths.cvScanner) return 3;
     if (path == AppRoutePaths.profile) return 4;
