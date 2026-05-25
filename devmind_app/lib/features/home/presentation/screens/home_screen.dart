@@ -6,10 +6,10 @@ import '../../../../app/router.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../domain/entities/home_user_profile.dart';
 import '../controllers/home_controller.dart';
+import '../widgets/daily_check_in_sheet.dart';
 import '../widgets/home_bottom_navigation.dart';
 import '../widgets/home_error_banner.dart';
 import '../widgets/home_header.dart';
-import '../widgets/learning_path_card.dart';
 import '../widgets/quick_action_card.dart';
 import '../widgets/ranking_card.dart';
 import '../widgets/section_header.dart';
@@ -35,12 +35,24 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     _watchedUid = user.uid;
-    context.read<HomeController>().watchUser(
-      uid: user.uid,
-      displayName: user.displayName,
-      email: user.email,
-      photoUrl: user.photoURL,
-    );
+    final homeController = context.read<HomeController>();
+    final uid = user.uid;
+    final displayName = user.displayName;
+    final email = user.email;
+    final photoUrl = user.photoURL;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _watchedUid != uid) {
+        return;
+      }
+
+      homeController.watchUser(
+        uid: uid,
+        displayName: displayName,
+        email: email,
+        photoUrl: photoUrl,
+      );
+    });
   }
 
   @override
@@ -69,7 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeHeader(profile: profile, user: user),
+              HomeHeader(
+                profile: profile,
+                user: user,
+                onCheckInTap: _openDailyCheckIn,
+              ),
               const SizedBox(height: 34),
               WelcomeSection(profile: profile),
               if (homeController.errorMessage != null) ...[
@@ -81,15 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 18),
               RankingCard(rank: profile.globalRank),
               const SizedBox(height: 26),
-              LearningPathCard(profile: profile),
-              const SizedBox(height: 34),
-              SectionHeader(
-                title: 'Dịch vụ nhanh',
-                trailing: TextButton(
-                  onPressed: () => context.goNamed(AppRouteNames.technicalQuiz),
-                  child: const Text('Xem tất cả'),
-                ),
-              ),
+              SectionHeader(title: 'Dịch vụ nhanh'),
               const SizedBox(height: 14),
               QuickActionCard(
                 icon: Icons.quiz_outlined,
@@ -122,6 +130,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: const HomeBottomNavigation(),
+    );
+  }
+
+  Future<void> _openDailyCheckIn() {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const DailyCheckInSheet(),
     );
   }
 }
