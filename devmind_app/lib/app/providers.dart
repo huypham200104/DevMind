@@ -12,6 +12,9 @@ import '../features/cv_scanner/presentation/controllers/cv_scanner_controller.da
 import '../features/home/data/repositories/firebase_home_profile_repository.dart';
 import '../features/home/domain/repositories/home_profile_repository.dart';
 import '../features/home/presentation/controllers/home_controller.dart';
+import '../features/ranking/data/repositories/firebase_ranking_repository.dart';
+import '../features/ranking/domain/repositories/ranking_repository.dart';
+import '../features/ranking/presentation/controllers/ranking_controller.dart';
 import '../features/technical_quiz/data/repositories/firebase_technical_course_repository.dart';
 import '../features/technical_quiz/domain/repositories/technical_course_repository.dart';
 import '../features/technical_quiz/presentation/controllers/technical_quiz_controller.dart';
@@ -39,11 +42,16 @@ class AppProviders extends StatelessWidget {
         ChangeNotifierProvider<HomeController>(
           create: (context) => HomeController(context.read()),
         ),
+        Provider<RankingRepository>(create: (_) => FirebaseRankingRepository()),
+        ChangeNotifierProvider<RankingController>(
+          create: (context) => RankingController(context.read()),
+        ),
         Provider<TechnicalCourseRepository>(
           create: (_) => FirebaseTechnicalCourseRepository(),
         ),
         ChangeNotifierProvider<TechnicalQuizController>(
-          create: (context) => TechnicalQuizController(context.read()),
+          create: (context) =>
+              TechnicalQuizController(context.read(), context.read()),
         ),
         Provider<CvUploadRepository>(
           create: (_) => FirebaseCvUploadRepository(),

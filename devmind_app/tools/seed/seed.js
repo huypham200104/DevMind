@@ -72,8 +72,23 @@ async function seedUserSubcollections() {
   const userRef = db.collection('users').doc(sampleUser.uid);
   
   // Update main user doc
-  await userRef.set(sampleUser.updates, { merge: true });
+  await userRef.set({
+    ...sampleUser.updates,
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+  }, { merge: true });
   console.log('Đã cập nhật main user document.');
+
+  await db.collection('rankings').doc(sampleUser.uid).set({
+    uid: sampleUser.uid,
+    displayName: sampleUser.updates.displayName || sampleUser.updates.email || 'User',
+    photoUrl: sampleUser.updates.photoUrl || null,
+    ranking: sampleUser.updates.ranking || sampleUser.updates.rankingOrder || 0,
+    rankingOrder: sampleUser.updates.rankingOrder || sampleUser.updates.ranking || 0,
+    rankingPoints: sampleUser.updates.rankingPoints || 0,
+    rankingFirstPlaceAt: sampleUser.updates.rankingFirstPlaceAt || null,
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+  }, { merge: true });
+  console.log('Đã cập nhật ranking mirror cho main user.');
 
   // Seed Activity Logs
   const logBatch = db.batch();
@@ -106,6 +121,91 @@ async function seedUserSubcollections() {
   console.log('Đã upload CV scan results.');
 }
 
+function toTimestampOrNull(value) {
+  if (!value) {
+    return null;
+  }
+
+  return admin.firestore.Timestamp.fromDate(new Date(value));
+}
+
+async function seedRankingUsers() {
+  const rankingUsers = sampleUser.rankingUsers || [];
+  console.log(`\n🏆 Seed ${rankingUsers.length} user ranking mẫu...`);
+
+  if (isDryRun) {
+    console.log('[DRY-RUN] Sẽ tạo/cập nhật các users ranking mẫu:');
+    console.log(rankingUsers.map((user) => ({
+      uid: user.uid,
+      displayName: user.displayName,
+      rankingPoints: user.rankingPoints,
+      ranking: user.ranking,
+    })));
+    return;
+  }
+
+  const batch = db.batch();
+  const now = admin.firestore.FieldValue.serverTimestamp();
+  const metadataRef = db.collection('metadata').doc('users');
+  const metadataSnapshot = await metadataRef.get();
+  const currentTotalUsers = metadataSnapshot.exists
+    ? metadataSnapshot.get('totalUsers') || 0
+    : 0;
+  const maxSeedAccountOrder = Math.max(
+    ...rankingUsers.map((user) => user.accountOrder),
+    sampleUser.updates.accountOrder || 0,
+  );
+
+  rankingUsers.forEach((user) => {
+    const userRef = db.collection('users').doc(user.uid);
+    const rankingRef = db.collection('rankings').doc(user.uid);
+    const rankingFirstPlaceAt = toTimestampOrNull(user.rankingFirstPlaceAt);
+
+    const userPayload = {
+      displayName: user.displayName,
+      email: user.email,
+      photoUrl: user.photoUrl || null,
+      accountOrder: user.accountOrder,
+      ranking: user.ranking,
+      rankingOrder: user.rankingOrder,
+      rankingPoints: user.rankingPoints,
+      rankingFirstPlaceAt,
+      totalQuizzesTaken: user.totalQuizzesTaken,
+      totalCorrectAnswers: user.totalCorrectAnswers,
+      totalQuestionsAnswered: user.totalQuestionsAnswered,
+      technicalScore: user.technicalScore,
+      iqScore: user.iqScore,
+      experienceScore: user.experienceScore,
+      freeExplainCount: 3,
+      freeCvScanCount: 1,
+      checkInPoints: 0,
+      points: 0,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    batch.set(userRef, userPayload, { merge: true });
+    batch.set(rankingRef, {
+      uid: user.uid,
+      displayName: user.displayName,
+      photoUrl: user.photoUrl || null,
+      ranking: user.ranking,
+      rankingOrder: user.rankingOrder,
+      rankingPoints: user.rankingPoints,
+      rankingFirstPlaceAt,
+      updatedAt: now,
+    }, { merge: true });
+  });
+
+  batch.set(metadataRef, {
+    totalUsers: Math.max(currentTotalUsers, maxSeedAccountOrder),
+    updatedAt: now,
+  }, { merge: true });
+
+  await batch.commit();
+  console.log('Đã seed users ranking mẫu và collection rankings.');
+}
+
 async function run() {
   try {
     if (isDryRun) {
@@ -121,6 +221,7 @@ async function run() {
     await seedCollection('technical_questions', technicalQuestions);
     
     await seedUserSubcollections();
+    await seedRankingUsers();
 
     console.log('\n✅ HOÀN TẤT!');
     if (!isDryRun) {

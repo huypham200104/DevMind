@@ -106,6 +106,8 @@ class FirebaseHomeProfileRepository implements HomeProfileRepository {
     final globalRank =
         _readInt(data, 'globalRank') ??
         _readInt(data, 'rank') ??
+        _readInt(data, 'ranking') ??
+        _readInt(data, 'rankingOrder') ??
         _readInt(data, 'accountOrder') ??
         0;
 

@@ -5,13 +5,15 @@ import 'package:flutter/foundation.dart';
 import '../../domain/entities/technical_course.dart';
 import '../../domain/entities/technical_question.dart';
 import '../../domain/repositories/technical_course_repository.dart';
+import '../../../ranking/domain/repositories/ranking_repository.dart';
 
 class TechnicalQuizController extends ChangeNotifier {
-  TechnicalQuizController(this._repository);
+  TechnicalQuizController(this._repository, this._rankingRepository);
 
   static const int _bonusQuizMinutes = 5;
 
   final TechnicalCourseRepository _repository;
+  final RankingRepository _rankingRepository;
 
   StreamSubscription<List<TechnicalCourse>>? _allCoursesSubscription;
   StreamSubscription<List<TechnicalCourse>>? _myCoursesSubscription;
@@ -40,6 +42,7 @@ class TechnicalQuizController extends ChangeNotifier {
   int _remainingSeconds = 0;
   bool _isQuizCompleted = false;
   bool _isQuizExpired = false;
+  bool _isRecordingRankingScore = false;
 
   List<TechnicalCourse> get allCourses => _allCourses;
   List<TechnicalCourse> get myCourses => _myCourses;
@@ -412,6 +415,7 @@ class TechnicalQuizController extends ChangeNotifier {
     _isQuizCompleted = true;
     _isQuizExpired = expired;
     notifyListeners();
+    unawaited(_recordRankingScore());
   }
 
   void _recordCurrentAnswer() {
@@ -421,6 +425,30 @@ class TechnicalQuizController extends ChangeNotifier {
     }
 
     _answerIndexes[_currentQuestionIndex] = _selectedAnswerIndex;
+  }
+
+  Future<void> _recordRankingScore() async {
+    final uid = _quizUid;
+    final course = _activeQuizCourse;
+    if (uid == null ||
+        course == null ||
+        _questions.isEmpty ||
+        _isRecordingRankingScore) {
+      return;
+    }
+
+    _isRecordingRankingScore = true;
+    try {
+      await _rankingRepository.recordTechnicalQuizScore(
+        uid: uid,
+        courseId: course.id,
+        courseTitle: course.title,
+        correctAnswers: correctAnswerCount,
+        totalQuestions: totalQuestions,
+      );
+    } finally {
+      _isRecordingRankingScore = false;
+    }
   }
 
   @override
