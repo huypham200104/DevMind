@@ -22,15 +22,6 @@ class WelcomeSection extends StatelessWidget {
             letterSpacing: 0,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Quá trình luyện tập của bạn đã hoàn thành ${(profile.progress * 100).round()}%.\nCố lên!',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: AppColors.textSecondary,
-            height: 1.35,
-            letterSpacing: 0,
-          ),
-        ),
       ],
     );
   }

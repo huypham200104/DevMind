@@ -26,7 +26,7 @@ class HomeUserProfile {
       photoUrl: photoUrl,
       freeExplainCount: 0,
       paidCredits: 0,
-      globalRank: 42,
+      globalRank: 0,
       currentPathTitle: 'Lộ trình Fullstack Engineer',
       completedDays: 12,
       totalDays: 20,

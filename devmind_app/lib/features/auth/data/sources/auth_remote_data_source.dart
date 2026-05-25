@@ -114,18 +114,137 @@ class AuthRemoteDataSource {
     required User user,
     required String? displayName,
     required String provider,
-  }) {
+  }) async {
     final now = FieldValue.serverTimestamp();
+    final userRef = _firestore.collection('users').doc(user.uid);
+    final counterRef = _firestore.collection('metadata').doc('users');
 
-    return _firestore.collection('users').doc(user.uid).set({
+    try {
+      await _firestore.runTransaction((transaction) async {
+        final userSnapshot = await transaction.get(userRef);
+        final userData = userSnapshot.data();
+        final needsAccountOrder = !userSnapshot.exists;
+
+        DocumentSnapshot<Map<String, dynamic>>? counterSnapshot;
+        if (needsAccountOrder) {
+          counterSnapshot = await transaction.get(counterRef);
+        }
+
+        final updateData = _buildUserProfileUpdate(
+          user: user,
+          displayName: displayName,
+          provider: provider,
+          existingData: userData,
+          isNewUserDoc: !userSnapshot.exists,
+          updatedAt: now,
+        );
+
+        if (needsAccountOrder) {
+          final nextAccountOrder =
+              (_readInt(counterSnapshot?.data(), 'totalUsers') ?? 0) + 1;
+          updateData['accountOrder'] = nextAccountOrder;
+          transaction.set(counterRef, {
+            'totalUsers': nextAccountOrder,
+            'updatedAt': now,
+          }, SetOptions(merge: true));
+        }
+
+        transaction.set(userRef, updateData, SetOptions(merge: true));
+      });
+    } on FirebaseException catch (error) {
+      if (error.code != 'permission-denied') {
+        rethrow;
+      }
+
+      await _upsertUserProfileWithoutAccountOrder(
+        user: user,
+        displayName: displayName,
+        provider: provider,
+        updatedAt: now,
+      );
+    }
+  }
+
+  Future<void> _upsertUserProfileWithoutAccountOrder({
+    required User user,
+    required String? displayName,
+    required String provider,
+    required Object updatedAt,
+  }) async {
+    final userRef = _firestore.collection('users').doc(user.uid);
+    final userSnapshot = await userRef.get();
+    final updateData = _buildUserProfileUpdate(
+      user: user,
+      displayName: displayName,
+      provider: provider,
+      existingData: userSnapshot.data(),
+      isNewUserDoc: !userSnapshot.exists,
+      updatedAt: updatedAt,
+    );
+
+    await userRef.set(updateData, SetOptions(merge: true));
+  }
+
+  Map<String, dynamic> _buildUserProfileUpdate({
+    required User user,
+    required String? displayName,
+    required String provider,
+    required Map<String, dynamic>? existingData,
+    required bool isNewUserDoc,
+    required Object updatedAt,
+  }) {
+    final updateData = <String, dynamic>{
       'email': user.email,
       'displayName': displayName?.trim() ?? '',
       'photoUrl': user.photoURL,
       'provider': provider,
-      'freeExplainCount': 0,
-      'paidCredits': 0,
-      'createdAt': now,
-      'updatedAt': now,
-    }, SetOptions(merge: true));
+      'updatedAt': updatedAt,
+    };
+
+    if (isNewUserDoc || existingData?['createdAt'] == null) {
+      updateData['createdAt'] = updatedAt;
+    }
+
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'freeExplainCount',
+      0,
+      force: isNewUserDoc,
+    );
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'paidCredits',
+      0,
+      force: isNewUserDoc,
+    );
+
+    return updateData;
+  }
+
+  void _setDefaultIfMissing(
+    Map<String, dynamic> updateData,
+    Map<String, dynamic>? existingData,
+    String key,
+    Object value, {
+    bool force = false,
+  }) {
+    if (force || existingData?[key] == null) {
+      updateData[key] = value;
+    }
+  }
+
+  int? _readInt(Map<String, dynamic>? data, String key) {
+    final value = data?[key];
+    if (value is int) {
+      return value;
+    }
+
+    if (value is double) {
+      return value.round();
+    }
+
+    return null;
   }
 }
