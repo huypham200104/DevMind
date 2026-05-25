@@ -53,7 +53,7 @@ class ProfileHeader extends StatelessWidget {
             ),
           ),
           child: Row(
-              mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
                 'Chỉnh sửa hồ sơ',
@@ -205,7 +205,7 @@ class _CodeLine extends StatelessWidget {
     return Container(
       width: width,
       height: 3,
-      margin: const EdgeInsets.only(bottom: 4),
+      margin: const EdgeInsets.only(bottom: 2),
       decoration: BoxDecoration(
         color: const Color(0xFFE2E8F0),
         borderRadius: BorderRadius.circular(999),

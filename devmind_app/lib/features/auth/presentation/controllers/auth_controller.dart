@@ -88,6 +88,12 @@ class AuthController extends ChangeNotifier {
       _errorMessage = _friendlyAuthError(error);
       return false;
     } on GoogleSignInException catch (error) {
+      if (kDebugMode) {
+        debugPrint(
+          'Google Sign-In failed: code=${error.code}, '
+          'description=${error.description}',
+        );
+      }
       _errorMessage = _friendlyGoogleSignInError(error);
       return false;
     } catch (_) {
@@ -127,7 +133,7 @@ class AuthController extends ChangeNotifier {
   String _friendlyGoogleSignInError(GoogleSignInException error) {
     switch (error.code) {
       case GoogleSignInExceptionCode.canceled:
-        return 'Đăng nhập Google đã bị hủy hoặc thiết bị không trả về tài khoản Google. Nếu bạn không tự bấm hủy, hãy thêm SHA-1/SHA-256 trong Firebase rồi tải lại google-services.json.';
+        return 'Google không trả về tài khoản. Hãy chọn tài khoản Google trên thiết bị/emulator, kiểm tra Google Play Services rồi thử lại. Nếu vừa đổi SHA, hãy tải lại google-services.json và chạy lại app.';
       case GoogleSignInExceptionCode.clientConfigurationError:
       case GoogleSignInExceptionCode.providerConfigurationError:
         return 'Cấu hình Google Sign-In chưa đúng. Hãy kiểm tra Google provider, SHA-1/SHA-256 và google-services.json.';
