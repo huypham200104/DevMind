@@ -85,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 profile: profile,
                 user: user,
                 onCheckInTap: _openDailyCheckIn,
+                checkInPoints: homeController.dailyCheckIn.points,
               ),
               const SizedBox(height: 34),
               WelcomeSection(profile: profile),
