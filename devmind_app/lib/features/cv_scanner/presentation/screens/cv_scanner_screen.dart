@@ -6,9 +6,11 @@ import '../../../../app/router.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
+import '../../domain/entities/cv_upload.dart';
 import '../controllers/cv_scanner_controller.dart';
 import '../widgets/cv_analyze_button.dart';
 import '../widgets/cv_position_field.dart';
+import '../widgets/cv_scan_result_card.dart';
 import '../widgets/cv_scanner_header.dart';
 import '../widgets/cv_upload_drop_zone.dart';
 import '../widgets/recent_cv_files_section.dart';
@@ -22,6 +24,8 @@ class CvScannerScreen extends StatefulWidget {
 
 class _CvScannerScreenState extends State<CvScannerScreen> {
   final _positionController = TextEditingController();
+  final _scrollController = ScrollController();
+  final _resultKey = GlobalKey();
   String? _watchedUid;
 
   @override
@@ -48,6 +52,7 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
   @override
   void dispose() {
     _positionController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -67,21 +72,40 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
             ),
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 padding: const EdgeInsets.fromLTRB(36, 74, 36, 28),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CvPositionField(controller: _positionController),
-                    const SizedBox(height: 96),
-                    CvUploadDropZone(onTap: _showPickerPlaceholder),
-                    const SizedBox(height: 64),
+                    const SizedBox(height: 56),
+                    CvUploadDropZone(
+                      onTap: _handlePickPdf,
+                      selectedFileName: controller.selectedFile?.fileName,
+                      selectedFileSize: controller.selectedFile?.displaySize,
+                      isBusy: controller.isPickingFile,
+                    ),
+                    if (controller.activeResult != null) ...[
+                      const SizedBox(height: 36),
+                      CvScanResultCard(
+                        key: _resultKey,
+                        result: controller.activeResult!,
+                        onClose: controller.clearResult,
+                      ),
+                    ],
+                    const SizedBox(height: 48),
                     RecentCvFilesSection(
                       files: controller.recentUploads,
                       isLoading: controller.isLoading,
                       errorMessage: controller.errorMessage,
+                      onFileTap: _handleShowResult,
                     ),
                     const SizedBox(height: 36),
-                    CvAnalyzeButton(onPressed: _showAnalyzePlaceholder),
+                    CvAnalyzeButton(
+                      onPressed: controller.canScan ? _handleAnalyze : null,
+                      isLoading:
+                          controller.isScanning || controller.isPickingFile,
+                    ),
                   ],
                 ),
               ),
@@ -101,27 +125,93 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
     context.goNamed(AppRouteNames.home);
   }
 
-  void _showPickerPlaceholder() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Chức năng chọn file CV sẽ được kết nối tiếp theo.'),
-      ),
-    );
-  }
-
-  void _showAnalyzePlaceholder() {
-    final position = _positionController.text.trim();
-    if (position.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập vị trí ứng tuyển.')),
-      );
+  Future<void> _handlePickPdf() async {
+    final controller = context.read<CvScannerController>();
+    final selected = await controller.pickPdf();
+    if (!mounted) {
       return;
     }
 
+    final errorMessage = controller.actionErrorMessage;
+    if (errorMessage != null) {
+      _showSnackBar(errorMessage, isError: true);
+      return;
+    }
+
+    if (selected && controller.selectedFile != null) {
+      _showSnackBar('Đã chọn ${controller.selectedFile!.fileName}.');
+    }
+  }
+
+  Future<void> _handleAnalyze() async {
+    final controller = context.read<CvScannerController>();
+    if (_positionController.text.trim().isEmpty) {
+      _showSnackBar('Vui lòng nhập vị trí ứng tuyển.', isError: true);
+      return;
+    }
+
+    if (controller.selectedFile == null) {
+      final selected = await controller.pickPdf();
+      if (!mounted) {
+        return;
+      }
+
+      final pickErrorMessage = controller.actionErrorMessage;
+      if (pickErrorMessage != null) {
+        _showSnackBar(pickErrorMessage, isError: true);
+        return;
+      }
+
+      if (!selected) {
+        return;
+      }
+    }
+
+    final scanned = await controller.scanSelectedPdf(_positionController.text);
+    if (!mounted) {
+      return;
+    }
+
+    final errorMessage = controller.actionErrorMessage;
+    if (errorMessage != null) {
+      _showSnackBar(errorMessage, isError: true);
+      return;
+    }
+
+    if (scanned) {
+      _showSnackBar('Đã scan CV và lưu vào lịch sử.');
+      _scrollToResult();
+    }
+  }
+
+  void _handleShowResult(CvUpload result) {
+    context.read<CvScannerController>().showResult(result);
+    _scrollToResult();
+  }
+
+  void _scrollToResult() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final resultContext = _resultKey.currentContext;
+      if (!mounted || resultContext == null) {
+        return;
+      }
+
+      Scrollable.ensureVisible(
+        resultContext,
+        alignment: 0.08,
+        duration: const Duration(milliseconds: 260),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Hãy chọn CV trước khi phân tích.'),
-        backgroundColor: AppColors.primaryGradientEnd,
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError
+            ? const Color(0xFFB42318)
+            : AppColors.primaryGradientEnd,
       ),
     );
   }

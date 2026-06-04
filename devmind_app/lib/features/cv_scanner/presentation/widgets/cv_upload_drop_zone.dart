@@ -3,12 +3,24 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme/app_colors.dart';
 
 class CvUploadDropZone extends StatelessWidget {
-  const CvUploadDropZone({super.key, required this.onTap});
+  const CvUploadDropZone({
+    super.key,
+    required this.onTap,
+    this.selectedFileName,
+    this.selectedFileSize,
+    this.isBusy = false,
+  });
 
   final VoidCallback onTap;
+  final String? selectedFileName;
+  final String? selectedFileSize;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
+    final hasSelectedFile =
+        selectedFileName != null && selectedFileName!.trim().isNotEmpty;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -33,16 +45,25 @@ class CvUploadDropZone extends StatelessWidget {
                     color: Color(0xFFD6F8F4),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.upload_file_outlined,
-                    color: AppColors.primaryGradientEnd,
-                    size: 52,
-                  ),
+                  child: isBusy
+                      ? const Padding(
+                          padding: EdgeInsets.all(34),
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        )
+                      : Icon(
+                          hasSelectedFile
+                              ? Icons.picture_as_pdf_outlined
+                              : Icons.upload_file_outlined,
+                          color: AppColors.primaryGradientEnd,
+                          size: 52,
+                        ),
                 ),
                 const SizedBox(height: 34),
                 Text(
-                  'Select your CV file',
+                  hasSelectedFile ? selectedFileName! : 'Chọn file CV PDF',
                   textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w800,
@@ -52,7 +73,9 @@ class CvUploadDropZone extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 Text(
-                  'Drag and drop your file here or click to browse.',
+                  hasSelectedFile
+                      ? '${selectedFileSize ?? 'Không rõ dung lượng'} • Bấm để chọn file khác.'
+                      : 'Bấm để chọn file PDF từ thiết bị.',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppColors.textSecondary,
@@ -63,7 +86,7 @@ class CvUploadDropZone extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Supported formats: PDF, DOCX (Max 5MB)',
+                  'Hỗ trợ PDF, tối đa 5MB',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppColors.textSecondary,
