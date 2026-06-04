@@ -12,20 +12,36 @@ class CvScannerController extends ChangeNotifier {
 
   StreamSubscription<List<CvUpload>>? _uploadsSubscription;
   List<CvUpload> _recentUploads = const [];
+  CvFileSelection? _selectedFile;
+  CvUpload? _activeResult;
   bool _isLoading = false;
+  bool _isPickingFile = false;
+  bool _isScanning = false;
   String? _errorMessage;
+  String? _actionErrorMessage;
   String? _activeUid;
 
   List<CvUpload> get recentUploads => _recentUploads;
+  CvFileSelection? get selectedFile => _selectedFile;
+  CvUpload? get activeResult => _activeResult;
   bool get isLoading => _isLoading;
+  bool get isPickingFile => _isPickingFile;
+  bool get isScanning => _isScanning;
   String? get errorMessage => _errorMessage;
+  String? get actionErrorMessage => _actionErrorMessage;
+  bool get canScan => !_isPickingFile && !_isScanning;
 
   void watchUploads(String? uid) {
     if (uid == null) {
       _activeUid = null;
       _recentUploads = const [];
+      _selectedFile = null;
+      _activeResult = null;
       _isLoading = false;
+      _isPickingFile = false;
+      _isScanning = false;
       _errorMessage = null;
+      _actionErrorMessage = null;
       _uploadsSubscription?.cancel();
       _uploadsSubscription = null;
       notifyListeners();
@@ -59,6 +75,114 @@ class CvScannerController extends ChangeNotifier {
             notifyListeners();
           },
         );
+  }
+
+  Future<bool> pickPdf() async {
+    if (_isPickingFile || _isScanning) {
+      return false;
+    }
+
+    _isPickingFile = true;
+    _actionErrorMessage = null;
+    notifyListeners();
+
+    try {
+      final file = await _repository.pickPdf();
+      if (file == null) {
+        return false;
+      }
+
+      _selectedFile = file;
+      _activeResult = null;
+      return true;
+    } catch (error) {
+      _actionErrorMessage = _readErrorMessage(
+        error,
+        fallback: 'Không thể chọn file PDF.',
+      );
+      return false;
+    } finally {
+      _isPickingFile = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> scanSelectedPdf(String jobTitle) async {
+    final normalizedJobTitle = jobTitle.trim();
+    if (normalizedJobTitle.isEmpty) {
+      _actionErrorMessage = 'Vui lòng nhập vị trí ứng tuyển.';
+      notifyListeners();
+      return false;
+    }
+
+    final file = _selectedFile;
+    if (file == null) {
+      _actionErrorMessage = 'Vui lòng chọn file PDF trước khi scan.';
+      notifyListeners();
+      return false;
+    }
+
+    if (_isScanning || _isPickingFile) {
+      return false;
+    }
+
+    _isScanning = true;
+    _actionErrorMessage = null;
+    notifyListeners();
+
+    try {
+      final result = await _repository.scanPdf(
+        file: file,
+        jobTitle: normalizedJobTitle,
+      );
+      _selectedFile = null;
+      _activeResult = result;
+      _recentUploads = _mergeResult(result);
+      return true;
+    } catch (error) {
+      _actionErrorMessage = _readErrorMessage(
+        error,
+        fallback: 'Không thể scan CV lúc này.',
+      );
+      return false;
+    } finally {
+      _isScanning = false;
+      notifyListeners();
+    }
+  }
+
+  void showResult(CvUpload result) {
+    _activeResult = result;
+    _actionErrorMessage = null;
+    notifyListeners();
+  }
+
+  void clearResult() {
+    if (_activeResult == null) {
+      return;
+    }
+
+    _activeResult = null;
+    notifyListeners();
+  }
+
+  List<CvUpload> _mergeResult(CvUpload result) {
+    if (result.id.isEmpty) {
+      return [result, ..._recentUploads];
+    }
+
+    return [
+      result,
+      ..._recentUploads.where((upload) => upload.id != result.id),
+    ];
+  }
+
+  String _readErrorMessage(Object error, {required String fallback}) {
+    if (error is CvScannerException && error.message.trim().isNotEmpty) {
+      return error.message.trim();
+    }
+
+    return fallback;
   }
 
   @override

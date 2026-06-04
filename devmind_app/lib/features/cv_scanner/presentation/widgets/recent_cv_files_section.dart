@@ -9,11 +9,13 @@ class RecentCvFilesSection extends StatelessWidget {
     required this.files,
     required this.isLoading,
     required this.errorMessage,
+    required this.onFileTap,
   });
 
   final List<CvUpload> files;
   final bool isLoading;
   final String? errorMessage;
+  final ValueChanged<CvUpload> onFileTap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class RecentCvFilesSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Files',
+          'Lịch sử scan CV',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w800,
@@ -45,12 +47,12 @@ class RecentCvFilesSection extends StatelessWidget {
         else if (files.isEmpty)
           const _RecentFilesMessage(
             icon: Icons.description_outlined,
-            title: 'Chưa có',
-            description: 'Bạn chưa gửi CV nào lên Firebase.',
+            title: 'Chưa có lịch sử',
+            description: 'Các CV đã scan sẽ xuất hiện tại đây.',
           )
         else
           for (final file in files.take(5)) ...[
-            _RecentCvFileTile(file: file),
+            _RecentCvFileTile(file: file, onTap: () => onFileTap(file)),
             const SizedBox(height: 14),
           ],
       ],
@@ -59,78 +61,100 @@ class RecentCvFilesSection extends StatelessWidget {
 }
 
 class _RecentCvFileTile extends StatelessWidget {
-  const _RecentCvFileTile({required this.file});
+  const _RecentCvFileTile({required this.file, required this.onTap});
 
   final CvUpload file;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(22, 20, 14, 20),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFE0E3E6)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x08000000),
-            blurRadius: 18,
-            offset: Offset(0, 8),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(22, 20, 14, 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: const Color(0xFFE0E3E6)),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x08000000),
+                blurRadius: 18,
+                offset: Offset(0, 8),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE9EAEC),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.description_outlined,
-              color: Color(0xFF233F3D),
-              size: 34,
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  file.fileName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0,
-                  ),
+          child: Row(
+            children: [
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE9EAEC),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  '${_formatUploadedAt(file.uploadedAt)}  •  ${file.displaySize}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0,
-                  ),
+                child: const Icon(
+                  Icons.description_outlined,
+                  color: Color(0xFF233F3D),
+                  size: 34,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      file.fileName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    if (file.jobTitle.isNotEmpty) ...[
+                      Text(
+                        file.jobTitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.primaryGradientEnd,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                    ],
+                    Text(
+                      '${_formatUploadedAt(file.uploadedAt)}  •  ${file.displaySize}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _ScoreBadge(scoreLabel: file.scoreLabel),
+              IconButton(
+                onPressed: onTap,
+                icon: const Icon(Icons.visibility_outlined, size: 26),
+                color: const Color(0xFF2F3F3D),
+                tooltip: 'Xem kết quả',
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert, size: 28),
-            color: const Color(0xFF2F3F3D),
-            tooltip: 'Tùy chọn',
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -162,6 +186,33 @@ class _RecentCvFileTile extends StatelessWidget {
     final minute = value.minute.toString().padLeft(2, '0');
     final period = value.hour >= 12 ? 'PM' : 'AM';
     return '$hour:$minute $period';
+  }
+}
+
+class _ScoreBadge extends StatelessWidget {
+  const _ScoreBadge({required this.scoreLabel});
+
+  final String scoreLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: const BoxConstraints(minWidth: 58),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3F8F5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        scoreLabel,
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: AppColors.primaryGradientEnd,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0,
+        ),
+      ),
+    );
   }
 }
 
