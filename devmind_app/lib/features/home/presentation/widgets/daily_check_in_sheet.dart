@@ -46,6 +46,8 @@ class DailyCheckInSheet extends StatelessWidget {
                               title: 'Đổi quà tặng',
                             ),
                             const SizedBox(height: 20),
+                            DailyCheckInPointsBalance(points: summary.points),
+                            const SizedBox(height: 16),
                             DailyCheckInRewardGrid(points: summary.points),
                             if (controller.dailyCheckInErrorMessage !=
                                 null) ...[

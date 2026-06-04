@@ -46,3 +46,50 @@ class DailyCheckInErrorMessage extends StatelessWidget {
     );
   }
 }
+
+class DailyCheckInPointsBalance extends StatelessWidget {
+  const DailyCheckInPointsBalance({super.key, required this.points});
+
+  final int points;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE5FAF8),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFB9F1EC)),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.stars_outlined,
+            color: AppColors.primaryGradientEnd,
+            size: 24,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Bạn đang có',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0,
+              ),
+            ),
+          ),
+          Text(
+            '$points điểm',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: AppColors.primaryGradientEnd,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -10,11 +10,13 @@ class HomeHeader extends StatelessWidget {
     required this.profile,
     required this.user,
     required this.onCheckInTap,
+    required this.checkInPoints,
   });
 
   final HomeUserProfile profile;
   final User user;
   final VoidCallback onCheckInTap;
+  final int checkInPoints;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
         ),
-        _CheckInChip(onTap: onCheckInTap),
+        _CheckInChip(onTap: onCheckInTap, points: checkInPoints),
         const SizedBox(width: 14),
         _UserAvatar(photoUrl: profile.photoUrl ?? user.photoURL),
       ],
@@ -39,9 +41,10 @@ class HomeHeader extends StatelessWidget {
 }
 
 class _CheckInChip extends StatelessWidget {
-  const _CheckInChip({required this.onTap});
+  const _CheckInChip({required this.onTap, required this.points});
 
   final VoidCallback onTap;
+  final int points;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +70,7 @@ class _CheckInChip extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Điểm danh',
+                '${_formatPoints(points)} điểm',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: AppColors.primaryGradientEnd,
                   fontWeight: FontWeight.w800,
@@ -79,6 +82,14 @@ class _CheckInChip extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _formatPoints(int value) {
+    if (value > 9999) {
+      return '9999+';
+    }
+
+    return value.toString();
   }
 }
 
