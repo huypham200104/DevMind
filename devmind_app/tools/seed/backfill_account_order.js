@@ -49,10 +49,33 @@ async function run() {
 
   const batch = db.batch();
   users.forEach((doc, index) => {
+    const data = doc.data() || {};
+    const rankingOrder = data.ranking || data.rankingOrder || data.accountOrder || index + 1;
+    const rankingPoints = data.rankingPoints || 0;
+    const displayName = data.displayName || data.email || 'User';
+    const photoUrl = data.photoUrl || null;
+
     batch.set(
       doc.ref,
       {
         accountOrder: index + 1,
+        ranking: rankingOrder,
+        rankingOrder,
+        rankingPoints,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    );
+
+    batch.set(
+      db.collection('rankings').doc(doc.id),
+      {
+        uid: doc.id,
+        displayName,
+        photoUrl,
+        ranking: rankingOrder,
+        rankingOrder,
+        rankingPoints,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true },
@@ -69,7 +92,7 @@ async function run() {
   );
 
   await batch.commit();
-  console.log(`Đã backfill accountOrder cho ${users.length} users.`);
+  console.log(`Đã backfill accountOrder/ranking cho ${users.length} users.`);
 }
 
 run()

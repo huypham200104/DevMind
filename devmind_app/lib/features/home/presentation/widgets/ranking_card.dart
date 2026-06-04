@@ -54,7 +54,7 @@ class RankingCard extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton.icon(
-              onPressed: () => context.goNamed(AppRouteNames.gamification),
+              onPressed: () => context.goNamed(AppRouteNames.ranking),
               iconAlignment: IconAlignment.end,
               icon: const Icon(Icons.arrow_forward, size: 18),
               label: const Text('Xem bảng xếp hạng'),

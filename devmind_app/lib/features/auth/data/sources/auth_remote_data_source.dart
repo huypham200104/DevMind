@@ -143,6 +143,8 @@ class AuthRemoteDataSource {
           final nextAccountOrder =
               (_readInt(counterSnapshot?.data(), 'totalUsers') ?? 0) + 1;
           updateData['accountOrder'] = nextAccountOrder;
+          updateData['rankingOrder'] = nextAccountOrder;
+          updateData['ranking'] = nextAccountOrder;
           transaction.set(counterRef, {
             'totalUsers': nextAccountOrder,
             'updatedAt': now,
@@ -218,6 +220,29 @@ class AuthRemoteDataSource {
       'paidCredits',
       0,
       force: isNewUserDoc,
+    );
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'rankingPoints',
+      0,
+      force: isNewUserDoc,
+    );
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'rankingOrder',
+      _readInt(existingData, 'accountOrder') ?? 0,
+      force: false,
+    );
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'ranking',
+      _readInt(existingData, 'rankingOrder') ??
+          _readInt(existingData, 'accountOrder') ??
+          0,
+      force: false,
     );
 
     return updateData;

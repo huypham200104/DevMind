@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "seed": "node seed.js",
+    "seed:ranking": "node seed_ranking_users.js",
     "backfill:account-order": "node backfill_account_order.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
