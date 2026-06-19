@@ -21,33 +21,33 @@ class ProfileHeader extends StatelessWidget {
     return Column(
       children: [
         ProfileAvatar(photoUrl: photoUrl),
-        const SizedBox(height: 10),
+        const SizedBox(height: 6),
         Text(
           displayName,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
             color: const Color(0xFF0F172A),
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w700,
             letterSpacing: 0,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         Text(
           email,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: const Color(0xFF64748B),
             fontWeight: FontWeight.w500,
             letterSpacing: 0,
           ),
         ),
-        const SizedBox(height: 34),
+        const SizedBox(height: 16),
         OutlinedButton(
           onPressed: onEditProfile,
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.primaryGradientEnd,
-            minimumSize: const Size(130, 30),
-            side: const BorderSide(color: AppColors.primary, width: 2),
+            minimumSize: const Size(120, 32),
+            side: const BorderSide(color: AppColors.primary, width: 1.5),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(999),
             ),
@@ -58,13 +58,13 @@ class ProfileHeader extends StatelessWidget {
               const Text(
                 'Chỉnh sửa hồ sơ',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.8,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
                 ),
               ),
-              const SizedBox(width: 6),
-              const Icon(Icons.edit_outlined, size: 16),
+              const SizedBox(width: 4),
+              const Icon(Icons.edit_outlined, size: 14),
             ],
           ),
         ),
@@ -83,8 +83,8 @@ class ProfileAvatar extends StatelessWidget {
     final normalizedPhotoUrl = photoUrl?.trim();
 
     return SizedBox(
-      width: 100,
-      height: 100,
+      width: 72,
+      height: 72,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -115,19 +115,19 @@ class ProfileAvatar extends StatelessWidget {
           ),
           Positioned(
             right: -2,
-            bottom: 8,
+            bottom: 4,
             child: Container(
-              width: 36,
-              height: 44,
+              width: 24,
+              height: 28,
               decoration: BoxDecoration(
                 color: AppColors.primary,
-                borderRadius: BorderRadius.circular(17),
-                border: Border.all(color: Colors.white, width: 3),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white, width: 2),
               ),
               child: const Icon(
                 Icons.verified_outlined,
                 color: Colors.white,
-                size: 19,
+                size: 14,
               ),
             ),
           ),
@@ -144,47 +144,47 @@ class _CodePreviewAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipOval(
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(6),
         color: const Color(0xFFF8FAFC),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 64,
-              height: 34,
-              padding: const EdgeInsets.all(6),
+              width: 44,
+              height: 24,
+              padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: const Color(0xFF111827),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(4),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  _CodeLine(width: 46),
-                  _CodeLine(width: 52),
-                  _CodeLine(width: 34),
-                  _CodeLine(width: 44),
+                  _CodeLine(width: 32),
+                  _CodeLine(width: 38),
+                  _CodeLine(width: 24),
+                  _CodeLine(width: 30),
                 ],
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 4),
             Container(
-              width: 66,
-              height: 10,
+              width: 46,
+              height: 6,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(3),
+                borderRadius: BorderRadius.circular(2),
                 border: Border.all(color: const Color(0xFFBFEAE6)),
               ),
             ),
-            const SizedBox(height: 3),
+            const SizedBox(height: 2),
             Container(
-              width: 70,
-              height: 12,
+              width: 50,
+              height: 8,
               decoration: const BoxDecoration(
                 color: AppColors.primaryGradientEnd,
                 borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(40),
+                  bottom: Radius.circular(24),
                 ),
               ),
             ),

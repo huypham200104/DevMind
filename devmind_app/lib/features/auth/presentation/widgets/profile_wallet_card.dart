@@ -27,9 +27,9 @@ class ProfileWalletCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Ví của tôi',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: const Color(0xFF0F172A),
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 0,
                   ),
                 ),
@@ -40,8 +40,8 @@ class ProfileWalletCard extends StatelessWidget {
                   backgroundColor: const Color(0xFFE8FAF8),
                   foregroundColor: AppColors.primaryGradientEnd,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 10,
+                    horizontal: 12,
+                    vertical: 6,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(999),
@@ -50,15 +50,15 @@ class ProfileWalletCard extends StatelessWidget {
                 child: const Text(
                   'NẠP THÊM',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w800,
-                    letterSpacing: 1.8,
+                    letterSpacing: 1.2,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 34),
+          const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
@@ -114,7 +114,7 @@ class _WalletMetricBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
@@ -125,7 +125,7 @@ class _WalletMetricBox extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 22, color: iconColor),
+              Icon(icon, size: 18, color: iconColor),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -141,7 +141,7 @@ class _WalletMetricBox extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -150,9 +150,9 @@ class _WalletMetricBox extends StatelessWidget {
               children: [
                 Text(
                   value?.toString() ?? '0',
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: textColor,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                     height: 1,
                   ),
                 ),

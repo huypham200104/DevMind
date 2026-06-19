@@ -42,7 +42,7 @@ class ProfileHistorySection extends StatelessWidget {
           ],
         ),
         const Divider(height: 1, color: Color(0xFFE7EDF2)),
-        const SizedBox(height: 28),
+        const SizedBox(height: 16),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 180),
           child: showingQuestions
@@ -117,7 +117,7 @@ class _QuestionHistoryList extends StatelessWidget {
       children: [
         for (final item in items) ...[
           ProfileQuestionHistoryCard(item: item),
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
         ],
       ],
     );
@@ -139,7 +139,7 @@ class _PaymentHistoryList extends StatelessWidget {
       children: [
         for (final item in items) ...[
           ProfilePaymentHistoryCard(item: item),
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
         ],
       ],
     );
@@ -228,7 +228,7 @@ class _HistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 20, 18, 20),
+      padding: const EdgeInsets.fromLTRB(16, 16, 14, 16),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
@@ -252,17 +252,17 @@ class _HistoryCard extends StatelessWidget {
                   title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: const Color(0xFF0F172A),
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
                     height: 1.1,
                     letterSpacing: 0,
                   ),
                 ),
-                const SizedBox(height: 9),
+                const SizedBox(height: 6),
                 Text(
                   subtitle,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: const Color(0xFF8090A7),
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0,
@@ -287,9 +287,9 @@ class _QuestionThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 72,
-      height: 72,
-      padding: const EdgeInsets.all(7),
+      width: 54,
+      height: 54,
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -304,15 +304,15 @@ class _QuestionThumbnail extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 23,
+            height: 18,
             decoration: BoxDecoration(
               color: accentColor.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(4),
             ),
-            child: Icon(Icons.code, color: accentColor, size: 16),
+            child: Icon(Icons.code, color: accentColor, size: 12),
           ),
-          const SizedBox(height: 6),
-          for (final width in const [48.0, 38.0, 54.0]) ...[
+          const SizedBox(height: 4),
+          for (final width in const [32.0, 24.0, 38.0]) ...[
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
@@ -338,8 +338,8 @@ class _PaymentThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 72,
-      height: 72,
+      width: 54,
+      height: 54,
       decoration: BoxDecoration(
         color: const Color(0xFFE8FAF8),
         borderRadius: BorderRadius.circular(16),
@@ -347,7 +347,7 @@ class _PaymentThumbnail extends StatelessWidget {
       child: const Icon(
         Icons.receipt_long_outlined,
         color: AppColors.primaryGradientEnd,
-        size: 32,
+        size: 24,
       ),
     );
   }
@@ -362,8 +362,8 @@ class _ScoreBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 64,
-      height: 64,
+      width: 48,
+      height: 48,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: const Color(0xFFE8FAF8),
@@ -374,7 +374,7 @@ class _ScoreBadge extends StatelessWidget {
           children: [
             TextSpan(
               text: '$score',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: AppColors.primaryGradientEnd,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0,
@@ -382,7 +382,7 @@ class _ScoreBadge extends StatelessWidget {
             ),
             TextSpan(
               text: '/$totalQuestions',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: const Color(0xFF8090A7),
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0,
@@ -404,14 +404,14 @@ class _PaymentBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         color: isCompleted ? const Color(0xFFE8FAF8) : const Color(0xFFFFF1F2),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Text(
         amountLabel,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
           color: isCompleted
               ? AppColors.primaryGradientEnd
               : const Color(0xFFE11D48),
