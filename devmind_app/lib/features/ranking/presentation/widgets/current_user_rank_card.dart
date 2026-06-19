@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../controllers/ranking_controller.dart';
+import '../models/ranking_display_state.dart';
 import 'ranking_avatar.dart';
 import 'ranking_points_text.dart';
 
@@ -14,6 +15,11 @@ class CurrentUserRankCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = rankedUser?.user;
     final rank = rankedUser?.rank;
+    final displayState = RankingDisplayState(
+      rank: rank ?? 0,
+      points: user?.points ?? 0,
+      completedQuizCount: user?.completedQuizCount ?? 0,
+    );
 
     return Container(
       width: double.infinity,
@@ -32,14 +38,20 @@ class CurrentUserRankCard extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 44,
+            width: 58,
             child: Text(
-              rank?.toString() ?? '-',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.surface,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0,
-              ),
+              displayState.cardRankLabel,
+              maxLines: 2,
+              style:
+                  (displayState.hasRank
+                          ? Theme.of(context).textTheme.titleLarge
+                          : Theme.of(context).textTheme.labelLarge)
+                      ?.copyWith(
+                        color: AppColors.surface,
+                        fontWeight: FontWeight.w800,
+                        height: 1.05,
+                        letterSpacing: 0,
+                      ),
             ),
           ),
           const SizedBox(width: 16),
@@ -55,31 +67,15 @@ class CurrentUserRankCard extends StatelessWidget {
           ),
           const SizedBox(width: 24),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'You',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: AppColors.surface,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  user == null || user.points <= 0
-                      ? 'Bắt đầu làm bài để lên hạng!'
-                      : 'Keep pushing!',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.surface,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0,
-                  ),
-                ),
-              ],
+            child: Text(
+              user?.displayName ?? 'Bạn',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: AppColors.surface,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0,
+              ),
             ),
           ),
           RankingPointsText(

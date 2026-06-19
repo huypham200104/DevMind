@@ -6,6 +6,7 @@ import '../../../../app/router.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../domain/entities/home_user_profile.dart';
 import '../controllers/home_controller.dart';
+import '../../../ranking/presentation/controllers/ranking_controller.dart';
 import '../widgets/daily_check_in_sheet.dart';
 import '../widgets/home_bottom_navigation.dart';
 import '../widgets/home_error_banner.dart';
@@ -29,8 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final user = context.read<AuthController>().currentUser;
-    if (user == null || _watchedUid == user.uid) {
+    final user = context.watch<AuthController>().currentUser;
+    if (user == null) {
+      _watchedUid = null;
+      return;
+    }
+
+    if (_watchedUid == user.uid) {
       return;
     }
 
@@ -52,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
         email: email,
         photoUrl: photoUrl,
       );
+      context.read<RankingController>().watchRanking(uid);
     });
   }
 
@@ -64,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final homeController = context.watch<HomeController>();
+    final rankingController = context.watch<RankingController>();
     final profile =
         homeController.profile ??
         HomeUserProfile.fallback(
@@ -84,8 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeHeader(
                 profile: profile,
                 user: user,
-                onCheckInTap: _openDailyCheckIn,
+                onCheckInTap: _handleCheckInTap,
+                onAvatarTap: _handleAvatarTap,
                 checkInPoints: homeController.dailyCheckIn.points,
+                shouldPulseCheckIn:
+                    !homeController.isLoadingDailyCheckIn &&
+                    !homeController.dailyCheckIn.hasCheckedIn(DateTime.now()),
               ),
               const SizedBox(height: 34),
               WelcomeSection(profile: profile),
@@ -96,12 +108,16 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 30),
               const SectionHeader(title: 'Xếp hạng'),
               const SizedBox(height: 18),
-              RankingCard(rank: profile.globalRank),
+              RankingCard(
+                rank: rankingController.currentRankedUser?.rank ?? profile.globalRank,
+                points: profile.rankingPoints,
+                completedQuizCount: profile.completedQuizCount,
+              ),
               const SizedBox(height: 26),
               SectionHeader(title: 'Dịch vụ nhanh'),
               const SizedBox(height: 14),
               QuickActionCard(
-                icon: Icons.quiz_outlined,
+                svgAsset: 'assets/icons/lesson.svg',
                 title: 'Ôn tập kỹ thuật',
                 description:
                     'Luyện tập kiến thức Cơ bản và thuật toán nâng cao với các câu hỏi từ AI.',
@@ -110,16 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 14),
               QuickActionCard(
-                icon: Icons.psychology_alt_outlined,
-                title: 'Kiểm tra IQ',
-                description:
-                    'Đánh giá tư duy logic và kỹ năng nhận thức cho các vị trí công nghệ hàng đầu.',
-                actionLabel: 'Đánh giá ngay',
-                onTap: () => context.goNamed(AppRouteNames.iqQuiz),
-              ),
-              const SizedBox(height: 14),
-              QuickActionCard(
-                icon: Icons.document_scanner_outlined,
+                svgAsset: 'assets/icons/cv_scanner.svg',
                 title: 'Quét CV bằng AI',
                 description:
                     'Nhận phản hồi tức thì về mức độ phù hợp của CV với mô tả công việc.',
@@ -134,7 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> _openDailyCheckIn() {
+  Future<void> _handleCheckInTap() {
+    if (context.read<AuthController>().currentUser == null) {
+      context.goNamed(AppRouteNames.signIn);
+      return Future.value();
+    }
+
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -142,5 +154,14 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => const DailyCheckInSheet(),
     );
+  }
+
+  void _handleAvatarTap() {
+    if (context.read<AuthController>().currentUser == null) {
+      context.goNamed(AppRouteNames.signIn);
+      return;
+    }
+
+    context.goNamed(AppRouteNames.profile);
   }
 }

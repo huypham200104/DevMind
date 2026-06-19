@@ -1,10 +1,12 @@
-const functions = require("firebase-functions");
+const functions = require("firebase-functions/v1");
 const admin = require("firebase-admin");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { defineSecret } = require("firebase-functions/params");
+
 
 admin.initializeApp();
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const groqApiKey = defineSecret("GROQ_API_KEY");
 const MAX_CV_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
 exports.initializeUserRanking = functions.auth.user().onCreate(async (user) => {
@@ -64,33 +66,25 @@ exports.initializeUserRanking = functions.auth.user().onCreate(async (user) => {
   });
 });
 
-exports.scanCV = functions.https.onCall(async (data, context) => {
-  // 1. Kiểm tra đăng nhập
-  if (!context.auth) {
-    throw new functions.https.HttpsError("unauthenticated", "Vui lòng đăng nhập.");
-  }
-
-  const uid = context.auth.uid;
+exports.scanCV = onCall({ secrets: [groqApiKey] }, async (request) => {
+  const data = request.data || {};
+  const auth = await resolveCallableAuth(request);
+  const uid = auth.uid;
   const db = admin.firestore();
 
   // 2. Lấy đầu vào từ app Flutter
   const payload = data || {};
   const jobTitle = typeof payload.jobTitle === "string" ? payload.jobTitle.trim() : "";
   const cvText = typeof payload.cvText === "string" ? payload.cvText.trim() : "";
-  const pdfBase64 = normalizeBase64(payload.pdfBase64);
   const fileName = sanitizeFileName(payload.fileName);
   const requestedSizeBytes = readPositiveInt(payload.sizeBytes);
 
   if (!jobTitle) {
-    throw new functions.https.HttpsError("invalid-argument", "Vui lòng nhập vị trí ứng tuyển.");
+    throw new HttpsError("invalid-argument", "Vui lòng nhập vị trí ứng tuyển.");
   }
 
-  if (!cvText && !pdfBase64) {
-    throw new functions.https.HttpsError("invalid-argument", "Vui lòng chọn file PDF để quét CV.");
-  }
-
-  if (pdfBase64 && !fileName.toLowerCase().endsWith(".pdf")) {
-    throw new functions.https.HttpsError("invalid-argument", "Chỉ hỗ trợ file PDF.");
+  if (!cvText) {
+    throw new HttpsError("invalid-argument", "Vui lòng chọn file PDF để quét CV.");
   }
 
   // 3. Kiểm tra số dư lượt quét (Credit)
@@ -98,14 +92,13 @@ exports.scanCV = functions.https.onCall(async (data, context) => {
   const userDoc = await userRef.get();
 
   if (!userDoc.exists) {
-    throw new functions.https.HttpsError("not-found", "Không tìm thấy dữ liệu người dùng.");
+    throw new HttpsError("not-found", "Không tìm thấy dữ liệu người dùng.");
   }
 
   const userData = userDoc.data();
   let hasCredit = false;
   let useFreeCredit = false;
 
-  // Ưu tiên dùng lượt free trước, hết free mới dùng paid
   if (userData.freeCvScanCount && userData.freeCvScanCount > 0) {
     hasCredit = true;
     useFreeCredit = true;
@@ -114,40 +107,21 @@ exports.scanCV = functions.https.onCall(async (data, context) => {
   }
 
   if (!hasCredit) {
-    throw new functions.https.HttpsError("resource-exhausted", "Bạn đã hết lượt quét CV. Vui lòng nâng cấp gói.");
+    throw new HttpsError("resource-exhausted", "Bạn đã hết lượt quét CV. Vui lòng nâng cấp gói.");
   }
 
   try {
-    // 4. Gọi Gemini AI chấm điểm
-    if (!GEMINI_API_KEY) {
-      throw new functions.https.HttpsError("failed-precondition", "Thiếu GEMINI_API_KEY.");
+    // 4. Gọi Groq AI chấm điểm
+    const apiKey = groqApiKey.value();
+    if (!apiKey) {
+      throw new HttpsError("failed-precondition", "Thiếu GROQ_API_KEY.");
     }
 
-    let pdfPart = null;
-    let resolvedSizeBytes = requestedSizeBytes || 0;
-    if (pdfBase64) {
-      const pdfBytes = Buffer.from(pdfBase64, "base64");
-      resolvedSizeBytes = pdfBytes.length;
-      if (resolvedSizeBytes <= 0) {
-        throw new functions.https.HttpsError("invalid-argument", "File PDF không hợp lệ.");
-      }
+    const resolvedSizeBytes = requestedSizeBytes || 0;
+    const cvContent = cvText;
 
-      if (resolvedSizeBytes > MAX_CV_FILE_SIZE_BYTES) {
-        throw new functions.https.HttpsError("invalid-argument", "File PDF vượt quá giới hạn 5MB.");
-      }
-
-      pdfPart = {
-        inlineData: {
-          data: pdfBytes.toString("base64"),
-          mimeType: "application/pdf",
-        },
-      };
-    }
-
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = `Bạn là chuyên gia tuyển dụng cấp cao. Hãy đánh giá CV sau đây cho vị trí "${jobTitle}".
-Yêu cầu BẮT BUỘC: Chỉ trả về duy nhất 1 chuỗi JSON hợp lệ, không giải thích, không dùng markdown block (\`\`\`json).
+Yêu cầu BẮT BUỘC: Chỉ trả về duy nhất 1 chuỗi JSON hợp lệ, không giải thích, không dùng markdown block.
 Cấu trúc JSON bắt buộc:
 {
   "overall_score": <điểm từ 1-10>,
@@ -158,14 +132,12 @@ Cấu trúc JSON bắt buộc:
   "suggested_keywords": ["từ khóa nên bổ sung 1", "từ khóa nên bổ sung 2"]
 }
 
-${cvText ? `Nội dung CV:\n${cvText}` : "File PDF CV được đính kèm trong request này."}`;
+Nội dung CV:\n${cvContent}`;
 
-    const contentParts = pdfPart ? [prompt, pdfPart] : [prompt];
-    const result = await model.generateContent(contentParts);
-    const aiResponse = result.response.text();
+    const aiResponse = await callGroqApi(apiKey, prompt);
     const parsedResult = normalizeScanResult(parseJsonResponse(aiResponse));
 
-    // 5. Trừ tiền (Lượt quét)
+    // 5. Trừ lượt quét
     if (useFreeCredit) {
       await userRef.update({
         freeCvScanCount: admin.firestore.FieldValue.increment(-1),
@@ -185,12 +157,12 @@ ${cvText ? `Nội dung CV:\n${cvText}` : "File PDF CV được đính kèm trong
       jobTitle,
       overallScore: parsedResult.overall_score,
       result: parsedResult,
-      source: pdfBase64 ? "pdf" : "text",
+      source: "text",
       uploadedAt: admin.firestore.FieldValue.serverTimestamp(),
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    // 7. Trả kết quả về cho Flutter App
+    // 7. Trả kết quả về Flutter App
     return {
       success: true,
       historyId: historyRef.id,
@@ -202,13 +174,132 @@ ${cvText ? `Nội dung CV:\n${cvText}` : "File PDF CV được đính kèm trong
 
   } catch (error) {
     console.error("Lỗi quá trình quét CV:", error);
-    if (error instanceof functions.https.HttpsError) {
+    if (error instanceof HttpsError) {
       throw error;
     }
-
-    throw new functions.https.HttpsError("internal", "Lỗi AI. Không thể quét CV lúc này.");
+    throw new functions.https.HttpsError("internal", "Lỗi AI: " + error.message);
   }
 });
+
+exports.completeTopUpPayment = onCall(async (request) => {
+  const data = request.data || {};
+  const auth = await resolveCallableAuth(request);
+  const uid = auth.uid;
+  const orderId = typeof (data && data.orderId) === "string" ? data.orderId.trim() : "";
+  if (!orderId) {
+    throw new HttpsError("invalid-argument", "Thiếu mã đơn hàng.");
+  }
+
+  const db = admin.firestore();
+  const orderRef = db.collection("transactions").doc(orderId);
+  const userRef = db.collection("users").doc(uid);
+
+  return db.runTransaction(async (transaction) => {
+    const orderSnapshot = await transaction.get(orderRef);
+    if (!orderSnapshot.exists) {
+      throw new HttpsError("not-found", "Không tìm thấy đơn hàng.");
+    }
+
+    const order = orderSnapshot.data() || {};
+    if (order.userId !== uid) {
+      throw new HttpsError("permission-denied", "Bạn không có quyền xác nhận đơn hàng này.");
+    }
+
+    const explainCredits = readPositiveInt(order.explainCredits);
+    const cvScanCredits = readPositiveInt(order.cvScanCredits);
+    const amount = readPositiveInt(order.amount);
+
+    if (amount <= 0 || (explainCredits <= 0 && cvScanCredits <= 0)) {
+      throw new HttpsError("failed-precondition", "Đơn hàng không hợp lệ.");
+    }
+
+    if (order.status === "completed") {
+      return {
+        success: true,
+        completedNow: false,
+        explainCredits,
+        cvScanCredits,
+      };
+    }
+
+    if (order.status && order.status !== "pending") {
+      throw new HttpsError("failed-precondition", "Trạng thái đơn hàng không hợp lệ.");
+    }
+
+    transaction.set(userRef, {
+      paidCredits: admin.firestore.FieldValue.increment(explainCredits),
+      paidCvScanCredits: admin.firestore.FieldValue.increment(cvScanCredits),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
+
+    transaction.update(orderRef, {
+      status: "completed",
+      completedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    return {
+      success: true,
+      completedNow: true,
+      explainCredits,
+      cvScanCredits,
+    };
+  });
+});
+
+async function resolveCallableAuth(request) {
+  if (request.auth && request.auth.uid) {
+    return request.auth;
+  }
+
+  const data = request.data || {};
+  const idToken = typeof data.idToken === "string" ? data.idToken.trim() : "";
+  if (!idToken) {
+    throw new HttpsError("unauthenticated", "Vui lòng đăng nhập.");
+  }
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    return {
+      uid: decodedToken.uid,
+      token: decodedToken,
+    };
+  } catch (error) {
+    console.error("Không thể xác thực ID token dự phòng:", error);
+    throw new HttpsError(
+        "unauthenticated",
+        "Phiên đăng nhập không hợp lệ. Vui lòng đăng nhập lại.",
+    );
+  }
+}
+
+async function callGroqApi(apiKey, prompt) {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.2,
+      max_tokens: 2048,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Groq API error ${response.status}: ${errorText}`);
+  }
+
+  const json = await response.json();
+  const text = json.choices?.[0]?.message?.content || "";
+  if (!text) {
+    throw new Error("Groq response does not contain text.");
+  }
+  return text;
+}
 
 function normalizeBase64(value) {
   if (typeof value !== "string") {
@@ -259,6 +350,52 @@ function parseJsonResponse(value) {
   }
 
   return JSON.parse(cleaned.slice(firstBrace, lastBrace + 1));
+}
+
+function toGeminiHttpsError(error) {
+  const message = String(error && error.message ? error.message : "");
+  const status = Number(error && error.status);
+  const details = Array.isArray(error && error.errorDetails) ? error.errorDetails : [];
+  const reason = details
+      .map((detail) => detail && detail.reason)
+      .find((value) => typeof value === "string") || "";
+
+  if (reason === "API_KEY_INVALID" || message.includes("API key not valid")) {
+    return new HttpsError(
+        "failed-precondition",
+        "Gemini API key không hợp lệ. Hãy cập nhật lại secret GEMINI_API_KEY.",
+    );
+  }
+
+  if (status === 403 || message.includes("PERMISSION_DENIED")) {
+    return new HttpsError(
+        "failed-precondition",
+        "Gemini API key chưa có quyền dùng Generative Language API.",
+    );
+  }
+
+  if (status === 404 || message.includes("not found")) {
+    return new HttpsError(
+        "failed-precondition",
+        "Model Gemini đang dùng không khả dụng. Hãy kiểm tra cấu hình model.",
+    );
+  }
+
+  if (status === 429 || message.includes("RESOURCE_EXHAUSTED")) {
+    return new HttpsError(
+        "resource-exhausted",
+        "Gemini API đã vượt hạn mức. Vui lòng thử lại sau hoặc kiểm tra billing/quota.",
+    );
+  }
+
+  if (message.includes("Gemini response does not contain JSON")) {
+    return new HttpsError(
+        "internal",
+        "Gemini trả về kết quả không đúng định dạng. Vui lòng thử scan lại.",
+    );
+  }
+
+  return null;
 }
 
 function normalizeScanResult(value) {

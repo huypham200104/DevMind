@@ -10,82 +10,99 @@ class DailyCheckInStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x08111827),
-            blurRadius: 24,
-            offset: Offset(0, 10),
+    return Row(
+      children: [
+        Expanded(
+          child: _StatItem(
+            icon: Icons.calendar_today_rounded,
+            value: '${summary.totalCheckInDays}',
+            label: 'Ngày điểm danh',
           ),
-        ],
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _StatItem(
+            icon: Icons.flag_rounded,
+            value: '${summary.nextMilestone}',
+            label: 'Mốc tiếp theo',
+            highlight: true,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  const _StatItem({
+    required this.icon,
+    required this.value,
+    required this.label,
+    this.highlight = false,
+  });
+
+  final IconData icon;
+  final String value;
+  final String label;
+  final bool highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: highlight
+            ? AppColors.primary.withAlpha(20)
+            : const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(14),
+        border: highlight
+            ? Border.all(color: AppColors.primary.withAlpha(60), width: 1.5)
+            : null,
       ),
       child: Row(
         children: [
           Container(
-            width: 66,
-            height: 66,
-            decoration: const BoxDecoration(
-              color: Color(0xFFE7E7E7),
-              shape: BoxShape.circle,
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: highlight ? AppColors.primary : const Color(0xFFE0E0E0),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
-              Icons.fact_check_outlined,
-              color: Color(0xFF2F3F3D),
-              size: 34,
+            child: Icon(
+              icon,
+              color: highlight ? Colors.white : AppColors.textSecondary,
+              size: 18,
             ),
           ),
-          const SizedBox(width: 24),
+          const SizedBox(width: 10),
           Expanded(
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Tổng số ngày điểm danh\n',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${summary.totalCheckInDays} ngày',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Text.rich(
-            TextSpan(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextSpan(
-                  text: 'Mốc tiếp theo\n',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0,
-                  ),
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: highlight
+                            ? AppColors.primaryGradientEnd
+                            : AppColors.textPrimary,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0,
+                        height: 1.1,
+                      ),
                 ),
-                TextSpan(
-                  text: '${summary.nextMilestone} ngày',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: AppColors.primaryGradientEnd,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0,
-                  ),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                        letterSpacing: 0,
+                      ),
                 ),
               ],
             ),
-            textAlign: TextAlign.right,
           ),
         ],
       ),

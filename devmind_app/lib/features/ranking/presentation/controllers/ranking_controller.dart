@@ -23,10 +23,16 @@ class RankingController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
+  List<RankingUser> get _rankableUsers {
+    // Hiển thị tất cả users, sắp xếp theo điểm
+    return List.from(_leaderboard);
+  }
+
   List<RankedUser> get rankedUsers {
+    final rankableUsers = _rankableUsers;
     return [
-      for (var index = 0; index < _leaderboard.length; index++)
-        RankedUser(rank: index + 1, user: _leaderboard[index]),
+      for (var index = 0; index < rankableUsers.length; index++)
+        RankedUser(rank: index + 1, user: rankableUsers[index]),
     ];
   }
 
@@ -38,13 +44,17 @@ class RankingController extends ChangeNotifier {
       return null;
     }
 
+    if (!user.hasCompletedQuiz || user.points <= 0) {
+      return RankedUser(rank: 0, user: user);
+    }
+
     for (final rankedUser in rankedUsers) {
       if (rankedUser.user.uid == user.uid) {
         return rankedUser;
       }
     }
 
-    final usersBeforeCurrent = _leaderboard
+    final usersBeforeCurrent = _rankableUsers
         .where(
           (other) => other.uid != user.uid && _compareUsers(other, user) < 0,
         )
@@ -73,7 +83,7 @@ class RankingController extends ChangeNotifier {
   }
 
   void watchRanking(String? uid) {
-    if (_activeUid == uid && _leaderboardSubscription != null) {
+    if (_activeUid == uid && _leaderboardSubscription != null && _errorMessage == null) {
       return;
     }
 

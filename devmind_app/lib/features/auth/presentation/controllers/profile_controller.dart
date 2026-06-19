@@ -17,8 +17,8 @@ class ProfileController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  Future<void> loadProfile(String uid) async {
-    if (_activeUid == uid && (_profileData != null || _isLoading)) {
+  Future<void> loadProfile(String uid, {bool force = false}) async {
+    if (!force && _activeUid == uid && (_profileData != null || _isLoading)) {
       return;
     }
 

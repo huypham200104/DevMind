@@ -5,6 +5,8 @@
   "scripts": {
     "seed": "node seed.js",
     "seed:ranking": "node seed_ranking_users.js",
+    "clear": "node clear_firestore.js",
+    "clear:seed": "node clear_firestore.js && node seed.js && node seed_ranking_users.js",
     "backfill:account-order": "node backfill_account_order.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

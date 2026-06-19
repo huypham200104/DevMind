@@ -33,6 +33,34 @@ class FirebaseTechnicalCourseRepository implements TechnicalCourseRepository {
   }
 
   @override
+  Future<void> createCustomCourse(
+    String uid,
+    String title,
+    List<String> questionIds,
+  ) async {
+    await _firestore.collection('technical_courses').add({
+      'title': title,
+      'category': 'custom',
+      'createdBy': uid,
+      'questionCount': questionIds.length,
+      'questionIds': questionIds,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  @override
+  Future<void> removeQuestionFromCustomCourse(
+    String courseId,
+    String questionId,
+  ) async {
+    final docRef = _firestore.collection('technical_courses').doc(courseId);
+    await docRef.update({
+      'questionIds': FieldValue.arrayRemove([questionId]),
+      'questionCount': FieldValue.increment(-1),
+    });
+  }
+
+  @override
   Future<List<TechnicalQuestion>> loadQuestionsForCourse(
     TechnicalCourse course,
   ) async {

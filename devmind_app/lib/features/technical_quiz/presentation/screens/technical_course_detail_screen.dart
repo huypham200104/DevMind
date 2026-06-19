@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -176,34 +177,38 @@ class _DetailContent extends StatelessWidget {
     final durationMinutes = course.questionCount + 5;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(28, 78, 28, 28),
+      padding: const EdgeInsets.fromLTRB(28, 24, 28, 24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CourseIcon(category: course.category),
-          const SizedBox(height: 34),
-          Text(
-            course.title,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w800,
-              height: 1.15,
-              letterSpacing: 0,
-            ),
+          Row(
+            children: [
+              _CourseIcon(category: course.category),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  course.title,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w800,
+                        height: 1.15,
+                        letterSpacing: 0,
+                      ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 24),
           Text(
             course.description,
-            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AppColors.textSecondary,
-              fontWeight: FontWeight.w500,
-              height: 1.58,
-              letterSpacing: 0,
-            ),
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                  letterSpacing: 0,
+                ),
           ),
-          const SizedBox(height: 52),
+          const SizedBox(height: 28),
           Row(
             children: [
               Expanded(
@@ -213,7 +218,7 @@ class _DetailContent extends StatelessWidget {
                   label: 'CÂU HỎI',
                 ),
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 16),
               Expanded(
                 child: _MetricCard(
                   icon: Icons.timer_outlined,
@@ -223,7 +228,7 @@ class _DetailContent extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 28),
           const _ImportantNotice(),
         ],
       ),
@@ -239,16 +244,18 @@ class _CourseIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 134,
-      height: 134,
+      width: 64,
+      height: 64,
       decoration: const BoxDecoration(
         color: Color(0xFFE2F7F5),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        technicalCategoryIcon(category),
-        color: AppColors.primaryGradientEnd,
-        size: 46,
+      child: Center(
+        child: SvgPicture.network(
+          technicalCategoryLogoUrl(category),
+          width: 32,
+          height: 32,
+        ),
       ),
     );
   }
@@ -268,8 +275,8 @@ class _MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(minHeight: 154),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+      constraints: const BoxConstraints(minHeight: 100),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(8),
@@ -285,15 +292,15 @@ class _MetricCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColors.primaryGradientEnd, size: 30),
-          const SizedBox(height: 12),
+          Icon(icon, color: AppColors.primaryGradientEnd, size: 24),
+          const SizedBox(height: 8),
           Text(
             value,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0,
-            ),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0,
+                ),
           ),
           const SizedBox(height: 2),
           Text(
@@ -301,11 +308,11 @@ class _MetricCard extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: AppColors.textSecondary,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.1,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.1,
+                ),
           ),
         ],
       ),

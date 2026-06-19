@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 
 import '../../domain/entities/technical_course.dart';
 
@@ -50,19 +50,19 @@ String technicalCategoryTitle(String category) {
   };
 }
 
-IconData technicalCategoryIcon(String category) {
+String technicalCategoryLogoUrl(String category) {
   return switch (category) {
-    'flutter_dart' => Icons.flutter_dash_outlined,
-    'javascript' => Icons.javascript,
-    'react' => Icons.hub_outlined,
-    'python' => Icons.terminal_outlined,
-    'data_structures' => Icons.account_tree_outlined,
-    'algorithms' => Icons.route_outlined,
-    'sql_database' => Icons.storage_outlined,
-    'system_design' => Icons.schema_outlined,
-    'oop' => Icons.category_outlined,
-    'networking' => Icons.settings_ethernet_outlined,
-    _ => Icons.architecture_outlined,
+    'flutter_dart' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg',
+    'javascript' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
+    'react' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
+    'python' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
+    'data_structures' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azuresqldatabase/azuresqldatabase-original.svg',
+    'algorithms' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/thealgorithms/thealgorithms-original.svg',
+    'sql_database' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg',
+    'system_design' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
+    'oop' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg',
+    'networking' => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/networkx/networkx-original.svg',
+    _ => 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/devicon/devicon-original.svg',
   };
 }
 

@@ -95,6 +95,29 @@ class AuthRemoteDataSource {
     return userCredential;
   }
 
+  Future<void> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      throw FirebaseAuthException(code: 'user-not-found', message: 'No user');
+    }
+    
+    final email = user.email;
+    if (email == null) {
+      throw FirebaseAuthException(code: 'invalid-email', message: 'No email');
+    }
+
+    final credential = EmailAuthProvider.credential(
+      email: email,
+      password: currentPassword,
+    );
+    
+    await user.reauthenticateWithCredential(credential);
+    await user.updatePassword(newPassword);
+  }
+
   Future<void> signOut() async {
     await Future.wait([
       _firebaseAuth.signOut(),
@@ -225,6 +248,27 @@ class AuthRemoteDataSource {
       updateData,
       existingData,
       'rankingPoints',
+      0,
+      force: isNewUserDoc,
+    );
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'totalQuizzesTaken',
+      0,
+      force: isNewUserDoc,
+    );
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'totalCorrectAnswers',
+      0,
+      force: isNewUserDoc,
+    );
+    _setDefaultIfMissing(
+      updateData,
+      existingData,
+      'totalQuestionsAnswered',
       0,
       force: isNewUserDoc,
     );

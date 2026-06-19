@@ -68,6 +68,16 @@ class FirebaseRankingRepository implements RankingRepository {
         if (!scoreSnapshot.exists) 'createdAt': now,
       }, SetOptions(merge: true));
 
+      final quizResultRef = userRef.collection('quiz_results').doc();
+      transaction.set(quizResultRef, {
+        'quizType': 'technical',
+        'category': courseTitle,
+        'correctAnswers': correctAnswers,
+        'totalQuestions': totalQuestions,
+        'score': ((correctAnswers / totalQuestions) * 100).round(),
+        'createdAt': now,
+      });
+
       final rankingOrder =
           _readInt(userData, 'ranking') ??
           _readInt(userData, 'rankingOrder') ??
@@ -75,6 +85,9 @@ class FirebaseRankingRepository implements RankingRepository {
           0;
       transaction.set(userRef, {
         'rankingPoints': FieldValue.increment(scoreDelta),
+        'totalQuizzesTaken': FieldValue.increment(1),
+        'totalCorrectAnswers': FieldValue.increment(correctAnswers),
+        'totalQuestionsAnswered': FieldValue.increment(totalQuestions),
         'rankingUpdatedAt': now,
         'rankingOrder': rankingOrder,
         'ranking': rankingOrder,
@@ -95,6 +108,8 @@ class FirebaseRankingRepository implements RankingRepository {
           'avatarUrl',
         ]),
         'rankingPoints': FieldValue.increment(scoreDelta),
+        'completedQuizCount': FieldValue.increment(1),
+        'totalQuizzesTaken': FieldValue.increment(1),
         'rankingOrder': rankingOrder,
         'ranking': rankingOrder,
         'updatedAt': now,
@@ -120,6 +135,11 @@ class FirebaseRankingRepository implements RankingRepository {
           _readInt(data, 'ranking') ??
           _readInt(data, 'rankingOrder') ??
           _readInt(data, 'accountOrder') ??
+          0,
+      completedQuizCount:
+          _readInt(data, 'completedQuizCount') ??
+          _readInt(data, 'totalQuizzesTaken') ??
+          _readInt(data, 'quizCount') ??
           0,
       firstPlaceAt: _readDateTime(data['rankingFirstPlaceAt']),
     );

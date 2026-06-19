@@ -134,7 +134,7 @@ class TechnicalQuizController extends ChangeNotifier {
   }
 
   void watchAllCourses() {
-    if (_allCoursesSubscription != null) {
+    if (_allCoursesSubscription != null && _allCoursesErrorMessage == null) {
       return;
     }
 
@@ -177,7 +177,7 @@ class TechnicalQuizController extends ChangeNotifier {
       return;
     }
 
-    if (_activeUid == uid && _myCoursesSubscription != null) {
+    if (_activeUid == uid && _myCoursesSubscription != null && _myCoursesErrorMessage == null) {
       return;
     }
 
@@ -217,6 +217,36 @@ class TechnicalQuizController extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<bool> createCustomCourse(
+    String uid,
+    String title,
+    List<String> questionIds,
+  ) async {
+    try {
+      await _repository.createCustomCourse(uid, title, questionIds);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> removeQuestionFromCustomCourse(
+    String courseId,
+    String questionId,
+  ) async {
+    try {
+      await _repository.removeQuestionFromCustomCourse(courseId, questionId);
+      // Wait, we need to update active quiz if it's the one? No, this is managed outside.
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<List<TechnicalQuestion>> loadQuestionsForCourse(TechnicalCourse course) {
+    return _repository.loadQuestionsForCourse(course);
   }
 
   Future<void> startQuiz({

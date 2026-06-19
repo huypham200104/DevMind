@@ -1,20 +1,22 @@
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/presentation/controllers/auth_controller.dart';
+import '../features/auth/presentation/screens/edit_profile_screen.dart';
 import '../features/auth/presentation/screens/profile_screen.dart';
 import '../features/auth/presentation/screens/sign_in_screen.dart';
 import '../features/auth/presentation/screens/sign_up_screen.dart';
 import '../features/auth/presentation/screens/welcome_screen.dart';
 import '../features/cv_scanner/presentation/screens/cv_scanner_screen.dart';
-import '../features/gamification/presentation/screens/gamification_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
-import '../features/iq_quiz/presentation/screens/iq_quiz_screen.dart';
+
 import '../features/payment/presentation/screens/payment_screen.dart';
 import '../features/technical_quiz/domain/entities/technical_course.dart';
 import '../features/technical_quiz/presentation/screens/technical_course_detail_screen.dart';
 import '../features/technical_quiz/presentation/screens/technical_question_screen.dart';
 import '../features/technical_quiz/presentation/screens/technical_quiz_screen.dart';
 import '../features/technical_quiz/presentation/screens/technical_quiz_result_screen.dart';
+import '../features/technical_quiz/presentation/screens/select_questions_screen.dart';
+import '../features/technical_quiz/presentation/screens/manage_custom_course_screen.dart';
 import '../features/wallet/presentation/screens/wallet_screen.dart';
 import '../features/ranking/presentation/screens/ranking_screen.dart';
 
@@ -25,15 +27,17 @@ abstract final class AppRouteNames {
   static const home = 'home';
   static const ranking = 'ranking';
   static const technicalQuiz = 'technicalQuiz';
+  static const createTechnicalCourse = 'createTechnicalCourse';
+  static const manageTechnicalCourse = 'manageTechnicalCourse';
   static const technicalCourseDetail = 'technicalCourseDetail';
   static const technicalQuestion = 'technicalQuestion';
   static const technicalQuizResult = 'technicalQuizResult';
   static const cvScanner = 'cvScanner';
-  static const iqQuiz = 'iqQuiz';
+
   static const wallet = 'wallet';
   static const payment = 'payment';
-  static const gamification = 'gamification';
   static const profile = 'profile';
+  static const editProfile = 'editProfile';
 }
 
 abstract final class AppRoutePaths {
@@ -43,16 +47,18 @@ abstract final class AppRoutePaths {
   static const signUp = '/sign-up';
   static const home = '/home';
   static const technicalQuiz = '/technical-quiz';
+  static const createTechnicalCourse = '/technical-quiz/create';
+  static const manageTechnicalCourse = '/technical-quiz/manage/:courseId';
   static const technicalCourseDetail = '/technical-quiz/:courseId';
   static const technicalQuestion = '/technical-quiz/:courseId/questions';
   static const technicalQuizResult = '/technical-quiz/:courseId/result';
   static const ranking = '/ranking';
   static const cvScanner = '/cv-scanner';
-  static const iqQuiz = '/iq-quiz';
+
   static const wallet = '/wallet';
   static const payment = '/payment';
-  static const gamification = '/gamification';
   static const profile = '/profile';
+  static const editProfile = '/profile/edit';
 }
 
 GoRouter createAppRouter(AuthController authController) {
@@ -94,6 +100,19 @@ GoRouter createAppRouter(AuthController authController) {
         path: AppRoutePaths.technicalQuiz,
         name: AppRouteNames.technicalQuiz,
         builder: (context, state) => const TechnicalQuizScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePaths.createTechnicalCourse,
+        name: AppRouteNames.createTechnicalCourse,
+        builder: (context, state) => const SelectQuestionsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePaths.manageTechnicalCourse,
+        name: AppRouteNames.manageTechnicalCourse,
+        builder: (context, state) {
+          final courseId = state.pathParameters['courseId']!;
+          return ManageCustomCourseScreen(courseId: courseId);
+        },
       ),
       GoRoute(
         path: AppRoutePaths.technicalQuestion,
@@ -151,11 +170,7 @@ GoRouter createAppRouter(AuthController authController) {
         name: AppRouteNames.cvScanner,
         builder: (context, state) => const CvScannerScreen(),
       ),
-      GoRoute(
-        path: AppRoutePaths.iqQuiz,
-        name: AppRouteNames.iqQuiz,
-        builder: (context, state) => const IqQuizScreen(),
-      ),
+
       GoRoute(
         path: AppRoutePaths.wallet,
         name: AppRouteNames.wallet,
@@ -167,14 +182,16 @@ GoRouter createAppRouter(AuthController authController) {
         builder: (context, state) => const PaymentScreen(),
       ),
       GoRoute(
-        path: AppRoutePaths.gamification,
-        name: AppRouteNames.gamification,
-        builder: (context, state) => const GamificationScreen(),
-      ),
-      GoRoute(
         path: AppRoutePaths.profile,
         name: AppRouteNames.profile,
         builder: (context, state) => const ProfileScreen(),
+        routes: [
+          GoRoute(
+            path: 'edit',
+            name: AppRouteNames.editProfile,
+            builder: (context, state) => const EditProfileScreen(),
+          ),
+        ],
       ),
     ],
   );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/widgets/app_dialog.dart';
 
 class DailyCheckInRewardGrid extends StatelessWidget {
   const DailyCheckInRewardGrid({super.key, required this.points});
@@ -13,16 +14,16 @@ class DailyCheckInRewardGrid extends StatelessWidget {
       children: [
         Expanded(
           child: _RewardCard(
-            icon: Icons.psychology_alt_outlined,
+            icon: Icons.psychology_alt_rounded,
             title: '1 Lượt giải thích AI',
             cost: 50,
             points: points,
           ),
         ),
-        const SizedBox(width: 18),
+        const SizedBox(width: 12),
         Expanded(
           child: _RewardCard(
-            icon: Icons.description_outlined,
+            icon: Icons.description_rounded,
             title: '1 Lượt quét CV',
             cost: 100,
             points: points,
@@ -51,77 +52,82 @@ class _RewardCard extends StatelessWidget {
     final canRedeem = points >= cost;
 
     return Container(
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFDADDE1)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x07111827),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
-        ],
+        color: canRedeem
+            ? AppColors.primary.withAlpha(20)
+            : const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: canRedeem
+              ? AppColors.primary.withAlpha(60)
+              : const Color(0xFFE5E5E5),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 72,
-            height: 72,
+            width: 46,
+            height: 46,
             decoration: BoxDecoration(
-              color: const Color(0xFFE5FAF8),
-              borderRadius: BorderRadius.circular(18),
+              color: canRedeem ? AppColors.primary : const Color(0xFFE0E0E0),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: AppColors.primaryGradientEnd, size: 36),
+            child: Icon(
+              icon,
+              color: canRedeem ? Colors.white : AppColors.navInactive,
+              size: 24,
+            ),
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 12),
           Text(
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w800,
-              height: 1.18,
-              letterSpacing: 0,
-            ),
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w700,
+                  height: 1.3,
+                  letterSpacing: 0,
+                ),
           ),
           const SizedBox(height: 4),
           Text(
             '$cost điểm',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AppColors.primaryGradientEnd,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0,
-            ),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: canRedeem
+                      ? AppColors.primaryGradientEnd
+                      : AppColors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0,
+                ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
-            height: 52,
             child: FilledButton(
               onPressed: canRedeem
                   ? () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Tính năng đổi quà sẽ được kết nối tiếp theo.',
-                          ),
-                        ),
+                      AppDialog.showSuccess(
+                        context,
+                        message:
+                            'Tính năng đổi quà sẽ được ra mắt trong phiên bản tiếp theo.',
                       );
                     }
                   : null,
               style: FilledButton.styleFrom(
-                disabledBackgroundColor: const Color(0xFFD9E2E0),
+                minimumSize: const Size.fromHeight(40),
+                disabledBackgroundColor: const Color(0xFFE0E0E0),
+                disabledForegroundColor: AppColors.navInactive,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0,
-                ),
+                textStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0,
+                    ),
               ),
               child: const Text('Đổi ngay'),
             ),

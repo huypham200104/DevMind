@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../domain/entities/technical_course.dart';
@@ -9,44 +10,53 @@ class TechnicalCourseCard extends StatelessWidget {
     super.key,
     required this.course,
     required this.onStart,
-    this.onDelete,
+    this.onManage,
   });
 
   final TechnicalCourse course;
   final VoidCallback onStart;
-  final VoidCallback? onDelete;
+  final VoidCallback? onManage;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.border),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x0A111827),
-              blurRadius: 18,
-              offset: Offset(0, 8),
-            ),
-          ],
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withAlpha(20),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.primary.withAlpha(60),
+          width: 1.5,
         ),
+      ),
         child: Row(
           children: [
             Container(
               width: 54,
               height: 54,
               decoration: BoxDecoration(
-                color: const Color(0xFFE6FAF7),
-                borderRadius: BorderRadius.circular(8),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColors.primary.withAlpha(30),
+                ),
               ),
-              child: Icon(
-                technicalCategoryIcon(course.category),
-                color: AppColors.primaryGradientEnd,
-                size: 26,
+              child: Center(
+                child: course.category == 'custom'
+                    ? SvgPicture.asset(
+                        'assets/icons/question.svg',
+                        width: 26,
+                        height: 26,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.primaryGradientEnd,
+                          BlendMode.srcIn,
+                        ),
+                      )
+                    : SvgPicture.network(
+                        technicalCategoryLogoUrl(course.category),
+                        width: 26,
+                        height: 26,
+                      ),
               ),
             ),
             const SizedBox(width: 14),
@@ -54,19 +64,28 @@ class TechnicalCourseCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${course.questionCount} CÂU HỎI',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: AppColors.primaryGradientEnd,
-                      fontWeight: FontWeight.w800,
-                      height: 1.15,
-                      letterSpacing: 0,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 9,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withAlpha(25),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '${course.questionCount} CÂU HỎI',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: AppColors.primaryGradientEnd,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0,
+                          ),
                     ),
                   ),
                   const SizedBox(height: 7),
                   Text(
                     course.title,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: AppColors.textPrimary,
@@ -74,25 +93,14 @@ class TechnicalCourseCard extends StatelessWidget {
                       letterSpacing: 0,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    course.description,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0,
-                    ),
-                  ),
                 ],
               ),
             ),
-            if (onDelete != null) ...[
+            if (onManage != null) ...[
               const SizedBox(width: 4),
               IconButton(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline),
+                onPressed: onManage,
+                icon: const Icon(Icons.settings_outlined),
                 color: AppColors.textSecondary,
                 iconSize: 22,
                 constraints: const BoxConstraints.tightFor(
@@ -100,7 +108,7 @@ class TechnicalCourseCard extends StatelessWidget {
                   height: 38,
                 ),
                 padding: EdgeInsets.zero,
-                tooltip: 'Xóa khóa học',
+                tooltip: 'Quản lý khóa học',
               ),
             ],
             const SizedBox(width: 8),
@@ -124,7 +132,6 @@ class TechnicalCourseCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

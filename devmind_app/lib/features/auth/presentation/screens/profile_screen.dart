@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
 import '../../../../core/widgets/app_placeholder_screen.dart';
+import '../../../home/presentation/controllers/home_controller.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/profile_controller.dart';
 import '../widgets/profile_app_bar.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_history_section.dart';
-import '../widgets/profile_learning_stats_card.dart';
 import '../widgets/profile_wallet_card.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -28,14 +28,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final uid = context.read<AuthController>().currentUser?.uid;
-    if (uid == null || _loadedUid == uid) {
+    final uid = context.watch<AuthController>().currentUser?.uid;
+    if (uid == null) {
+      _loadedUid = null;
+      return;
+    }
+
+    if (_loadedUid == uid) {
       return;
     }
 
     _loadedUid = uid;
     final profileController = context.read<ProfileController>();
-    Future.microtask(() => profileController.loadProfile(uid));
+    Future.microtask(() => profileController.loadProfile(uid, force: true));
   }
 
   @override
@@ -72,6 +77,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           slivers: [
             ProfileAppBar(
               onLogoutPressed: () async {
+                // Đợi PopupMenu đóng hẳn (khoảng 300ms) để tránh lỗi "Looking up a deactivated widget's ancestor is unsafe"
+                await Future.delayed(const Duration(milliseconds: 300));
+                if (!context.mounted) return;
+                
+                context.read<HomeController>().clear();
+                context.read<ProfileController>().clear();
+                
                 await context.read<AuthController>().signOut();
                 if (context.mounted) {
                   context.goNamed(AppRouteNames.welcome);
@@ -87,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       displayName: displayName,
                       email: email,
                       photoUrl: user.photoURL,
-                      onEditProfile: () {},
+                      onEditProfile: () => context.pushNamed(AppRouteNames.editProfile),
                     ),
                     const SizedBox(height: 10),
                     if (profileController.isLoading) ...[
@@ -101,26 +113,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                     const SizedBox(height: 10),
-                    ProfileLearningStatsCard(
-                      stats: profileController.profileData?.learningStats,
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 10),
+
                     ProfileWalletCard(
                       explainCredits:
                           profileController.profileData?.wallet.explainCredits,
                       cvScanCredits:
                           profileController.profileData?.wallet.cvScanCredits,
-                      onTopUp: () => context.goNamed(AppRouteNames.payment),
+                      onTopUp: () => context.goNamed(AppRouteNames.wallet),
                     ),
                     const SizedBox(height: 34),
                     ProfileHistorySection(
                       selectedIndex: _selectedHistoryIndex,
                       questions:
-                          profileController.profileData?.questionHistory ??
+                          profileController.profileData?.questionHistory.reversed.take(3).toList() ??
                           const [],
                       payments:
-                          profileController.profileData?.paymentHistory ??
+                          profileController.profileData?.paymentHistory.reversed.take(3).toList() ??
                           const [],
                       onTabChanged: (index) {
                         setState(() {

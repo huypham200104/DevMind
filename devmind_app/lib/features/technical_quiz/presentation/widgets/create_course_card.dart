@@ -9,32 +9,34 @@ class CreateCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.primary,
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.primaryGradientEnd),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 26),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withAlpha(20),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.primary.withAlpha(60),
+            width: 1.5,
           ),
+        ),
           child: Row(
             children: [
               Container(
-                width: 58,
-                height: 58,
-                decoration: const BoxDecoration(
-                  color: AppColors.surface,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.add,
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
                   color: AppColors.primary,
-                  size: 30,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
               ),
               const SizedBox(width: 22),
@@ -45,8 +47,8 @@ class CreateCourseCard extends StatelessWidget {
                     Text(
                       'Tạo mới khóa học',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: AppColors.surface,
-                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
                         letterSpacing: 0,
                       ),
                     ),
@@ -54,8 +56,8 @@ class CreateCourseCard extends StatelessWidget {
                     Text(
                       'Từ những bài học AI',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppColors.surface.withValues(alpha: 0.9),
-                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w500,
                         letterSpacing: 0,
                       ),
                     ),
@@ -63,14 +65,13 @@ class CreateCourseCard extends StatelessWidget {
                 ),
               ),
               const Icon(
-                Icons.chevron_right,
-                color: Color(0xFFBFF5F0),
+                Icons.chevron_right_rounded,
+                color: AppColors.primary,
                 size: 34,
               ),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }

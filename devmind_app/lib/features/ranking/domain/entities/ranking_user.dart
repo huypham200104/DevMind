@@ -5,6 +5,7 @@ class RankingUser {
     required this.photoUrl,
     required this.points,
     required this.rankingOrder,
+    required this.completedQuizCount,
     required this.firstPlaceAt,
   });
 
@@ -13,7 +14,10 @@ class RankingUser {
   final String? photoUrl;
   final int points;
   final int rankingOrder;
+  final int completedQuizCount;
   final DateTime? firstPlaceAt;
+
+  bool get hasCompletedQuiz => completedQuizCount > 0 || points > 0;
 
   String get firstName {
     final normalizedName = displayName.trim();

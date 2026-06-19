@@ -62,18 +62,26 @@ class ProfileWalletCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _WalletMetric(
-                  label: 'SỐ LƯỢT GIẢI THÍCH',
+                child: _WalletMetricBox(
+                  label: 'GIẢI THÍCH AI',
                   value: explainCredits,
-                  description: 'AI Explanations',
+                  icon: Icons.auto_awesome_rounded,
+                  backgroundColor: AppColors.primary.withAlpha(15),
+                  borderColor: AppColors.primary.withAlpha(40),
+                  iconColor: AppColors.primary,
+                  textColor: AppColors.textPrimary,
                 ),
               ),
-              Container(width: 1, height: 92, color: const Color(0xFFE7EDF2)),
+              const SizedBox(width: 12),
               Expanded(
-                child: _WalletMetric(
-                  label: 'SỐ LƯỢT SCAN CV',
+                child: _WalletMetricBox(
+                  label: 'QUÉT CV',
                   value: cvScanCredits,
-                  description: 'CV Scans',
+                  icon: Icons.document_scanner_rounded,
+                  backgroundColor: AppColors.primary.withAlpha(15),
+                  borderColor: AppColors.primary.withAlpha(40),
+                  iconColor: AppColors.primary,
+                  textColor: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -84,65 +92,82 @@ class ProfileWalletCard extends StatelessWidget {
   }
 }
 
-class _WalletMetric extends StatelessWidget {
-  const _WalletMetric({
+class _WalletMetricBox extends StatelessWidget {
+  const _WalletMetricBox({
     required this.label,
     required this.value,
-    required this.description,
+    required this.icon,
+    required this.backgroundColor,
+    required this.borderColor,
+    required this.iconColor,
+    required this.textColor,
   });
 
   final String label;
   final int? value;
-  final String description;
+  final IconData icon;
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color iconColor;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor, width: 1.5),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: const Color(0xFF94A3B8),
-              fontWeight: FontWeight.w800,
-              letterSpacing: 2.4,
-            ),
-          ),
-          const SizedBox(height: 10),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: value?.toString() ?? 'Không có',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: const Color(0xFF0F172A),
+          Row(
+            children: [
+              Icon(icon, size: 22, color: iconColor),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: textColor.withValues(alpha: 0.8),
                     fontWeight: FontWeight.w800,
-                    fontSize: value == null ? 18 : null,
-                    height: 1,
-                    letterSpacing: 0,
+                    letterSpacing: 0.5,
                   ),
                 ),
-                if (value != null)
-                  TextSpan(
-                    text: ' còn lại',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: const Color(0xFF64748B),
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  value?.toString() ?? '0',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    color: textColor,
+                    fontWeight: FontWeight.w900,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: Text(
+                    'lượt',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: textColor.withValues(alpha: 0.7),
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
+                ),
               ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppColors.primaryGradientEnd,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0,
             ),
           ),
         ],

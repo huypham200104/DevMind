@@ -15,4 +15,15 @@ abstract interface class TechnicalCourseRepository {
   Future<bool> consumeExplainCredit(String uid);
 
   Future<void> deleteMyCourse(String courseId);
+
+  Future<void> createCustomCourse(
+    String uid,
+    String title,
+    List<String> questionIds,
+  );
+
+  Future<void> removeQuestionFromCustomCourse(
+    String courseId,
+    String questionId,
+  );
 }

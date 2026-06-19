@@ -1,21 +1,28 @@
-import 'dart:convert';
 
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import '../../domain/entities/cv_upload.dart';
 import '../../domain/repositories/cv_upload_repository.dart';
 
 class FirebaseCvUploadRepository implements CvUploadRepository {
   FirebaseCvUploadRepository({
+    FirebaseAuth? auth,
     FirebaseFirestore? firestore,
     FirebaseFunctions? functions,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _functions = functions ?? FirebaseFunctions.instance;
+  }) : _auth = auth ?? FirebaseAuth.instance,
+       _firestore = firestore ?? FirebaseFirestore.instance,
+       _functions =
+           functions ?? FirebaseFunctions.instanceFor(region: 'us-central1');
 
   static const _maxPdfSizeBytes = 5 * 1024 * 1024;
 
+  final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
   final FirebaseFunctions _functions;
 
@@ -36,21 +43,26 @@ class FirebaseCvUploadRepository implements CvUploadRepository {
       type: FileType.custom,
       allowedExtensions: const ['pdf'],
       allowMultiple: false,
-      withData: true,
+      withData: false,
     );
 
     if (result == null || result.files.isEmpty) {
       return null;
     }
 
-    final file = result.files.single;
-    final fileName = file.name.trim().isNotEmpty ? file.name.trim() : 'CV.pdf';
+    final fileInfo = result.files.single;
+    final fileName = fileInfo.name.trim().isNotEmpty ? fileInfo.name.trim() : 'CV.pdf';
     if (!fileName.toLowerCase().endsWith('.pdf')) {
       throw const CvScannerException('Chỉ hỗ trợ file PDF.');
     }
 
-    final bytes = file.bytes;
-    if (bytes == null || bytes.isEmpty) {
+    if (fileInfo.path == null) {
+      throw const CvScannerException('Không thể lấy đường dẫn file.');
+    }
+
+    final file = File(fileInfo.path!);
+    final bytes = await file.readAsBytes();
+    if (bytes.isEmpty) {
       throw const CvScannerException('Không thể đọc nội dung file PDF.');
     }
 
@@ -71,21 +83,72 @@ class FirebaseCvUploadRepository implements CvUploadRepository {
     required String jobTitle,
   }) async {
     try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw const CvScannerException(
+          'Bạn chưa đăng nhập. Vui lòng đăng nhập lại để scan CV.',
+        );
+      }
+
+      final idToken = await user.getIdToken();
+      if (idToken == null || idToken.isEmpty) {
+        throw const CvScannerException(
+          'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để scan CV.',
+        );
+      }
+
+      // Trích xuất text từ PDF ngay trên thiết bị
+      final pdfDocument = PdfDocument(inputBytes: file.bytes);
+      final extractor = PdfTextExtractor(pdfDocument);
+      final cvText = extractor.extractText();
+      pdfDocument.dispose();
+
+      if (cvText.trim().isEmpty) {
+        throw const CvScannerException(
+          'Không thể đọc nội dung từ file PDF này. Vui lòng thử file khác.',
+        );
+      }
+
       final callable = _functions.httpsCallable('scanCV');
-      final response = await callable.call(<String, dynamic>{
+      final response = await callable.call<Map<String, dynamic>>({
         'jobTitle': jobTitle,
         'fileName': file.fileName,
         'sizeBytes': file.sizeBytes,
-        'pdfBase64': base64Encode(file.bytes),
+        'cvText': cvText,
+        'idToken': idToken,
       });
 
       return _mapCallableResult(_asStringMap(response.data), file, jobTitle);
+    } on FirebaseAuthException catch (error) {
+      throw CvScannerException(_friendlyAuthError(error));
     } on FirebaseFunctionsException catch (error) {
-      throw CvScannerException(error.message ?? 'Không thể quét CV lúc này.');
+      throw CvScannerException(_friendlyFunctionsError(error));
     } on CvScannerException {
       rethrow;
     } catch (_) {
       throw const CvScannerException('Không thể quét CV lúc này.');
+    }
+  }
+
+  String _friendlyAuthError(FirebaseAuthException error) {
+    if (error.code == 'network-request-failed') {
+      return 'Không thể kết nối Firebase Auth. Kiểm tra Internet rồi thử lại.';
+    }
+
+    return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để scan CV.';
+  }
+
+  String _friendlyFunctionsError(FirebaseFunctionsException error) {
+    switch (error.code) {
+      case 'unauthenticated':
+        return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để scan CV.';
+      case 'resource-exhausted':
+      case 'invalid-argument':
+      case 'not-found':
+      case 'failed-precondition':
+        return error.message ?? 'Không thể scan CV lúc này.';
+      default:
+        return error.message ?? 'Không thể scan CV lúc này.';
     }
   }
 

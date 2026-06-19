@@ -56,33 +56,43 @@ class DailyCheckInPointsBalance extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFFE5FAF8),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFB9F1EC)),
+        color: AppColors.primary.withAlpha(20),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: AppColors.primary.withAlpha(60),
+          width: 1.5,
+        ),
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.stars_outlined,
-            color: AppColors.primaryGradientEnd,
-            size: 24,
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.stars_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Bạn đang có',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              'Điểm tích lũy của bạn',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppColors.textSecondary,
-                fontWeight: FontWeight.w600,
                 letterSpacing: 0,
               ),
             ),
           ),
           Text(
             '$points điểm',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: AppColors.primaryGradientEnd,
               fontWeight: FontWeight.w800,
               letterSpacing: 0,

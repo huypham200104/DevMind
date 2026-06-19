@@ -13,28 +13,26 @@ class DailyCheckInWeekRow extends StatelessWidget {
     final today = _dateOnly(DateTime.now());
     final monday = today.subtract(Duration(days: today.weekday - 1));
     final days = [
-      for (var index = 0; index < 7; index++) monday.add(Duration(days: index)),
+      for (var i = 0; i < 7; i++) monday.add(Duration(days: i)),
     ];
     const labels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 
     return Row(
       children: [
-        for (var index = 0; index < days.length; index++)
+        for (var i = 0; i < days.length; i++)
           Expanded(
             child: _WeekDayItem(
-              label: labels[index],
-              date: days[index],
+              label: labels[i],
+              date: days[i],
               today: today,
-              checked: summary.hasCheckedIn(days[index]),
+              checked: summary.hasCheckedIn(days[i]),
             ),
           ),
       ],
     );
   }
 
-  DateTime _dateOnly(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
-  }
+  DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 }
 
 class _WeekDayItem extends StatelessWidget {
@@ -57,85 +55,89 @@ class _WeekDayItem extends StatelessWidget {
     final isLocked = daysAfterToday > 1;
     final isFuture = daysAfterToday > 0;
 
+    Color bgColor;
+    Color borderColor;
+    Widget innerWidget;
+
+    if (checked) {
+      bgColor = AppColors.primary;
+      borderColor = Colors.transparent;
+      innerWidget = const Icon(Icons.check_rounded, color: Colors.white, size: 22);
+    } else if (isToday) {
+      bgColor = AppColors.primary.withAlpha(20);
+      borderColor = AppColors.primary;
+      innerWidget = Text(
+        '+10',
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: AppColors.primaryGradientEnd,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0,
+            ),
+      );
+    } else if (isFuture && !isLocked) {
+      bgColor = const Color(0xFFF0F0F0);
+      borderColor = Colors.transparent;
+      innerWidget = Text(
+        '+10',
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0,
+            ),
+      );
+    } else {
+      bgColor = const Color(0xFFF0F0F0);
+      borderColor = Colors.transparent;
+      innerWidget = Icon(
+        isLocked ? Icons.lock_outline_rounded : Icons.remove,
+        color: AppColors.navInactive,
+        size: 18,
+      );
+    }
+
     return Column(
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: isToday
-                ? AppColors.primaryGradientEnd
-                : AppColors.textSecondary,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0,
-          ),
-        ),
-        const SizedBox(height: 14),
-        Container(
-          width: 58,
-          height: 58,
-          decoration: BoxDecoration(
-            color: checked
-                ? AppColors.primary
-                : isToday
-                ? const Color(0xFFD6F8F4)
-                : const Color(0xFFEDEDED),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isToday
-                  ? AppColors.primaryGradientEnd
-                  : isLocked
-                  ? const Color(0xFFBFD6D3)
-                  : Colors.transparent,
-              width: isToday || isLocked ? 2 : 0,
-            ),
-          ),
-          child: Center(
-            child: checked
-                ? const Icon(Icons.check, color: AppColors.surface, size: 30)
-                : isLocked
-                ? const Icon(
-                    Icons.lock_outline,
-                    color: AppColors.textSecondary,
-                    size: 26,
-                  )
-                : Text(
-                    '+10',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: isToday
-                          ? AppColors.primaryGradientEnd
-                          : AppColors.textSecondary,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0,
-                    ),
-                  ),
-          ),
-        ),
-        SizedBox(height: isToday && !checked ? 8 : 30),
-        if (isToday && !checked)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            decoration: BoxDecoration(
-              color: AppColors.primaryGradientEnd,
-              borderRadius: BorderRadius.circular(6),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x332ED3C6),
-                  blurRadius: 10,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Text(
-              'Nhận ngay',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.surface,
-                fontWeight: FontWeight.w600,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: isToday
+                    ? AppColors.primaryGradientEnd
+                    : AppColors.textSecondary,
+                fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
                 letterSpacing: 0,
               ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: bgColor,
+            shape: BoxShape.circle,
+            border: Border.all(color: borderColor, width: 1.5),
+          ),
+          child: Center(child: innerWidget),
+        ),
+        const SizedBox(height: 6),
+        if (isToday && !checked)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'Hôm nay',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 9,
+                    letterSpacing: 0,
+                  ),
             ),
           )
-        else if (isFuture)
-          const SizedBox(height: 0),
+        else
+          const SizedBox(height: 18),
       ],
     );
   }

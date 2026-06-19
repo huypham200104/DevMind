@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../app/theme/app_colors.dart';
+import '../../../../core/widgets/app_dialog.dart';
 import '../controllers/home_controller.dart';
 import 'daily_check_in_bottom_action.dart';
 import 'daily_check_in_header.dart';
@@ -21,7 +23,7 @@ class DailyCheckInSheet extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.96,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF7F7F7),
+        backgroundColor: AppColors.surface,
         body: SafeArea(
           child: Column(
             children: [
@@ -35,13 +37,13 @@ class DailyCheckInSheet extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             DailyCheckInStreakCard(summary: summary),
-                            const SizedBox(height: 40),
+                            const SizedBox(height: 24),
                             const DailyCheckInSectionTitle(title: 'Tuần này'),
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 24),
                             DailyCheckInWeekRow(summary: summary),
-                            const SizedBox(height: 32),
+                            const SizedBox(height: 24),
                             DailyCheckInStatsCard(summary: summary),
-                            const SizedBox(height: 46),
+                            const SizedBox(height: 32),
                             const DailyCheckInSectionTitle(
                               title: 'Đổi quà tặng',
                             ),
@@ -73,20 +75,21 @@ class DailyCheckInSheet extends StatelessWidget {
   }
 
   Future<void> _claim(BuildContext context) async {
-    final messenger = ScaffoldMessenger.of(context);
     final claimed = await context.read<HomeController>().claimDailyCheckIn();
     if (!context.mounted) {
       return;
     }
 
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          claimed
-              ? 'Điểm danh thành công. Bạn nhận được 10 điểm.'
-              : 'Bạn đã điểm danh hôm nay.',
-        ),
-      ),
-    );
+    if (claimed) {
+      AppDialog.showSuccess(
+        context,
+        message: 'Điểm danh thành công. Bạn nhận được 10 điểm.',
+      );
+    } else {
+      AppDialog.showError(
+        context,
+        message: 'Bạn đã điểm danh hôm nay.',
+      );
+    }
   }
 }

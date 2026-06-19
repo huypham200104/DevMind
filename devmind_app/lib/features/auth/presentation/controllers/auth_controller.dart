@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../data/sources/auth_remote_data_source.dart';
+import '../../data/datasources/auth_remote_data_source.dart';
 
 class AuthController extends ChangeNotifier {
   AuthController(this._authRemoteDataSource) {
@@ -54,6 +54,18 @@ class AuthController extends ChangeNotifier {
 
   Future<bool> signInWithGoogle() async {
     return _runAuthAction(() => _authRemoteDataSource.signInWithGoogle());
+  }
+
+  Future<bool> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    return _runAuthAction(
+      () => _authRemoteDataSource.updatePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      ),
+    );
   }
 
   Future<void> signOut() async {

@@ -43,6 +43,7 @@ dependencies:
   google_sign_in: ^7.2.0
   cloud_functions: ^6.3.2
   file_picker: ^11.0.2
+  syncfusion_flutter_pdf: ^27.1.52
 
 flutter_launcher_icons:
   android: "launcher_icon"

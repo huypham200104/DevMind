@@ -8,12 +8,12 @@ class TechnicalCourseList extends StatelessWidget {
     super.key,
     required this.courses,
     required this.onStart,
-    this.onDelete,
+    this.onManage,
   });
 
   final List<TechnicalCourse> courses;
   final ValueChanged<TechnicalCourse> onStart;
-  final ValueChanged<TechnicalCourse>? onDelete;
+  final ValueChanged<TechnicalCourse>? onManage;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class TechnicalCourseList extends StatelessWidget {
           TechnicalCourseCard(
             course: course,
             onStart: () => onStart(course),
-            onDelete: course.isMine && onDelete != null
-                ? () => onDelete!(course)
+            onManage: course.isMine && onManage != null
+                ? () => onManage!(course)
                 : null,
           ),
           if (course != courses.last) const SizedBox(height: 14),

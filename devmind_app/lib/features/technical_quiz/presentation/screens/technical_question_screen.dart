@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/widgets/app_dialog.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../domain/entities/technical_course.dart';
 import '../../domain/entities/technical_question.dart';
@@ -179,10 +180,7 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
     if (!mounted || revealed) {
       return;
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Bạn đã hết lượt giải thích.')),
-    );
+    AppDialog.showError(context, message: 'Bạn đã hết lượt giải thích.');
   }
 
   void _submitAnswer() {
@@ -192,9 +190,7 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
     }
 
     if (controller.selectedAnswerIndex == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng chọn một đáp án.')),
-      );
+      AppDialog.showError(context, message: 'Vui lòng chọn một đáp án.');
       return;
     }
 
@@ -338,45 +334,62 @@ class _QuestionBody extends StatelessWidget {
       );
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(18, 28, 18, 28),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _QuestionProgress(
-            currentQuestion: controller.currentQuestionIndex + 1,
-            totalQuestions: controller.totalQuestions,
-            progress: controller.quizProgress,
-            remainingSeconds: controller.remainingSeconds,
-          ),
-          const SizedBox(height: 22),
-          _QuestionCard(question: question),
-          const SizedBox(height: 16),
-          _ExplanationButton(
-            isVisible: controller.isCurrentExplanationVisible,
-            isLoading: controller.isConsumingExplainCredit,
-            hasCredits: controller.explainCredits > 0,
-            isQuizCompleted: controller.isQuizCompleted,
-            onPressed: onExplain,
-          ),
-          if (controller.isCurrentExplanationVisible) ...[
-            const SizedBox(height: 14),
-            _ExplanationCard(explanation: question.explanation),
-          ],
-          const SizedBox(height: 20),
-          for (var index = 0; index < question.options.length; index++) ...[
-            _AnswerOption(
-              letter: _optionLetter(index),
-              text: question.options[index],
-              isSelected: controller.selectedAnswerIndex == index,
-              onTap: controller.isQuizCompleted
-                  ? null
-                  : () => controller.selectAnswer(index),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(18, 28, 18, 28),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _QuestionProgress(
+                  currentQuestion: controller.currentQuestionIndex + 1,
+                  totalQuestions: controller.totalQuestions,
+                  progress: controller.quizProgress,
+                  remainingSeconds: controller.remainingSeconds,
+                ),
+                const SizedBox(height: 22),
+                _QuestionCard(
+                  question: question,
+                  index: controller.currentQuestionIndex,
+                ),
+                const SizedBox(height: 16),
+                _ExplanationButton(
+                  isVisible: controller.isCurrentExplanationVisible,
+                  isLoading: controller.isConsumingExplainCredit,
+                  hasCredits: controller.explainCredits > 0,
+                  isQuizCompleted: controller.isQuizCompleted,
+                  onPressed: onExplain,
+                ),
+                if (controller.isCurrentExplanationVisible) ...[
+                  const SizedBox(height: 14),
+                  _ExplanationCard(explanation: question.explanation),
+                ],
+                const SizedBox(height: 20),
+                for (var index = 0; index < question.options.length; index++) ...[
+                  _AnswerOption(
+                    letter: _optionLetter(index),
+                    text: question.options[index],
+                    isSelected: controller.selectedAnswerIndex == index,
+                    onTap: controller.isQuizCompleted
+                        ? null
+                        : () => controller.selectAnswer(index),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+                const SizedBox(height: 28),
+                _ConceptFocusCard(course: activeCourse),
+              ],
             ),
-            const SizedBox(height: 12),
-          ],
-          const SizedBox(height: 18),
-          SizedBox(
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(18, 12, 18, 18),
+          decoration: const BoxDecoration(
+            color: Color(0xFFF6F7F8),
+            border: Border(top: BorderSide(color: Color(0xFFE0E6E8))),
+          ),
+          child: SizedBox(
             width: double.infinity,
             height: 62,
             child: FilledButton.icon(
@@ -396,10 +409,8 @@ class _QuestionBody extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 28),
-          _ConceptFocusCard(course: activeCourse),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -516,9 +527,10 @@ class _QuestionProgress extends StatelessWidget {
 }
 
 class _QuestionCard extends StatelessWidget {
-  const _QuestionCard({required this.question});
+  const _QuestionCard({required this.question, required this.index});
 
   final TechnicalQuestion question;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -537,7 +549,7 @@ class _QuestionCard extends StatelessWidget {
         ],
       ),
       child: Text(
-        question.question,
+        'Câu ${index + 1}: ${question.question}',
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
           color: AppColors.textPrimary,
           fontWeight: FontWeight.w800,

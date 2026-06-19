@@ -27,6 +27,7 @@ class RankingPodium extends StatelessWidget {
               avatarSize: 82,
               pillarHeight: 104,
               topOffset: 58,
+              position: 2,
             ),
           ),
           const SizedBox(width: 8),
@@ -36,6 +37,7 @@ class RankingPodium extends StatelessWidget {
               avatarSize: 104,
               pillarHeight: 136,
               highlighted: true,
+              position: 1,
             ),
           ),
           const SizedBox(width: 8),
@@ -45,6 +47,7 @@ class RankingPodium extends StatelessWidget {
               avatarSize: 82,
               pillarHeight: 86,
               topOffset: 78,
+              position: 3,
             ),
           ),
         ],
@@ -68,6 +71,7 @@ class _PodiumUser extends StatelessWidget {
     required this.rankedUser,
     required this.avatarSize,
     required this.pillarHeight,
+    required this.position,
     this.highlighted = false,
     this.topOffset = 24,
   });
@@ -75,53 +79,57 @@ class _PodiumUser extends StatelessWidget {
   final RankedUser? rankedUser;
   final double avatarSize;
   final double pillarHeight;
+  final int position; // 1, 2, 3 — dùng làm fallback seed cho avatar
   final bool highlighted;
   final double topOffset;
 
   @override
   Widget build(BuildContext context) {
     final user = rankedUser?.user;
-    final rank = rankedUser?.rank;
 
     return Padding(
       padding: EdgeInsets.only(top: topOffset),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Stack(
-            alignment: Alignment.center,
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                padding: EdgeInsets.all(highlighted ? 6 : 0),
-                decoration: highlighted
-                    ? BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.primaryGradientEnd,
-                          width: 5,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x332ED3C6),
-                            blurRadius: 34,
-                            offset: Offset(0, 14),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(highlighted ? 6 : 0),
+                  decoration: highlighted
+                      ? BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.primaryGradientEnd,
+                            width: 5,
                           ),
-                        ],
-                      )
-                    : null,
-                child: RankingAvatar(
-                  photoUrl: user?.photoUrl,
-                  size: avatarSize,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x332ED3C6),
+                              blurRadius: 34,
+                              offset: Offset(0, 14),
+                            ),
+                          ],
+                        )
+                      : null,
+                  child: RankingAvatar(
+                    photoUrl: user?.photoUrl,
+                    size: avatarSize,
+                    fallbackSeed: position * 7, // seed cố định theo vị trí
+                  ),
                 ),
-              ),
-              if (rank != null)
+                // Luôn hiển thị rank badge
                 Positioned(
                   right: highlighted ? -6 : -4,
                   bottom: highlighted ? -10 : -8,
-                  child: _RankBadge(rank: rank, large: highlighted),
+                  child: _RankBadge(rank: position, large: highlighted),
                 ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 12),
           Text(

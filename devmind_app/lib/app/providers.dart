@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../features/auth/data/repositories/firebase_profile_repository.dart';
-import '../features/auth/data/sources/auth_remote_data_source.dart';
+import '../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../features/auth/domain/repositories/profile_repository.dart';
 import '../features/auth/presentation/controllers/auth_controller.dart';
 import '../features/auth/presentation/controllers/profile_controller.dart';

@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
-import '../../../../app/theme/app_colors.dart';
+import '../../../../core/widgets/app_dialog.dart';
+import '../../../../core/widgets/app_header.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 import '../../domain/entities/technical_course.dart';
@@ -11,10 +12,7 @@ import '../controllers/technical_quiz_controller.dart';
 import '../models/technical_quiz_ui.dart';
 import '../widgets/all_courses_section.dart';
 import '../widgets/my_courses_section.dart';
-import '../widgets/technical_category_filter_sheet.dart';
-import '../widgets/technical_quiz_header.dart';
 import '../widgets/technical_quiz_tabs.dart';
-import '../widgets/technical_search_filter_bar.dart';
 
 class TechnicalQuizScreen extends StatefulWidget {
   const TechnicalQuizScreen({super.key});
@@ -24,19 +22,10 @@ class TechnicalQuizScreen extends StatefulWidget {
 }
 
 class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
-  final _searchController = TextEditingController();
-
   TechnicalQuizTab _selectedTab = TechnicalQuizTab.allCourses;
-  String _searchQuery = '';
-  String _selectedCategory = technicalAllCategory;
   bool _hasScheduledCourseWatch = false;
   String? _watchedCoursesUid;
 
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(_syncSearchQuery);
-  }
 
   @override
   void didChangeDependencies() {
@@ -52,7 +41,16 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
     _watchedCoursesUid = uid;
     final controller = context.read<TechnicalQuizController>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted || _watchedCoursesUid != uid) {
+        return;
+      }
+
+      // Đợi animation chuyển trang hoàn tất (khoảng 300-350ms)
+      // Việc này giúp tránh hiện tượng giật lag (jank) khi render quá nhiều SVG 
+      // và call Firebase cùng lúc với animation chuyển màn hình.
+      await Future.delayed(const Duration(milliseconds: 350));
+      
       if (!mounted || _watchedCoursesUid != uid) {
         return;
       }
@@ -62,13 +60,6 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    _searchController
-      ..removeListener(_syncSearchQuery)
-      ..dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,21 +73,19 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
         child: Column(
           children: [
             const SizedBox(height: 8),
-            TechnicalQuizHeader(onBack: _handleBack),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: AppHeader(
+                title: 'DevMind AI',
+                onBack: _handleBack,
+              ),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(24, 44, 24, 28),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildTitle(context),
-                    const SizedBox(height: 34),
-                    TechnicalSearchFilterBar(
-                      controller: _searchController,
-                      selectedCategory: _selectedCategory,
-                      onFilterTap: _openCategoryFilter,
-                    ),
-                    const SizedBox(height: 34),
                     TechnicalQuizTabs(
                       selectedTab: _selectedTab,
                       onChanged: (tab) => setState(() => _selectedTab = tab),
@@ -110,8 +99,6 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
                               courses: controller.allCourses,
                               isLoading: controller.isLoadingAllCourses,
                               errorMessage: controller.allCoursesErrorMessage,
-                              selectedCategory: _selectedCategory,
-                              searchQuery: _searchQuery,
                               onStart: _showStartMessage,
                             )
                           : MyCoursesSection(
@@ -120,11 +107,9 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
                               courses: controller.myCourses,
                               isLoading: controller.isLoadingMyCourses,
                               errorMessage: controller.myCoursesErrorMessage,
-                              selectedCategory: _selectedCategory,
-                              searchQuery: _searchQuery,
-                              onCreate: _showCreateCourseMessage,
+                              onCreate: _navigateToCreateCourse,
                               onStart: _showStartMessage,
-                              onDelete: _deleteCourse,
+                              onManage: _manageCourse,
                             ),
                     ),
                   ],
@@ -136,43 +121,6 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
       ),
     );
   }
-
-  Widget _buildTitle(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Ôn tập kỹ thuật',
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w800,
-            height: 1.08,
-            letterSpacing: 0,
-          ),
-        ),
-        const SizedBox(height: 18),
-        Text(
-          'Chọn một danh mục để bắt đầu kiểm tra kiến thức của bạn.',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: AppColors.textSecondary,
-            height: 1.55,
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0,
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _syncSearchQuery() {
-    final nextQuery = _searchController.text.trim();
-    if (nextQuery == _searchQuery) {
-      return;
-    }
-
-    setState(() => _searchQuery = nextQuery);
-  }
-
   void _handleBack() {
     if (context.canPop()) {
       context.pop();
@@ -191,79 +139,22 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
     );
   }
 
-  void _showCreateCourseMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Tính năng tạo khóa học sẽ được kết nối ở bước tiếp theo.',
-        ),
-      ),
-    );
-  }
-
-  Future<void> _deleteCourse(TechnicalCourse course) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Xóa khóa học?'),
-        content: Text(
-          'Khóa học "${course.title}" sẽ bị xóa khỏi danh sách của bạn.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Hủy'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Xóa'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true) {
-      return;
-    }
-
-    if (!mounted) {
-      return;
-    }
-
+  void _navigateToCreateCourse() {
     final controller = context.read<TechnicalQuizController>();
-    final deleted = await controller.deleteMyCourse(course.id);
-    if (!mounted) {
+    if (controller.myCourses.length >= 5) {
+      AppDialog.showError(
+        context,
+        message: 'Bạn chỉ có thể tạo tối đa 5 khóa học tùy chỉnh.',
+      );
       return;
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          deleted
-              ? 'Đã xóa khóa học.'
-              : 'Không thể xóa khóa học. Vui lòng thử lại.',
-        ),
-      ),
-    );
+    context.pushNamed(AppRouteNames.createTechnicalCourse);
   }
 
-  Future<void> _openCategoryFilter() async {
-    final nextCategory = await showModalBottomSheet<String>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      showDragHandle: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-      ),
-      builder: (context) =>
-          TechnicalCategoryFilterSheet(selectedCategory: _selectedCategory),
+  void _manageCourse(TechnicalCourse course) {
+    context.pushNamed(
+      AppRouteNames.manageTechnicalCourse,
+      pathParameters: {'courseId': course.id},
     );
-
-    if (nextCategory == null || nextCategory == _selectedCategory) {
-      return;
-    }
-
-    setState(() => _selectedCategory = nextCategory);
   }
 }

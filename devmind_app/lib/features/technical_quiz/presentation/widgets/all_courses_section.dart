@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/technical_course.dart';
-import '../models/technical_quiz_ui.dart';
 import 'technical_course_list.dart';
 import 'technical_course_loading_list.dart';
 import 'technical_quiz_state_card.dart';
@@ -12,16 +11,12 @@ class AllCoursesSection extends StatelessWidget {
     required this.courses,
     required this.isLoading,
     required this.errorMessage,
-    required this.selectedCategory,
-    required this.searchQuery,
     required this.onStart,
   });
 
   final List<TechnicalCourse> courses;
   final bool isLoading;
   final String? errorMessage;
-  final String selectedCategory;
-  final String searchQuery;
   final ValueChanged<TechnicalCourse> onStart;
 
   @override
@@ -38,20 +33,14 @@ class AllCoursesSection extends StatelessWidget {
       return const TechnicalCourseLoadingList();
     }
 
-    final visibleCourses = filterTechnicalCourses(
-      courses,
-      selectedCategory,
-      searchQuery,
-    );
-
-    if (visibleCourses.isEmpty) {
+    if (courses.isEmpty) {
       return const TechnicalQuizStateCard(
         icon: Icons.search_off_outlined,
         title: 'Không có khóa học',
-        description: 'Không tìm thấy khóa học phù hợp với bộ lọc hiện tại.',
+        description: 'Chưa có khóa học nào được đăng tải.',
       );
     }
 
-    return TechnicalCourseList(courses: visibleCourses, onStart: onStart);
+    return TechnicalCourseList(courses: courses, onStart: onStart);
   }
 }

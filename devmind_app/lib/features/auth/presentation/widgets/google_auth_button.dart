@@ -18,14 +18,20 @@ class GoogleAuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
+      height: 52,
       child: OutlinedButton.icon(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.textPrimary,
-          side: const BorderSide(color: AppColors.borderStrong),
+          side: BorderSide(color: AppColors.primary.withAlpha(80), width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
           textStyle: Theme.of(
             context,
-          ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800),
+          ).textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0,
+          ),
         ),
         onPressed: enabled ? () => onPressed() : null,
         icon: SvgPicture.asset(

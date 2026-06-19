@@ -119,6 +119,14 @@ class FirebaseHomeProfileRepository implements HomeProfileRepository {
       freeExplainCount: _readInt(data, 'freeExplainCount') ?? 0,
       paidCredits: _readInt(data, 'paidCredits') ?? 0,
       globalRank: globalRank,
+      rankingPoints: _readInt(data, 'rankingPoints') ?? 0,
+      completedQuizCount:
+          _readFirstInt(data, const [
+            'totalQuizzesTaken',
+            'completedQuizCount',
+            'quizCount',
+          ]) ??
+          0,
       currentPathTitle:
           _readString(data, 'currentPathTitle') ??
           'Lộ trình Fullstack Engineer',
@@ -148,6 +156,17 @@ class FirebaseHomeProfileRepository implements HomeProfileRepository {
 
     if (value is double) {
       return value.round();
+    }
+
+    return null;
+  }
+
+  int? _readFirstInt(Map<String, dynamic> data, List<String> keys) {
+    for (final key in keys) {
+      final value = _readInt(data, key);
+      if (value != null) {
+        return value;
+      }
     }
 
     return null;

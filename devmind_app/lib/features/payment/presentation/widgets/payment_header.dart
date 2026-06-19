@@ -2,31 +2,41 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 
-class CvScannerHeader extends StatelessWidget {
-  const CvScannerHeader({super.key, required this.onBack});
+class PaymentHeader extends StatelessWidget {
+  const PaymentHeader({required this.onBack, super.key});
 
   final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 72,
+    return Container(
+      height: 92,
+      padding: const EdgeInsets.symmetric(horizontal: 28),
+      decoration: const BoxDecoration(
+        color: Color(0xFFF7F7F7),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x08000000),
+            blurRadius: 10,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           IconButton(
             onPressed: onBack,
-            icon: const Icon(Icons.arrow_back, size: 30),
+            icon: const Icon(Icons.arrow_back, size: 28),
             color: AppColors.primaryGradientEnd,
             tooltip: 'Quay lại',
           ),
           Expanded(
             child: Text(
-              'Upload CV',
+              'DevMind AI',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: AppColors.textPrimary,
+                color: AppColors.primaryGradientEnd,
                 fontWeight: FontWeight.w800,
-                fontFamily: 'serif',
                 letterSpacing: 0,
               ),
             ),

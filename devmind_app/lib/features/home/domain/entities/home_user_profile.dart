@@ -7,6 +7,8 @@ class HomeUserProfile {
     required this.freeExplainCount,
     required this.paidCredits,
     required this.globalRank,
+    required this.rankingPoints,
+    required this.completedQuizCount,
     required this.currentPathTitle,
     required this.completedDays,
     required this.totalDays,
@@ -27,6 +29,8 @@ class HomeUserProfile {
       freeExplainCount: 0,
       paidCredits: 0,
       globalRank: 0,
+      rankingPoints: 0,
+      completedQuizCount: 0,
       currentPathTitle: 'Lộ trình Fullstack Engineer',
       completedDays: 12,
       totalDays: 20,
@@ -41,6 +45,8 @@ class HomeUserProfile {
   final int freeExplainCount;
   final int paidCredits;
   final int globalRank;
+  final int rankingPoints;
+  final int completedQuizCount;
   final String currentPathTitle;
   final int completedDays;
   final int totalDays;
@@ -70,6 +76,8 @@ class HomeUserProfile {
       freeExplainCount: freeExplainCount,
       paidCredits: paidCredits,
       globalRank: globalRank,
+      rankingPoints: rankingPoints,
+      completedQuizCount: completedQuizCount,
       currentPathTitle: currentPathTitle.trim().isEmpty
           ? fallback.currentPathTitle
           : currentPathTitle.trim(),

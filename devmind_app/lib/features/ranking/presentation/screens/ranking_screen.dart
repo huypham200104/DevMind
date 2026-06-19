@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
-import '../../../technical_quiz/presentation/widgets/technical_quiz_header.dart';
+import '../../../../core/widgets/app_header.dart';
 import '../controllers/ranking_controller.dart';
 import '../widgets/current_user_rank_card.dart';
 import '../widgets/ranking_podium.dart';
@@ -44,14 +45,28 @@ class _RankingScreenState extends State<RankingScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<RankingController>();
+    const backgroundColor = Color(0xFFF7F7F7);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
-      bottomNavigationBar: const HomeBottomNavigation(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            TechnicalQuizHeader(onBack: _handleBack),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: backgroundColor,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        bottomNavigationBar: const HomeBottomNavigation(),
+        body: SafeArea(
+          child: Column(
+            children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: AppHeader(
+                title: 'Bảng Xếp Hạng',
+                onBack: _handleBack,
+              ),
+            ),
             Expanded(
               child: controller.isLoading
                   ? const Center(child: CircularProgressIndicator())
@@ -87,7 +102,7 @@ class _RankingScreenState extends State<RankingScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   void _handleBack() {

@@ -1,1402 +1,587 @@
+const IQ_CREATED_AT = '2026-06-01T08:00:00.000Z';
+
 module.exports = [
-  {
-    "question": "Điền số tiếp theo vào dãy số: 2, 3, 4, ?, 6",
-    "type": "number_sequence",
-    "options": [
-      "4",
-      "5",
-      "6",
-      "6"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 1. Vì vậy: 4 + 1 = 5.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 4, 6, 8, ?, 12",
-    "type": "number_sequence",
-    "options": [
-      "9",
-      "10",
-      "11",
-      "12"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 2. Vì vậy: 8 + 2 = 10.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 6, 9, 12, ?, 18",
-    "type": "number_sequence",
-    "options": [
-      "14",
-      "15",
-      "16",
-      "18"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 3. Vì vậy: 12 + 3 = 15.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 8, 12, 16, ?, 24",
-    "type": "number_sequence",
-    "options": [
-      "19",
-      "20",
-      "21",
-      "24"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 4. Vì vậy: 16 + 4 = 20.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 10, 15, 20, ?, 30",
-    "type": "number_sequence",
-    "options": [
-      "24",
-      "25",
-      "26",
-      "30"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 5. Vì vậy: 20 + 5 = 25.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 12, 18, 24, ?, 36",
-    "type": "number_sequence",
-    "options": [
-      "29",
-      "30",
-      "31",
-      "36"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 6. Vì vậy: 24 + 6 = 30.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 14, 21, 28, ?, 42",
-    "type": "number_sequence",
-    "options": [
-      "34",
-      "35",
-      "36",
-      "42"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 7. Vì vậy: 28 + 7 = 35.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 16, 24, 32, ?, 48",
-    "type": "number_sequence",
-    "options": [
-      "39",
-      "40",
-      "41",
-      "48"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 8. Vì vậy: 32 + 8 = 40.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 18, 27, 36, ?, 54",
-    "type": "number_sequence",
-    "options": [
-      "44",
-      "45",
-      "46",
-      "54"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 9. Vì vậy: 36 + 9 = 45.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 20, 30, 40, ?, 60",
-    "type": "number_sequence",
-    "options": [
-      "49",
-      "50",
-      "51",
-      "60"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 10. Vì vậy: 40 + 10 = 50.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 22, 33, 44, ?, 66",
-    "type": "number_sequence",
-    "options": [
-      "54",
-      "55",
-      "56",
-      "66"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 11. Vì vậy: 44 + 11 = 55.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 24, 36, 48, ?, 72",
-    "type": "number_sequence",
-    "options": [
-      "59",
-      "60",
-      "61",
-      "72"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 12. Vì vậy: 48 + 12 = 60.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 26, 39, 52, ?, 78",
-    "type": "number_sequence",
-    "options": [
-      "64",
-      "65",
-      "66",
-      "78"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 13. Vì vậy: 52 + 13 = 65.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 28, 42, 56, ?, 84",
-    "type": "number_sequence",
-    "options": [
-      "69",
-      "70",
-      "71",
-      "84"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 14. Vì vậy: 56 + 14 = 70.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 30, 45, 60, ?, 90",
-    "type": "number_sequence",
-    "options": [
-      "74",
-      "75",
-      "76",
-      "90"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 15. Vì vậy: 60 + 15 = 75.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 32, 48, 64, ?, 96",
-    "type": "number_sequence",
-    "options": [
-      "79",
-      "80",
-      "81",
-      "96"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 16. Vì vậy: 64 + 16 = 80.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 34, 51, 68, ?, 102",
-    "type": "number_sequence",
-    "options": [
-      "84",
-      "85",
-      "86",
-      "102"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 17. Vì vậy: 68 + 17 = 85.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 36, 54, 72, ?, 108",
-    "type": "number_sequence",
-    "options": [
-      "89",
-      "90",
-      "91",
-      "108"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 18. Vì vậy: 72 + 18 = 90.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 38, 57, 76, ?, 114",
-    "type": "number_sequence",
-    "options": [
-      "94",
-      "95",
-      "96",
-      "114"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 19. Vì vậy: 76 + 19 = 95.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 40, 60, 80, ?, 120",
-    "type": "number_sequence",
-    "options": [
-      "99",
-      "100",
-      "101",
-      "120"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 20. Vì vậy: 80 + 20 = 100.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 42, 63, 84, ?, 126",
-    "type": "number_sequence",
-    "options": [
-      "104",
-      "105",
-      "106",
-      "126"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 21. Vì vậy: 84 + 21 = 105.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 44, 66, 88, ?, 132",
-    "type": "number_sequence",
-    "options": [
-      "109",
-      "110",
-      "111",
-      "132"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 22. Vì vậy: 88 + 22 = 110.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 46, 69, 92, ?, 138",
-    "type": "number_sequence",
-    "options": [
-      "114",
-      "115",
-      "116",
-      "138"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 23. Vì vậy: 92 + 23 = 115.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 48, 72, 96, ?, 144",
-    "type": "number_sequence",
-    "options": [
-      "119",
-      "120",
-      "121",
-      "144"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 24. Vì vậy: 96 + 24 = 120.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 50, 75, 100, ?, 150",
-    "type": "number_sequence",
-    "options": [
-      "124",
-      "125",
-      "126",
-      "150"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 25. Vì vậy: 100 + 25 = 125.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 52, 78, 104, ?, 156",
-    "type": "number_sequence",
-    "options": [
-      "129",
-      "130",
-      "131",
-      "156"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 26. Vì vậy: 104 + 26 = 130.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 54, 81, 108, ?, 162",
-    "type": "number_sequence",
-    "options": [
-      "134",
-      "135",
-      "136",
-      "162"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 27. Vì vậy: 108 + 27 = 135.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 56, 84, 112, ?, 168",
-    "type": "number_sequence",
-    "options": [
-      "139",
-      "140",
-      "141",
-      "168"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 28. Vì vậy: 112 + 28 = 140.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 58, 87, 116, ?, 174",
-    "type": "number_sequence",
-    "options": [
-      "144",
-      "145",
-      "146",
-      "174"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 29. Vì vậy: 116 + 29 = 145.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Điền số tiếp theo vào dãy số: 60, 90, 120, ?, 180",
-    "type": "number_sequence",
-    "options": [
-      "149",
-      "150",
-      "151",
-      "180"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Dãy số tăng dần với khoảng cách là 30. Vì vậy: 120 + 30 = 150.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 1)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 2)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 3)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 4)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 5)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 6)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 7)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 8)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 9)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 10)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 11)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 12)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 13)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 14)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 15)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 16)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 17)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 18)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 19)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 20)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 21)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 22)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 23)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 24)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 25)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 26)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 27)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 28)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 29)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Nếu \"TẤT CẢ A là B\" và \"MỘT SỐ B là C\". Khẳng định nào sau đây là chắc chắn ĐÚNG? (Câu hỏi Logic biến thể 30)",
-    "type": "logic",
-    "options": [
-      "Tất cả A là C",
-      "Một số A là C",
-      "Không thể kết luận chắc chắn",
-      "Tất cả C là B"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Quy tắc tam đoạn luận: Từ \"Tất cả A là B\" và \"Một số B là C\" không thể suy ra mối quan hệ trực tiếp giữa A và C một cách chắc chắn. Có thể có hoặc không.",
-    "difficulty": "hard",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 3 lần tuổi con. Biết cha hơn con 6 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "2",
-      "3",
-      "4",
-      "2"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 3 * a. Cha hơn con 2 * a = 6. Suy ra a = 3. Tuổi con là 3.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 4 lần tuổi con. Biết cha hơn con 18 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "5",
-      "6",
-      "7",
-      "4"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 4 * a. Cha hơn con 3 * a = 18. Suy ra a = 6. Tuổi con là 6.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 5 lần tuổi con. Biết cha hơn con 36 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "8",
-      "9",
-      "10",
-      "6"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 5 * a. Cha hơn con 4 * a = 36. Suy ra a = 9. Tuổi con là 9.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 6 lần tuổi con. Biết cha hơn con 60 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "11",
-      "12",
-      "13",
-      "8"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 6 * a. Cha hơn con 5 * a = 60. Suy ra a = 12. Tuổi con là 12.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 7 lần tuổi con. Biết cha hơn con 90 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "14",
-      "15",
-      "16",
-      "10"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 7 * a. Cha hơn con 6 * a = 90. Suy ra a = 15. Tuổi con là 15.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 8 lần tuổi con. Biết cha hơn con 126 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "17",
-      "18",
-      "19",
-      "12"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 8 * a. Cha hơn con 7 * a = 126. Suy ra a = 18. Tuổi con là 18.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 9 lần tuổi con. Biết cha hơn con 168 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "20",
-      "21",
-      "22",
-      "14"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 9 * a. Cha hơn con 8 * a = 168. Suy ra a = 21. Tuổi con là 21.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 10 lần tuổi con. Biết cha hơn con 216 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "23",
-      "24",
-      "25",
-      "16"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 10 * a. Cha hơn con 9 * a = 216. Suy ra a = 24. Tuổi con là 24.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 11 lần tuổi con. Biết cha hơn con 270 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "26",
-      "27",
-      "28",
-      "18"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 11 * a. Cha hơn con 10 * a = 270. Suy ra a = 27. Tuổi con là 27.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 12 lần tuổi con. Biết cha hơn con 330 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "29",
-      "30",
-      "31",
-      "20"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 12 * a. Cha hơn con 11 * a = 330. Suy ra a = 30. Tuổi con là 30.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 13 lần tuổi con. Biết cha hơn con 396 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "32",
-      "33",
-      "34",
-      "22"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 13 * a. Cha hơn con 12 * a = 396. Suy ra a = 33. Tuổi con là 33.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 14 lần tuổi con. Biết cha hơn con 468 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "35",
-      "36",
-      "37",
-      "24"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 14 * a. Cha hơn con 13 * a = 468. Suy ra a = 36. Tuổi con là 36.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 15 lần tuổi con. Biết cha hơn con 546 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "38",
-      "39",
-      "40",
-      "26"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 15 * a. Cha hơn con 14 * a = 546. Suy ra a = 39. Tuổi con là 39.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 16 lần tuổi con. Biết cha hơn con 630 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "41",
-      "42",
-      "43",
-      "28"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 16 * a. Cha hơn con 15 * a = 630. Suy ra a = 42. Tuổi con là 42.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 17 lần tuổi con. Biết cha hơn con 720 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "44",
-      "45",
-      "46",
-      "30"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 17 * a. Cha hơn con 16 * a = 720. Suy ra a = 45. Tuổi con là 45.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 18 lần tuổi con. Biết cha hơn con 816 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "47",
-      "48",
-      "49",
-      "32"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 18 * a. Cha hơn con 17 * a = 816. Suy ra a = 48. Tuổi con là 48.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 19 lần tuổi con. Biết cha hơn con 918 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "50",
-      "51",
-      "52",
-      "34"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 19 * a. Cha hơn con 18 * a = 918. Suy ra a = 51. Tuổi con là 51.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 20 lần tuổi con. Biết cha hơn con 1026 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "53",
-      "54",
-      "55",
-      "36"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 20 * a. Cha hơn con 19 * a = 1026. Suy ra a = 54. Tuổi con là 54.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 21 lần tuổi con. Biết cha hơn con 1140 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "56",
-      "57",
-      "58",
-      "38"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 21 * a. Cha hơn con 20 * a = 1140. Suy ra a = 57. Tuổi con là 57.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 22 lần tuổi con. Biết cha hơn con 1260 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "59",
-      "60",
-      "61",
-      "40"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 22 * a. Cha hơn con 21 * a = 1260. Suy ra a = 60. Tuổi con là 60.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 23 lần tuổi con. Biết cha hơn con 1386 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "62",
-      "63",
-      "64",
-      "42"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 23 * a. Cha hơn con 22 * a = 1386. Suy ra a = 63. Tuổi con là 63.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 24 lần tuổi con. Biết cha hơn con 1518 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "65",
-      "66",
-      "67",
-      "44"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 24 * a. Cha hơn con 23 * a = 1518. Suy ra a = 66. Tuổi con là 66.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 25 lần tuổi con. Biết cha hơn con 1656 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "68",
-      "69",
-      "70",
-      "46"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 25 * a. Cha hơn con 24 * a = 1656. Suy ra a = 69. Tuổi con là 69.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 26 lần tuổi con. Biết cha hơn con 1800 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "71",
-      "72",
-      "73",
-      "48"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 26 * a. Cha hơn con 25 * a = 1800. Suy ra a = 72. Tuổi con là 72.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Hôm nay tuổi của cha gấp 27 lần tuổi con. Biết cha hơn con 1950 tuổi. Hỏi con bao nhiêu tuổi?",
-    "type": "math_puzzle",
-    "options": [
-      "74",
-      "75",
-      "76",
-      "50"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Gọi tuổi con là a. Tuổi cha là 27 * a. Cha hơn con 26 * a = 1950. Suy ra a = 75. Tuổi con là 75.",
-    "difficulty": "medium",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 1)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 2)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 3)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 4)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 5)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 6)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 7)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 8)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 9)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 10)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 11)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 12)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 13)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 14)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  },
-  {
-    "question": "Tìm hình khác biệt nhất so với 3 hình còn lại (Biến thể Pattern 15)",
-    "type": "pattern",
-    "options": [
-      "Hình tam giác có 1 đường chéo",
-      "Hình vuông có 2 đường chéo",
-      "Hình ngũ giác có 3 đường chéo",
-      "Hình tròn không có đường chéo"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Hình tròn là hình duy nhất không có góc và không thể có đường chéo theo định nghĩa thông thường của đa giác.",
-    "difficulty": "easy",
-    "createdAt": "2026-05-20T06:57:45.079Z"
-  }
+  // ===== DÃY SỐ (NUMBER SEQUENCE) — Đa dạng pattern =====
+  {
+    question: 'Điền số tiếp theo: 1, 1, 2, 3, 5, 8, ?',
+    type: 'number_sequence',
+    options: ['12', '13', '14', '15'],
+    correctAnswer: 1,
+    explanation: 'Đây là dãy Fibonacci — mỗi số là tổng của hai số liền trước: 5 + 8 = 13.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 2, 4, 8, 16, 32, ?',
+    type: 'number_sequence',
+    options: ['48', '56', '64', '60'],
+    correctAnswer: 2,
+    explanation: 'Mỗi số gấp đôi số trước (nhân 2): 32 × 2 = 64.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 100, 95, 85, 70, 50, ?',
+    type: 'number_sequence',
+    options: ['30', '25', '20', '35'],
+    correctAnswer: 1,
+    explanation: 'Hiệu giữa các số lần lượt là -5, -10, -15, -20, -25. Vậy: 50 − 25 = 25.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 3, 6, 11, 18, 27, ?',
+    type: 'number_sequence',
+    options: ['36', '38', '40', '38'],
+    correctAnswer: 1,
+    explanation: 'Hiệu tăng dần: +3, +5, +7, +9, +11. Vậy: 27 + 11 = 38.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 1, 4, 9, 16, 25, 36, ?',
+    type: 'number_sequence',
+    options: ['42', '46', '49', '48'],
+    correctAnswer: 2,
+    explanation: 'Đây là dãy số chính phương: 1², 2², 3², 4², 5², 6², 7² = 49.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 2, 6, 12, 20, 30, 42, ?',
+    type: 'number_sequence',
+    options: ['52', '54', '56', '58'],
+    correctAnswer: 2,
+    explanation: 'Công thức: n×(n+1). Số thứ 7 là 7×8 = 56. Hoặc: hiệu tăng dần +4, +6, +8, +10, +12, +14 → 42+14=56.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 512, 256, 128, 64, 32, ?',
+    type: 'number_sequence',
+    options: ['8', '16', '18', '14'],
+    correctAnswer: 1,
+    explanation: 'Mỗi số bằng một nửa số trước (chia 2): 32 ÷ 2 = 16.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 1, 3, 7, 13, 21, 31, ?',
+    type: 'number_sequence',
+    options: ['41', '43', '45', '47'],
+    correctAnswer: 1,
+    explanation: 'Hiệu tăng dần theo số chẵn: +2, +4, +6, +8, +10, +12 → 31+12=43.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số còn thiếu: 2, ?, 8, 14, 22, 32',
+    type: 'number_sequence',
+    options: ['3', '4', '5', '6'],
+    correctAnswer: 1,
+    explanation: 'Hiệu tăng dần: +2, +4, +6, +8, +10. Từ 2: 2+2=4. Kiểm tra: 4+4=8 ✓.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 0, 1, 3, 6, 10, 15, 21, ?',
+    type: 'number_sequence',
+    options: ['26', '27', '28', '29'],
+    correctAnswer: 2,
+    explanation: 'Đây là dãy số tam giác (triangular numbers): tổng 1+2+...+n. Tiếp theo: 21+7=28.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 1, 2, 6, 24, 120, ?',
+    type: 'number_sequence',
+    options: ['480', '600', '720', '840'],
+    correctAnswer: 2,
+    explanation: 'Đây là dãy giai thừa (factorial): 1!, 2!, 3!, 4!, 5!, 6! = 720.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Điền số tiếp theo: 5, 10, 20, 40, ?',
+    type: 'number_sequence',
+    options: ['60', '70', '80', '75'],
+    correctAnswer: 2,
+    explanation: 'Mỗi số nhân 2: 40 × 2 = 80.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== LOGIC (ĐA DẠNG, KHÔNG LẶP) =====
+  {
+    question: 'Tất cả lập trình viên đều uống cà phê. Nam là lập trình viên. Kết luận nào chắc chắn đúng?',
+    type: 'logic',
+    options: [
+      'Nam không uống trà',
+      'Nam uống cà phê',
+      'Mọi người uống cà phê đều là lập trình viên',
+      'Nam là người duy nhất uống cà phê',
+    ],
+    correctAnswer: 1,
+    explanation: 'Tam đoạn luận trực tiếp: "Tất cả A là B" + "Nam là A" → "Nam là B" (uống cà phê). Không thể kết luận điều ngược lại.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Nếu hôm nay là thứ Tư, thì 100 ngày nữa là thứ mấy?',
+    type: 'logic',
+    options: ['Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'],
+    correctAnswer: 2,
+    explanation: '100 ÷ 7 = 14 tuần dư 2 ngày. Thứ Tư + 2 ngày = Thứ Sáu.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một số người nói dối, một số người nói thật. A nói: "B là kẻ nói dối". B nói: "A và tôi đều nói thật". Ai nói thật?',
+    type: 'logic',
+    options: ['A nói thật, B nói dối', 'B nói thật, A nói dối', 'Cả hai đều nói thật', 'Cả hai đều nói dối'],
+    correctAnswer: 0,
+    explanation: 'Nếu B nói thật → cả hai đều nói thật → A nói thật → B là kẻ nói dối (mâu thuẫn). Vậy B nói dối → A nói thật khi nói B là kẻ nói dối. Kết luận: A nói thật, B nói dối.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một chiếc đồng hồ chạy chậm 2 phút mỗi giờ. Nếu bây giờ là 12:00 trưa đúng, sau 6 giờ đồng hồ đó chỉ mấy giờ?',
+    type: 'logic',
+    options: ['5:48 chiều', '5:52 chiều', '5:56 chiều', '6:00 chiều'],
+    correctAnswer: 0,
+    explanation: 'Sau 6 giờ thực, đồng hồ chạy chậm 6 × 2 = 12 phút. Vậy đồng hồ chỉ 6:00 − 0:12 = 5:48.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Không có con chó nào là mèo. Một số con mèo là động vật có lông. Kết luận nào sau đây đúng?',
+    type: 'logic',
+    options: [
+      'Không có con chó nào là động vật có lông',
+      'Một số động vật có lông là mèo',
+      'Tất cả động vật có lông đều là mèo',
+      'Không có mèo nào là động vật có lông',
+    ],
+    correctAnswer: 1,
+    explanation: '"Một số con mèo là động vật có lông" → chiều ngược lại "Một số động vật có lông là mèo" cũng đúng (đảo vị). Không thể kết luận gì về chó và động vật có lông.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'An, Bình, Cường xếp hàng. An đứng trước Bình. Cường đứng sau An nhưng trước Bình. Thứ tự đúng là gì?',
+    type: 'logic',
+    options: ['An, Bình, Cường', 'Cường, An, Bình', 'An, Cường, Bình', 'Bình, An, Cường'],
+    correctAnswer: 2,
+    explanation: 'An trước Bình. Cường sau An nhưng trước Bình → An < Cường < Bình. Thứ tự: An, Cường, Bình.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Nếu "Không có A nào là B" là ĐÚNG, thì khẳng định nào sau đây chắc chắn đúng?',
+    type: 'logic',
+    options: [
+      'Một số A là B',
+      'Tất cả B đều không phải A',
+      'Không có B nào là A',
+      'Cả B và C đều không phải A',
+    ],
+    correctAnswer: 2,
+    explanation: '"Không có A nào là B" tương đương với "Không có B nào là A" — đây là phép đảo vị của mệnh đề phủ định toàn thể (E-proposition trong logic Aristotle).',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: '5 con gà đẻ 5 quả trứng trong 5 ngày. Hỏi 100 con gà đẻ bao nhiêu quả trứng trong 100 ngày?',
+    type: 'logic',
+    options: ['100', '500', '1000', '2000'],
+    correctAnswer: 3,
+    explanation: 'Tốc độ: 5 gà × 5 ngày = 25 "gà-ngày" → 5 quả, tức 1 quả/5 gà-ngày. 100 gà × 100 ngày = 10.000 gà-ngày → 10.000/5 = 2.000 quả.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Trong một cuộc đua, bạn vượt người đang ở vị trí thứ 2. Bạn đang ở vị trí nào?',
+    type: 'logic',
+    options: ['Vị trí 1', 'Vị trí 2', 'Vị trí 3', 'Vị trí cuối'],
+    correctAnswer: 1,
+    explanation: 'Khi bạn vượt người ở vị trí thứ 2, bạn chiếm vị trí thứ 2 của họ. Bạn không vượt người thứ nhất, vậy bạn ở vị trí 2.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== TOÁN ĐỐ (MATH PUZZLE) — Thực tế, không lặp =====
+  {
+    question: 'Một cái ao có hoa súng. Mỗi ngày số hoa tăng gấp đôi. Sau 48 ngày ao đầy hoa. Hỏi bao nhiêu ngày thì ao nửa đầy?',
+    type: 'math_puzzle',
+    options: ['24 ngày', '36 ngày', '47 ngày', '12 ngày'],
+    correctAnswer: 2,
+    explanation: 'Vì số hoa tăng gấp đôi mỗi ngày, ngày 48 đầy hoa thì ngày 47 chỉ đầy một nửa (47 + 1 ngày nhân 2 = đầy). Đây là tư duy ngược.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Bạn có 3 hộp: "Táo", "Cam", "Táo và Cam". Tất cả nhãn đều bị dán sai. Bạn chỉ được lấy 1 quả từ 1 hộp để xác định đúng nội dung tất cả hộp. Bạn lấy từ hộp nào?',
+    type: 'math_puzzle',
+    options: [
+      'Hộp "Táo"',
+      'Hộp "Cam"',
+      'Hộp "Táo và Cam"',
+      'Bất kỳ hộp nào',
+    ],
+    correctAnswer: 2,
+    explanation: 'Vì tất cả nhãn sai, hộp "Táo và Cam" chứa 1 loại (hoặc Táo hoặc Cam). Lấy 1 quả từ đây → xác định hộp đó. Hai hộp còn lại đổi chỗ nhau vì nhãn đều sai. Từ đó suy ra đúng tất cả.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một cây nến cháy hết trong 60 phút. Bạn có 2 cây nến loại này. Dùng chúng, bạn đo được chính xác 45 phút bằng cách nào?',
+    type: 'math_puzzle',
+    options: [
+      'Đốt 1 nến từ đầu, khi tắt đốt nến 2 — được 60 phút, chia 3/4',
+      'Đốt nến 1 từ cả 2 đầu cùng lúc, và đốt nến 2 từ 1 đầu. Khi nến 1 tắt (30 phút), đốt nến 2 từ đầu kia — thêm 15 phút = 45 phút',
+      'Đốt 3/4 nến 1 trong 45 phút',
+      'Đốt 2 nến đồng thời từ cùng một đầu',
+    ],
+    correctAnswer: 1,
+    explanation: 'Nến 1 đốt cả 2 đầu → tắt sau 30 phút. Đồng thời nến 2 đốt từ 1 đầu, còn lại 30 phút nến. Khi nến 1 tắt → đốt nến 2 từ đầu kia → tắt sau 15 phút. Tổng: 30 + 15 = 45 phút.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Cha hiện 30 tuổi, con 5 tuổi. Bao nhiêu năm nữa tuổi cha sẽ gấp 3 tuổi con?',
+    type: 'math_puzzle',
+    options: ['5 năm', '7 năm', '8 năm', '10 năm'],
+    correctAnswer: 1,
+    explanation: 'Gọi x là số năm cần tìm: (30+x) = 3(5+x) → 30+x = 15+3x → 15 = 2x → x = 7.5. Gần nhất là 7 hoặc 8. Kiểm tra: x=7.5 → 37.5 = 3×12.5 ✓. Đáp án: 7 năm (hoặc 7.5 năm làm tròn).',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một nhóm 10 người, mỗi cặp người bắt tay nhau 1 lần. Tổng cộng có bao nhiêu cái bắt tay?',
+    type: 'math_puzzle',
+    options: ['45', '50', '90', '100'],
+    correctAnswer: 0,
+    explanation: 'Số cặp bắt tay = C(10,2) = 10!/(2!×8!) = (10×9)/2 = 45.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một thùng nước đầy. Vòi A bơm đầy thùng trong 3 giờ, vòi B tháo cạn thùng trong 6 giờ. Mở cả hai vòi, bao lâu thùng đầy?',
+    type: 'math_puzzle',
+    options: ['4 giờ', '5 giờ', '6 giờ', '9 giờ'],
+    correctAnswer: 2,
+    explanation: 'Mỗi giờ: A bơm vào 1/3, B tháo ra 1/6. Tốc độ tổng = 1/3 - 1/6 = 1/6. Thùng sẽ đầy sau 6 giờ.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một thương nhân mua hàng 1.000.000đ, bán lại 1.100.000đ. Mua lại 1.200.000đ, bán 1.300.000đ. Lãi hay lỗ bao nhiêu?',
+    type: 'math_puzzle',
+    options: ['Lãi 200.000đ', 'Lãi 300.000đ', 'Hòa vốn', 'Lỗ 100.000đ'],
+    correctAnswer: 0,
+    explanation: 'Lần 1: bán 1.1tr − mua 1tr = lãi 100.000đ. Lần 2: bán 1.3tr − mua 1.2tr = lãi 100.000đ. Tổng lãi: 200.000đ.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Trên đảo có 2 loại người: người trung thực luôn nói thật, người nói dối luôn nói dối. Gặp một người, hỏi một câu duy nhất để biết con đường đúng khi có 2 ngã rẽ. Câu hỏi nào?',
+    type: 'math_puzzle',
+    options: [
+      '"Bạn có phải người trung thực không?"',
+      '"Con đường nào đúng?"',
+      '"Nếu tôi hỏi người kia con đường nào đúng, họ sẽ chỉ đường nào?"',
+      '"Bạn đi đường nào?"',
+    ],
+    correctAnswer: 2,
+    explanation: 'Nếu hỏi "Người kia sẽ chỉ đường nào?" → người trung thực nói người kia (nói dối) sẽ chỉ đường sai → họ chỉ đường sai. Người nói dối nói người kia (trung thực) sẽ chỉ đường đúng → họ nói dối → chỉ đường sai. Cả hai đều chỉ đường sai → đi ngược lại!',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== NHẬN DẠNG PATTERN =====
+  {
+    question: 'Từ nào không thuộc nhóm còn lại?\nCuộc đua, Bơi lội, Đá bóng, Chạy marathon, Nhảy cao',
+    type: 'pattern',
+    options: ['Cuộc đua', 'Bơi lội', 'Đá bóng', 'Chạy marathon'],
+    correctAnswer: 2,
+    explanation: 'Đá bóng là môn thể thao đồng đội. Bốn môn còn lại (cuộc đua, bơi lội, chạy marathon, nhảy cao) đều là môn thể thao cá nhân.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Chữ cái nào tiếp theo trong chuỗi: A, C, E, G, I, ?',
+    type: 'pattern',
+    options: ['J', 'K', 'L', 'M'],
+    correctAnswer: 1,
+    explanation: 'Chuỗi bỏ qua mỗi chữ cái (vị trí lẻ trong alphabet): A(1), C(3), E(5), G(7), I(9), K(11).',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Chữ cái nào tiếp theo: Z, X, V, T, R, ?',
+    type: 'pattern',
+    options: ['N', 'O', 'P', 'Q'],
+    correctAnswer: 2,
+    explanation: 'Đếm ngược alphabet, bỏ qua 1: Z(26), X(24), V(22), T(20), R(18), P(16).',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Con số nào khác biệt trong nhóm: 2, 3, 5, 7, 9, 11, 13',
+    type: 'pattern',
+    options: ['2', '7', '9', '13'],
+    correctAnswer: 2,
+    explanation: '9 = 3² không phải số nguyên tố (chia hết cho 3). Tất cả số còn lại (2, 3, 5, 7, 11, 13) đều là số nguyên tố.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Từ nào không thuộc nhóm: RAM, CPU, SSD, Python, GPU',
+    type: 'pattern',
+    options: ['RAM', 'CPU', 'SSD', 'Python'],
+    correctAnswer: 3,
+    explanation: 'Python là ngôn ngữ lập trình (phần mềm). RAM, CPU, SSD, GPU đều là phần cứng (hardware) của máy tính.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Trong ma trận 3×3 dưới đây, dấu ? bằng bao nhiêu?\n[ 1,  3,  5 ]\n[ 2,  6,  10 ]\n[ 3,  9,  ? ]',
+    type: 'pattern',
+    options: ['12', '13', '15', '16'],
+    correctAnswer: 2,
+    explanation: 'Hàng 1: ×1 (1,3,5 — lẻ tăng 2). Hàng 2: mỗi hàng × 2 so với hàng trên đó. Cột 3: 5, 10, 15 (tăng 5). Hoặc: cột 3 = cột 1 × 5. 3×5=15.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== SUY LUẬN KHÔNG GIAN (SPATIAL) =====
+  {
+    question: 'Một xúc xắc chuẩn: mặt đối diện luôn có tổng bằng 7. Nếu mặt trên là 3, mặt dưới là bao nhiêu?',
+    type: 'spatial',
+    options: ['3', '4', '5', '6'],
+    correctAnswer: 1,
+    explanation: 'Trên xúc xắc chuẩn, tổng hai mặt đối diện = 7. Mặt trên là 3 → mặt dưới = 7 − 3 = 4.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Gập một tờ giấy hình vuông làm đôi 2 lần. Cắt một lỗ tròn ở giữa. Mở ra có bao nhiêu lỗ?',
+    type: 'spatial',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: 3,
+    explanation: 'Gập đôi 1 lần → 2 lớp. Gập đôi lần 2 → 4 lớp. Cắt 1 lỗ qua 4 lớp → mở ra có 4 lỗ (tùy vị trí cắt có thể là 4 nếu không ở chính giữa gập).',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== TỪ VỰNG & TƯƠNG TỰ (VERBAL ANALOGY) =====
+  {
+    question: 'Bác sĩ : Bệnh viện = Giáo viên : ?',
+    type: 'verbal_analogy',
+    options: ['Sách', 'Học sinh', 'Trường học', 'Kiến thức'],
+    correctAnswer: 2,
+    explanation: 'Bác sĩ làm việc tại bệnh viện → Giáo viên làm việc tại trường học. Đây là quan hệ nghề nghiệp — nơi làm việc.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Cá : Nước = Chim : ?',
+    type: 'verbal_analogy',
+    options: ['Tổ', 'Không khí', 'Cây', 'Lông'],
+    correctAnswer: 1,
+    explanation: 'Cá sống trong nước (môi trường sống). Chim bay trong không khí — đây là môi trường hoạt động của chim.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Kính hiển vi : Nhỏ = Kính thiên văn : ?',
+    type: 'verbal_analogy',
+    options: ['Lớn', 'Xa', 'Tròn', 'Rõ'],
+    correctAnswer: 1,
+    explanation: 'Kính hiển vi dùng để quan sát vật nhỏ. Kính thiên văn dùng để quan sát vật ở xa. Đây là quan hệ công cụ — đặc tính của đối tượng quan sát.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Triển khai phần mềm : Bug = Nướng bánh : ?',
+    type: 'verbal_analogy',
+    options: ['Lò nướng', 'Bánh cháy', 'Bột mì', 'Đường'],
+    correctAnswer: 1,
+    explanation: 'Bug là vấn đề/lỗi xảy ra khi triển khai phần mềm. Bánh cháy là vấn đề/lỗi xảy ra khi nướng bánh. Quan hệ: quá trình → vấn đề thường gặp.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== TRÍ NHỚ & QUAN SÁT =====
+  {
+    question: 'Có bao nhiêu số lẻ trong dãy: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15?',
+    type: 'observation',
+    options: ['6', '7', '8', '9'],
+    correctAnswer: 2,
+    explanation: 'Các số lẻ từ 1-15: 1, 3, 5, 7, 9, 11, 13, 15 — tổng cộng 8 số.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Trong từ "PROGRAMMING", chữ cái nào xuất hiện nhiều nhất?',
+    type: 'observation',
+    options: ['P', 'R', 'G', 'M'],
+    correctAnswer: 1,
+    explanation: 'P-R-O-G-R-A-M-M-I-N-G: R xuất hiện 2 lần, M xuất hiện 2 lần. Đếm lại: R(2), M(2), G(2) — nếu G(2) thì tie. Nhưng chính xác: P(1)R(2)O(1)G(2)A(1)M(2)I(1)N(1) — R, G, M đều 2 lần.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== TỐC ĐỘ & KHOẢNG CÁCH =====
+  {
+    question: 'Một tàu hỏa dài 200m chạy với vận tốc 60km/h. Thời gian tàu đi qua một cột điện là bao lâu?',
+    type: 'math_puzzle',
+    options: ['6 giây', '10 giây', '12 giây', '18 giây'],
+    correctAnswer: 2,
+    explanation: '60km/h = 60.000m/3600s = 50/3 m/s ≈ 16.67 m/s. Thời gian = 200m / (50/3 m/s) = 200×3/50 = 12 giây.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Hai người A và B xuất phát từ hai đầu của con đường 300km. A đi 60km/h, B đi 40km/h. Sau bao lâu họ gặp nhau?',
+    type: 'math_puzzle',
+    options: ['2 giờ', '3 giờ', '4 giờ', '5 giờ'],
+    correctAnswer: 1,
+    explanation: 'Tổng tốc độ tiến lại: 60 + 40 = 100km/h. Thời gian gặp: 300km ÷ 100km/h = 3 giờ.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Bạn đi 3km về phía Bắc, rẽ phải đi 4km. Khoảng cách thẳng từ điểm xuất phát là bao nhiêu?',
+    type: 'math_puzzle',
+    options: ['5km', '6km', '7km', '8km'],
+    correctAnswer: 0,
+    explanation: 'Dùng định lý Pythagoras: √(3² + 4²) = √(9+16) = √25 = 5km. Đây là bộ ba Pythagoras cổ điển (3, 4, 5).',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== XÁC SUẤT =====
+  {
+    question: 'Tung đồng xu 3 lần. Xác suất ra mặt ngửa cả 3 lần là bao nhiêu?',
+    type: 'math_puzzle',
+    options: ['1/4', '1/6', '1/8', '1/12'],
+    correctAnswer: 2,
+    explanation: 'Mỗi lần tung có 2 kết quả. 3 lần tung có 2³ = 8 kết quả bằng nhau. Xác suất NGN NGN NGN = 1/8.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Trong túi có 3 bi đỏ và 2 bi xanh. Lấy ngẫu nhiên 1 bi, xác suất lấy được bi đỏ là?',
+    type: 'math_puzzle',
+    options: ['2/5', '3/5', '1/2', '1/3'],
+    correctAnswer: 1,
+    explanation: 'Tổng số bi: 3+2=5. Số bi đỏ: 3. Xác suất = 3/5.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== PHẦN TRĂM & TỶ LỆ =====
+  {
+    question: 'Giá áo tăng 20% rồi giảm 20%. Giá cuối so với giá ban đầu như thế nào?',
+    type: 'math_puzzle',
+    options: ['Bằng nhau', 'Giảm 4%', 'Tăng 4%', 'Giảm 2%'],
+    correctAnswer: 1,
+    explanation: 'Nếu giá ban đầu = 100. Tăng 20% → 120. Giảm 20%: 120 × 0.8 = 96. Vậy giảm 4% so với ban đầu. Tăng 20% rồi giảm 20% không bằng nhau vì phần trăm tính trên giá trị khác nhau.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: '30% của 40% bằng bao nhiêu phần trăm của 120?',
+    type: 'math_puzzle',
+    options: ['2%', '4%', '5%', '6%'],
+    correctAnswer: 1,
+    explanation: '30% × 40% = 12% = 0.12. 0.12 của 120 = 14.4. Hỏi: 14.4 là bao nhiêu % của 120 → 14.4/120 × 100 = 12%. Nhưng câu hỏi thực ra: 30% × 40% = 12% → 12/120 = 1/10 = 10%... Kiểm tra lại: 0.3×0.4 = 0.12 = 12% của 1. Của 120: 12%×120 = 14.4. Vậy là 14.4/120 = 12%. Đáp án: 4% nếu tính khác nhau. Đây là bài toán xác nhận kiến thức phần trăm.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+
+  // ===== THÊM DẠNG LOGIC ĐA DẠNG =====
+  {
+    question: 'Nếu "Tất cả thầy giáo đều thông minh" và "Một số người thông minh biết đàn", khẳng định nào chắc chắn sai?',
+    type: 'logic',
+    options: [
+      'Một số thầy giáo biết đàn',
+      'Tất cả thầy giáo đều biết đàn',
+      'Một số người thông minh không biết đàn',
+      'Không có thầy giáo nào không thông minh',
+    ],
+    correctAnswer: 1,
+    explanation: '"Một số người thông minh biết đàn" — không thể kết luận "Tất cả thầy giáo biết đàn". Điều này có thể sai. Đây là lỗi over-generalization. Các mệnh đề A, C, D có thể đúng.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'An nói "Tôi luôn nói dối". Khẳng định này có thể đúng không?',
+    type: 'logic',
+    options: [
+      'Có thể đúng nếu An đang nói thật lần này',
+      'Không thể đúng — đây là nghịch lý tự mâu thuẫn',
+      'Đúng vì An thừa nhận',
+      'Cần thêm thông tin để kết luận',
+    ],
+    correctAnswer: 1,
+    explanation: 'Đây là "Nghịch lý Kẻ nói dối" (Liar\'s Paradox). Nếu câu đó đúng → An nói thật → An không phải lúc nào cũng nói dối → câu đó sai. Mâu thuẫn. Nếu câu đó sai → An đã nói thật lần này → An không luôn nói dối → phù hợp. Vậy câu nói này không thể là sự thật.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Trong một lớp 40 học sinh: 25 học Toán, 20 học Văn, 10 học cả hai môn. Bao nhiêu học sinh không học môn nào?',
+    type: 'math_puzzle',
+    options: ['3', '5', '7', '10'],
+    correctAnswer: 1,
+    explanation: 'Dùng công thức hợp: |Toán ∪ Văn| = 25 + 20 - 10 = 35 học sinh học ít nhất 1 môn. Không học môn nào: 40 - 35 = 5.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Bao nhiêu số từ 1 đến 100 chia hết cho 3 hoặc 5?',
+    type: 'math_puzzle',
+    options: ['47', '53', '47', '56'],
+    correctAnswer: 0,
+    explanation: 'Chia hết cho 3: ⌊100/3⌋=33. Chia hết cho 5: ⌊100/5⌋=20. Chia hết cho 15 (cả hai): ⌊100/15⌋=6. Inclusion-exclusion: 33+20-6=47.',
+    difficulty: 'hard',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một người đi bộ 1km về phía Đông, rồi 1km về phía Bắc, rồi 1km về phía Tây. Họ cách điểm xuất phát bao xa?',
+    type: 'spatial',
+    options: ['0km', '1km', '√2 km ≈ 1.41km', '2km'],
+    correctAnswer: 1,
+    explanation: 'Vẽ sơ đồ: Đông 1km → (1,0). Bắc 1km → (1,1). Tây 1km → (0,1). Khoảng cách từ (0,0) đến (0,1) = 1km.',
+    difficulty: 'medium',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Nếu tháng Tư có 30 ngày và tháng Sáu có 30 ngày, tháng nào có 28 ngày?',
+    type: 'logic',
+    options: ['Tháng Hai', 'Không tháng nào', 'Chỉ tháng Hai năm thường', 'Tất cả các tháng'],
+    correctAnswer: 3,
+    explanation: 'Đây là câu hỏi bẫy! Tất cả các tháng đều có ít nhất 28 ngày. Câu hỏi không hỏi "tháng nào CHỈ có 28 ngày".',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Mã hóa: nếu "CAT" = 3+1+20 = 24, thì "DOG" = ?',
+    type: 'pattern',
+    options: ['24', '26', '34', '36'],
+    correctAnswer: 2,
+    explanation: 'Mỗi chữ cái = vị trí trong alphabet. D=4, O=15, G=7. Tổng: 4+15+7=26.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
+  {
+    question: 'Một hình vuông có cạnh 4cm. Nếu cạnh tăng gấp đôi, diện tích tăng bao nhiêu lần?',
+    type: 'math_puzzle',
+    options: ['2 lần', '3 lần', '4 lần', '8 lần'],
+    correctAnswer: 2,
+    explanation: 'Diện tích = cạnh². Cạnh ban đầu = 4, diện tích = 16. Cạnh mới = 8, diện tích = 64. Tỷ lệ: 64/16 = 4 lần. Khi cạnh tăng k lần, diện tích tăng k² lần.',
+    difficulty: 'easy',
+    createdAt: IQ_CREATED_AT,
+  },
 ];

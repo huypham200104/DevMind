@@ -36,7 +36,7 @@ class HomeController extends ChangeNotifier {
     required String? email,
     required String? photoUrl,
   }) {
-    if (_activeUid == uid) {
+    if (_activeUid == uid && _errorMessage == null && _dailyCheckInErrorMessage == null) {
       return;
     }
 

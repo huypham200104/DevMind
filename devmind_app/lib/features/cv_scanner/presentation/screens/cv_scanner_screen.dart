@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
-import '../../../../app/theme/app_colors.dart';
+
+import '../../../../core/widgets/app_dialog.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 import '../../domain/entities/cv_upload.dart';
@@ -11,7 +12,7 @@ import '../controllers/cv_scanner_controller.dart';
 import '../widgets/cv_analyze_button.dart';
 import '../widgets/cv_position_field.dart';
 import '../widgets/cv_scan_result_card.dart';
-import '../widgets/cv_scanner_header.dart';
+import '../../../../core/widgets/app_header.dart';
 import '../widgets/cv_upload_drop_zone.dart';
 import '../widgets/recent_cv_files_section.dart';
 
@@ -68,7 +69,10 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: CvScannerHeader(onBack: _handleBack),
+              child: AppHeader(
+                title: 'Quét CV',
+                onBack: _handleBack,
+              ),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -126,6 +130,10 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
   }
 
   Future<void> _handlePickPdf() async {
+    if (!_ensureSignedIn()) {
+      return;
+    }
+
     final controller = context.read<CvScannerController>();
     final selected = await controller.pickPdf();
     if (!mounted) {
@@ -144,6 +152,10 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
   }
 
   Future<void> _handleAnalyze() async {
+    if (!_ensureSignedIn()) {
+      return;
+    }
+
     final controller = context.read<CvScannerController>();
     if (_positionController.text.trim().isEmpty) {
       _showSnackBar('Vui lòng nhập vị trí ứng tuyển.', isError: true);
@@ -184,6 +196,19 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
     }
   }
 
+  bool _ensureSignedIn() {
+    if (context.read<AuthController>().currentUser != null) {
+      return true;
+    }
+
+    _showSnackBar(
+      'Bạn chưa đăng nhập. Vui lòng đăng nhập lại để scan CV.',
+      isError: true,
+    );
+    context.goNamed(AppRouteNames.signIn);
+    return false;
+  }
+
   void _handleShowResult(CvUpload result) {
     context.read<CvScannerController>().showResult(result);
     _scrollToResult();
@@ -206,13 +231,10 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? const Color(0xFFB42318)
-            : AppColors.primaryGradientEnd,
-      ),
-    );
+    if (isError) {
+      AppDialog.showError(context, message: message);
+    } else {
+      AppDialog.showSuccess(context, message: message);
+    }
   }
 }
