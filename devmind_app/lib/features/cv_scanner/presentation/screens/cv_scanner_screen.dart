@@ -70,7 +70,7 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: AppHeader(
-                title: 'Quét CV',
+                title: 'DevMind AI',
                 onBack: _handleBack,
               ),
             ),

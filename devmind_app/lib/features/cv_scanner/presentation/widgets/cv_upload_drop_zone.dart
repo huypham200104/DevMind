@@ -33,62 +33,62 @@ class CvUploadDropZone extends StatelessWidget {
           ),
           child: Container(
             width: double.infinity,
-            constraints: const BoxConstraints(minHeight: 282),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 42),
+            constraints: const BoxConstraints(minHeight: 160),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 116,
-                  height: 116,
+                  width: 72,
+                  height: 72,
                   decoration: const BoxDecoration(
                     color: Color(0xFFD6F8F4),
                     shape: BoxShape.circle,
                   ),
                   child: isBusy
                       ? const Padding(
-                          padding: EdgeInsets.all(34),
-                          child: CircularProgressIndicator(strokeWidth: 3),
+                          padding: EdgeInsets.all(20),
+                          child: CircularProgressIndicator(strokeWidth: 2.5),
                         )
                       : Icon(
                           hasSelectedFile
                               ? Icons.picture_as_pdf_outlined
                               : Icons.upload_file_outlined,
                           color: AppColors.primaryGradientEnd,
-                          size: 52,
+                          size: 32,
                         ),
                 ),
-                const SizedBox(height: 34),
+                const SizedBox(height: 16),
                 Text(
                   hasSelectedFile ? selectedFileName! : 'Chọn file CV PDF',
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
                     height: 1.15,
                     letterSpacing: 0,
                   ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 8),
                 Text(
                   hasSelectedFile
                       ? '${selectedFileSize ?? 'Không rõ dung lượng'} • Bấm để chọn file khác.'
                       : 'Bấm để chọn file PDF từ thiết bị.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                     height: 1.35,
                     letterSpacing: 0,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   'Hỗ trợ PDF, tối đa 5MB',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                     height: 1.35,
