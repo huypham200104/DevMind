@@ -289,7 +289,7 @@ class _QuestionThumbnail extends StatelessWidget {
     return Container(
       width: 54,
       height: 54,
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -304,21 +304,21 @@ class _QuestionThumbnail extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 18,
+            height: 16,
             decoration: BoxDecoration(
               color: accentColor.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Icon(Icons.code, color: accentColor, size: 12),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
           for (final width in const [32.0, 24.0, 38.0]) ...[
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
                 width: width,
                 height: 4,
-                margin: const EdgeInsets.only(bottom: 5),
+                margin: const EdgeInsets.only(bottom: 3),
                 decoration: BoxDecoration(
                   color: const Color(0xFFE2E8F0),
                   borderRadius: BorderRadius.circular(999),
