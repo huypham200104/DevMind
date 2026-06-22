@@ -8,7 +8,7 @@ import '../../../../core/widgets/app_dialog.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../domain/entities/technical_course.dart';
 import '../../domain/entities/technical_question.dart';
-import '../controllers/technical_quiz_controller.dart';
+import '../controllers/technical_course_list_controller.dart';
 
 class SelectQuestionsScreen extends StatefulWidget {
   const SelectQuestionsScreen({super.key});
@@ -22,7 +22,7 @@ class _SelectQuestionsScreenState extends State<SelectQuestionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TechnicalQuizController>();
+    final controller = context.watch<TechnicalCourseListController>();
     final courses = controller.allCourses;
 
     return Scaffold(
@@ -43,9 +43,9 @@ class _SelectQuestionsScreenState extends State<SelectQuestionsScreen> {
             child: Text(
               'Chọn câu hỏi',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                  ),
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -54,9 +54,9 @@ class _SelectQuestionsScreenState extends State<SelectQuestionsScreen> {
             child: Text(
               'Lựa chọn các chủ đề và câu hỏi cụ thể để xây dựng khóa học tùy chỉnh của bạn.',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.5,
-                  ),
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
             ),
           ),
           const SizedBox(height: 24),
@@ -73,7 +73,10 @@ class _SelectQuestionsScreenState extends State<SelectQuestionsScreen> {
                     setState(() {
                       if (selected) {
                         if (_selectedIds.length >= 25) {
-                          AppDialog.showError(context, message: 'Bạn chỉ được chọn tối đa 25 câu hỏi.');
+                          AppDialog.showError(
+                            context,
+                            message: 'Bạn chỉ được chọn tối đa 25 câu hỏi.',
+                          );
                           return;
                         }
                         _selectedIds.add(id);
@@ -106,16 +109,18 @@ class _SelectQuestionsScreenState extends State<SelectQuestionsScreen> {
                   Text(
                     'Đã chọn ${_selectedIds.length}/25 câu (tối thiểu 5 câu)',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
                     height: 54,
                     child: FilledButton.icon(
-                      onPressed: _selectedIds.length >= 5 ? _showCreateDialog : null,
+                      onPressed: _selectedIds.length >= 5
+                          ? _showCreateDialog
+                          : null,
                       iconAlignment: IconAlignment.end,
                       icon: const Icon(Icons.arrow_forward, size: 20),
                       label: const Text(
@@ -143,14 +148,17 @@ class _SelectQuestionsScreenState extends State<SelectQuestionsScreen> {
     final uid = context.read<AuthController>().currentUser?.uid;
     if (uid == null) return;
 
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalCourseListController>();
 
-    final existingCourseNames = controller.myCourses.map((c) => c.title.toLowerCase().trim()).toList();
+    final existingCourseNames = controller.myCourses
+        .map((c) => c.title.toLowerCase().trim())
+        .toList();
 
     final title = await showDialog<String>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => _CreateCourseDialog(existingCourseNames: existingCourseNames),
+      builder: (context) =>
+          _CreateCourseDialog(existingCourseNames: existingCourseNames),
     );
 
     if (title == null || title.trim().isEmpty) return;
@@ -242,15 +250,15 @@ class _CategoryAccordionState extends State<_CategoryAccordion> {
         title: Text(
           widget.course.title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w700,
-              ),
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         subtitle: Text(
           '${widget.course.questionCount} câu hỏi khả dụng',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.textSecondary,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
         ),
         children: [
           if (_isLoading)
@@ -276,8 +284,9 @@ class _CategoryAccordionState extends State<_CategoryAccordion> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                     ),
                   ),
                   activeColor: AppColors.primaryGradientEnd,
@@ -294,7 +303,7 @@ class _CategoryAccordionState extends State<_CategoryAccordion> {
   Future<void> _loadQuestions() async {
     setState(() => _isLoading = true);
     final questions = await context
-        .read<TechnicalQuizController>()
+        .read<TechnicalCourseListController>()
         .loadQuestionsForCourse(widget.course);
     if (!mounted) return;
     setState(() {
@@ -339,9 +348,9 @@ class _CreateCourseDialogState extends State<_CreateCourseDialog> {
                 Text(
                   'Đặt tên khóa học',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w800,
-                      ),
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -353,9 +362,9 @@ class _CreateCourseDialogState extends State<_CreateCourseDialog> {
             Text(
               'Tên khóa học',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -364,24 +373,31 @@ class _CreateCourseDialogState extends State<_CreateCourseDialog> {
                 hintText: 'VD: Nhập môn Trí tuệ nhân tạo...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.primaryGradientEnd),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryGradientEnd,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.primaryGradientEnd),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryGradientEnd,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.primaryGradientEnd, width: 2),
+                  borderSide: const BorderSide(
+                    color: AppColors.primaryGradientEnd,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Tên khóa học nên ngắn gọn và thể hiện rõ nội dung.',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -392,7 +408,11 @@ class _CreateCourseDialogState extends State<_CreateCourseDialog> {
                   final text = _controller.text.trim();
                   if (text.isEmpty) return;
                   if (widget.existingCourseNames.contains(text.toLowerCase())) {
-                    AppDialog.showError(context, message: 'Tên khóa học đã tồn tại. Vui lòng chọn tên khác.');
+                    AppDialog.showError(
+                      context,
+                      message:
+                          'Tên khóa học đã tồn tại. Vui lòng chọn tên khác.',
+                    );
                     return;
                   }
                   Navigator.of(context).pop(text);

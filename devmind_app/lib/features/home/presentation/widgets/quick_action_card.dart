@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/theme_ext.dart';
+import '../../../../app/theme/app_spacing.dart';
 
 class QuickActionCard extends StatelessWidget {
   const QuickActionCard({
@@ -23,27 +24,40 @@ class QuickActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withAlpha(20),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.primary.withAlpha(60),
-            width: 1.5,
-          ),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.colors.outline,
+          width: 1,
         ),
-        child: Row(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(8),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(16),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          splashColor: context.colors.primary.withAlpha(20),
+          highlightColor: context.colors.primary.withAlpha(10),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Row(
           children: [
             // Icon badge
             Container(
               width: 54,
               height: 54,
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: context.colors.primary,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
@@ -61,7 +75,7 @@ class QuickActionCard extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 16),
+            AppSpacing.wGapMD,
 
             // Text info
             Expanded(
@@ -70,56 +84,46 @@ class QuickActionCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0,
-                        ),
+                    style: context.cardTitle,
                   ),
-                  const SizedBox(height: 3),
+                  AppSpacing.hGapXXS,
                   Text(
                     description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                          letterSpacing: 0,
-                          height: 1.45,
-                        ),
+                    style: context.cardSubtitle,
                   ),
-                  const SizedBox(height: 8),
+                  AppSpacing.hGapXS,
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 9,
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withAlpha(25),
+                      color: context.colors.primary.withAlpha(25),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       actionLabel,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: AppColors.primaryGradientEnd,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0,
-                          ),
+                      style: context.actionLabel,
                     ),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(width: 8),
+            AppSpacing.wGapXS,
 
             // Arrow
             Icon(
               Icons.chevron_right_rounded,
-              color: AppColors.primary,
+              color: context.colors.primary,
               size: 24,
             ),
           ],
         ),
+      ),
+    ),
       ),
     );
   }

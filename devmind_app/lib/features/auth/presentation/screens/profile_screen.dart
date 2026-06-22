@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
+import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_spacing.dart';
+import '../../../../core/utils/theme_ext.dart';
 import '../../../../core/widgets/app_placeholder_screen.dart';
 import '../../../home/presentation/controllers/home_controller.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
+import '../../../home/presentation/widgets/home_error_banner.dart';
+import '../../../../core/widgets/glassy_app_bar.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/profile_controller.dart';
-import '../widgets/profile_app_bar.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_history_section.dart';
 import '../widgets/profile_wallet_card.dart';
@@ -71,28 +76,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : 'huypham@devmind.com';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7F8),
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            ProfileAppBar(
-              onLogoutPressed: () async {
-                // Đợi PopupMenu đóng hẳn (khoảng 300ms) để tránh lỗi "Looking up a deactivated widget's ancestor is unsafe"
-                await Future.delayed(const Duration(milliseconds: 300));
-                if (!context.mounted) return;
+      backgroundColor: context.colors.surface,
+      appBar: GlassyAppBar(
+        title: 'DevMind AI',
+        actions: [
+          PopupMenuButton<int>(
+            tooltip: 'Cài đặt',
+            position: PopupMenuPosition.under,
+            color: AppColors.surface,
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            onSelected: (action) async {
+              if (action == 0) {
+                final homeController = context.read<HomeController>();
+                final profileController = context.read<ProfileController>();
+                final appAuthController = context.read<AuthController>();
                 
-                context.read<HomeController>().clear();
-                context.read<ProfileController>().clear();
+                homeController.clear();
+                profileController.clear();
                 
-                await context.read<AuthController>().signOut();
+                await appAuthController.signOut();
                 if (context.mounted) {
                   context.goNamed(AppRouteNames.welcome);
                 }
-              },
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.logout, color: AppColors.danger, size: 20),
+                    SizedBox(width: 10),
+                    Text(
+                      'Đăng xuất',
+                      style: TextStyle(
+                        color: AppColors.danger,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            icon: const Icon(
+              Icons.settings_outlined,
+              color: AppColors.primary,
+              size: 30,
             ),
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(26, 28, 26, 28),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, AppSpacing.xxl, AppSpacing.xxl, AppSpacing.xxl),
                 child: Column(
                   children: [
                     ProfileHeader(
@@ -100,19 +145,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       email: email,
                       photoUrl: user.photoURL,
                       onEditProfile: () => context.pushNamed(AppRouteNames.editProfile),
-                    ),
-                    const SizedBox(height: 10),
+                    ).animate().fade(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
+                    AppSpacing.hGapSM,
                     if (profileController.isLoading) ...[
-                      const SizedBox(height: 18),
+                      AppSpacing.hGapMD,
                       const CircularProgressIndicator(),
                     ],
                     if (profileController.errorMessage != null) ...[
-                      const SizedBox(height: 18),
-                      _ProfileErrorMessage(
+                      AppSpacing.hGapMD,
+                      HomeErrorBanner(
                         message: profileController.errorMessage!,
-                      ),
+                      ).animate().fade().slideY(begin: 0.1),
                     ],
-                    const SizedBox(height: 10),
+                    AppSpacing.hGapSM,
 
                     ProfileWalletCard(
                       explainCredits:
@@ -120,8 +165,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       cvScanCredits:
                           profileController.profileData?.wallet.cvScanCredits,
                       onTopUp: () => context.goNamed(AppRouteNames.wallet),
-                    ),
-                    const SizedBox(height: 34),
+                    ).animate().fade(delay: 100.ms, duration: 400.ms).slideY(begin: 0.1, delay: 100.ms, duration: 400.ms),
+                    AppSpacing.hGapXXXL,
                     ProfileHistorySection(
                       selectedIndex: _selectedHistoryIndex,
                       questions:
@@ -135,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _selectedHistoryIndex = index;
                         });
                       },
-                    ),
+                    ).animate().fade(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, delay: 200.ms, duration: 400.ms),
                   ],
                 ),
               ),
@@ -144,34 +189,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       bottomNavigationBar: const HomeBottomNavigation(),
-    );
-  }
-}
-
-class _ProfileErrorMessage extends StatelessWidget {
-  const _ProfileErrorMessage({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF7ED),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFFED7AA)),
-      ),
-      child: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: const Color(0xFF9A3412),
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0,
-        ),
-      ),
     );
   }
 }

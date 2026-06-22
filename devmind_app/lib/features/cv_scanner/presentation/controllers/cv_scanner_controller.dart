@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/errors/error_handler.dart';
 import '../../domain/entities/cv_upload.dart';
 import '../../domain/repositories/cv_upload_repository.dart';
 
@@ -68,10 +69,10 @@ class CvScannerController extends ChangeNotifier {
             _errorMessage = null;
             notifyListeners();
           },
-          onError: (_) {
+          onError: (error) {
             _recentUploads = const [];
             _isLoading = false;
-            _errorMessage = 'Không thể tải danh sách CV từ Firebase.';
+            _errorMessage = ErrorHandler.handle(error).message;
             notifyListeners();
           },
         );
@@ -95,11 +96,12 @@ class CvScannerController extends ChangeNotifier {
       _selectedFile = file;
       _activeResult = null;
       return true;
-    } catch (error) {
-      _actionErrorMessage = _readErrorMessage(
-        error,
-        fallback: 'Không thể chọn file PDF.',
-      );
+    } catch (error, stackTrace) {
+      if (error is CvScannerException && error.message.trim().isNotEmpty) {
+        _actionErrorMessage = error.message.trim();
+      } else {
+        _actionErrorMessage = ErrorHandler.handle(error, stackTrace).message;
+      }
       return false;
     } finally {
       _isPickingFile = false;
@@ -139,11 +141,12 @@ class CvScannerController extends ChangeNotifier {
       _activeResult = result;
       _recentUploads = _mergeResult(result);
       return true;
-    } catch (error) {
-      _actionErrorMessage = _readErrorMessage(
-        error,
-        fallback: 'Không thể scan CV lúc này.',
-      );
+    } catch (error, stackTrace) {
+      if (error is CvScannerException && error.message.trim().isNotEmpty) {
+        _actionErrorMessage = error.message.trim();
+      } else {
+        _actionErrorMessage = ErrorHandler.handle(error, stackTrace).message;
+      }
       return false;
     } finally {
       _isScanning = false;
@@ -177,13 +180,6 @@ class CvScannerController extends ChangeNotifier {
     ];
   }
 
-  String _readErrorMessage(Object error, {required String fallback}) {
-    if (error is CvScannerException && error.message.trim().isNotEmpty) {
-      return error.message.trim();
-    }
-
-    return fallback;
-  }
 
   @override
   void dispose() {

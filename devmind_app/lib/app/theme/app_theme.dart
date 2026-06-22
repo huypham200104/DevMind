@@ -112,6 +112,10 @@ abstract final class AppTheme {
       secondary: AppColors.secondary,
       surface: AppColors.surface,
       error: AppColors.danger,
+      onSurface: AppColors.textPrimary,
+      onSurfaceVariant: AppColors.textSecondary,
+      outline: AppColors.border,
+      outlineVariant: AppColors.border,
     );
 
     return ThemeData(
@@ -173,6 +177,98 @@ abstract final class AppTheme {
           borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
         ),
       ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        },
+      ),
+      extensions: const [
+        AppColorsExtension(
+          primaryGradientEnd: AppColors.primaryGradientEnd,
+          headerBackground: AppColors.headerBackground,
+          inputSurface: AppColors.inputSurface,
+          borderStrong: AppColors.borderStrong,
+          navInactive: AppColors.navInactive,
+          navInactiveAlt: AppColors.navInactiveAlt,
+          googleBlue: AppColors.googleBlue,
+          googleRed: AppColors.googleRed,
+          googleYellow: AppColors.googleYellow,
+          googleGreen: AppColors.googleGreen,
+        ),
+      ],
+    );
+  }
+}
+
+class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
+  const AppColorsExtension({
+    required this.primaryGradientEnd,
+    required this.headerBackground,
+    required this.inputSurface,
+    required this.borderStrong,
+    required this.navInactive,
+    required this.navInactiveAlt,
+    required this.googleBlue,
+    required this.googleRed,
+    required this.googleYellow,
+    required this.googleGreen,
+  });
+
+  final Color primaryGradientEnd;
+  final Color headerBackground;
+  final Color inputSurface;
+  final Color borderStrong;
+  final Color navInactive;
+  final Color navInactiveAlt;
+  final Color googleBlue;
+  final Color googleRed;
+  final Color googleYellow;
+  final Color googleGreen;
+
+  @override
+  ThemeExtension<AppColorsExtension> copyWith({
+    Color? primaryGradientEnd,
+    Color? headerBackground,
+    Color? inputSurface,
+    Color? borderStrong,
+    Color? navInactive,
+    Color? navInactiveAlt,
+    Color? googleBlue,
+    Color? googleRed,
+    Color? googleYellow,
+    Color? googleGreen,
+  }) {
+    return AppColorsExtension(
+      primaryGradientEnd: primaryGradientEnd ?? this.primaryGradientEnd,
+      headerBackground: headerBackground ?? this.headerBackground,
+      inputSurface: inputSurface ?? this.inputSurface,
+      borderStrong: borderStrong ?? this.borderStrong,
+      navInactive: navInactive ?? this.navInactive,
+      navInactiveAlt: navInactiveAlt ?? this.navInactiveAlt,
+      googleBlue: googleBlue ?? this.googleBlue,
+      googleRed: googleRed ?? this.googleRed,
+      googleYellow: googleYellow ?? this.googleYellow,
+      googleGreen: googleGreen ?? this.googleGreen,
+    );
+  }
+
+  @override
+  ThemeExtension<AppColorsExtension> lerp(ThemeExtension<AppColorsExtension>? other, double t) {
+    if (other is! AppColorsExtension) {
+      return this;
+    }
+    return AppColorsExtension(
+      primaryGradientEnd: Color.lerp(primaryGradientEnd, other.primaryGradientEnd, t)!,
+      headerBackground: Color.lerp(headerBackground, other.headerBackground, t)!,
+      inputSurface: Color.lerp(inputSurface, other.inputSurface, t)!,
+      borderStrong: Color.lerp(borderStrong, other.borderStrong, t)!,
+      navInactive: Color.lerp(navInactive, other.navInactive, t)!,
+      navInactiveAlt: Color.lerp(navInactiveAlt, other.navInactiveAlt, t)!,
+      googleBlue: Color.lerp(googleBlue, other.googleBlue, t)!,
+      googleRed: Color.lerp(googleRed, other.googleRed, t)!,
+      googleYellow: Color.lerp(googleYellow, other.googleYellow, t)!,
+      googleGreen: Color.lerp(googleGreen, other.googleGreen, t)!,
     );
   }
 }

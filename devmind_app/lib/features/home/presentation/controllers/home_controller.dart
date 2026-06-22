@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/errors/error_handler.dart';
 import '../../domain/entities/daily_check_in_summary.dart';
 import '../../domain/entities/home_user_profile.dart';
 import '../../domain/repositories/home_profile_repository.dart';
@@ -70,10 +71,10 @@ class HomeController extends ChangeNotifier {
             _errorMessage = null;
             notifyListeners();
           },
-          onError: (_) {
+          onError: (error) {
             _profile = fallbackProfile;
             _isLoading = false;
-            _errorMessage = 'Không thể tải hồ sơ người dùng từ Firestore.';
+            _errorMessage = ErrorHandler.handle(error).message;
             notifyListeners();
           },
         );
@@ -87,11 +88,10 @@ class HomeController extends ChangeNotifier {
             _dailyCheckInErrorMessage = null;
             notifyListeners();
           },
-          onError: (_) {
+          onError: (error) {
             _dailyCheckIn = DailyCheckInSummary.empty();
             _isLoadingDailyCheckIn = false;
-            _dailyCheckInErrorMessage =
-                'Không thể tải dữ liệu điểm danh từ Firestore.';
+            _dailyCheckInErrorMessage = ErrorHandler.handle(error).message;
             notifyListeners();
           },
         );
@@ -109,8 +109,8 @@ class HomeController extends ChangeNotifier {
 
     try {
       return await _profileRepository.claimDailyCheckIn(uid);
-    } catch (_) {
-      _dailyCheckInErrorMessage = 'Không thể điểm danh. Vui lòng thử lại.';
+    } catch (error, stackTrace) {
+      _dailyCheckInErrorMessage = ErrorHandler.handle(error, stackTrace).message;
       return false;
     } finally {
       _isClaimingDailyCheckIn = false;

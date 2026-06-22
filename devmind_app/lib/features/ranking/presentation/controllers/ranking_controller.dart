@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/errors/error_handler.dart';
 import '../../domain/entities/ranking_user.dart';
 import '../../domain/repositories/ranking_repository.dart';
 
@@ -103,10 +104,10 @@ class RankingController extends ChangeNotifier {
         _errorMessage = null;
         notifyListeners();
       },
-      onError: (_) {
+      onError: (error) {
         _leaderboard = const [];
         _isLoading = false;
-        _errorMessage = 'Không thể tải bảng xếp hạng từ Firebase.';
+        _errorMessage = ErrorHandler.handle(error).message;
         notifyListeners();
       },
     );

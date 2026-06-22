@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../features/auth/presentation/controllers/auth_controller.dart';
 import '../features/auth/presentation/screens/edit_profile_screen.dart';
@@ -14,6 +15,8 @@ import '../features/technical_quiz/domain/entities/technical_course.dart';
 import '../features/technical_quiz/presentation/screens/technical_course_detail_screen.dart';
 import '../features/technical_quiz/presentation/screens/technical_question_screen.dart';
 import '../features/technical_quiz/presentation/screens/technical_quiz_screen.dart';
+import '../features/technical_quiz/presentation/controllers/technical_quiz_session_controller.dart';
+import '../features/technical_quiz/presentation/models/technical_quiz_result_summary.dart';
 import '../features/technical_quiz/presentation/screens/technical_quiz_result_screen.dart';
 import '../features/technical_quiz/presentation/screens/select_questions_screen.dart';
 import '../features/technical_quiz/presentation/screens/manage_custom_course_screen.dart';
@@ -122,12 +125,19 @@ GoRouter createAppRouter(AuthController authController) {
               ? state.extra! as TechnicalCourse
               : null;
 
-          return TechnicalQuestionScreen(
-            courseId: state.pathParameters['courseId'] ?? course?.id ?? '',
-            isMine:
-                state.uri.queryParameters['scope'] == 'mine' ||
-                course?.isMine == true,
-            initialCourse: course,
+          return ChangeNotifierProvider<TechnicalQuizSessionController>(
+            create: (context) => TechnicalQuizSessionController(
+              context.read(),
+              context.read(),
+              context.read(),
+            ),
+            child: TechnicalQuestionScreen(
+              courseId: state.pathParameters['courseId'] ?? course?.id ?? '',
+              isMine:
+                  state.uri.queryParameters['scope'] == 'mine' ||
+                  course?.isMine == true,
+              initialCourse: course,
+            ),
           );
         },
       ),
@@ -135,16 +145,16 @@ GoRouter createAppRouter(AuthController authController) {
         path: AppRoutePaths.technicalQuizResult,
         name: AppRouteNames.technicalQuizResult,
         builder: (context, state) {
-          final course = state.extra is TechnicalCourse
-              ? state.extra! as TechnicalCourse
+          final summary = state.extra is TechnicalQuizResultSummary
+              ? state.extra! as TechnicalQuizResultSummary
               : null;
 
           return TechnicalQuizResultScreen(
-            courseId: state.pathParameters['courseId'] ?? course?.id ?? '',
+            courseId: state.pathParameters['courseId'] ?? summary?.course.id ?? '',
             isMine:
                 state.uri.queryParameters['scope'] == 'mine' ||
-                course?.isMine == true,
-            initialCourse: course,
+                summary?.course.isMine == true,
+            resultSummary: summary,
           );
         },
       ),

@@ -6,7 +6,7 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/app_dialog.dart';
 import '../../domain/entities/technical_course.dart';
 import '../../domain/entities/technical_question.dart';
-import '../controllers/technical_quiz_controller.dart';
+import '../controllers/technical_course_list_controller.dart';
 
 class ManageCustomCourseScreen extends StatefulWidget {
   const ManageCustomCourseScreen({super.key, required this.courseId});
@@ -35,7 +35,7 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
     if (!mounted) return;
     setState(() => _isLoading = true);
 
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalCourseListController>();
     final myCourses = controller.myCourses;
     _course = myCourses.firstWhere(
       (c) => c.id == widget.courseId,
@@ -77,14 +77,17 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
         title: Text(
           'Quản lý khóa học',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: AppColors.primaryGradientEnd,
-                fontWeight: FontWeight.w700,
-              ),
+            color: AppColors.primaryGradientEnd,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_outlined, color: AppColors.primaryGradientEnd),
+            icon: const Icon(
+              Icons.settings_outlined,
+              color: AppColors.primaryGradientEnd,
+            ),
             onPressed: () {},
           ),
         ],
@@ -99,10 +102,10 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
                   child: Text(
                     'KHÓA HỌC TÙY CHỈNH',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: AppColors.primaryGradientEnd,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.1,
-                        ),
+                      color: AppColors.primaryGradientEnd,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.1,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -113,7 +116,8 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
                       Expanded(
                         child: Text(
                           _course?.title ?? '',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
                                 color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w800,
                                 height: 1.2,
@@ -123,7 +127,9 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
                       const SizedBox(width: 16),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFE2F7F5),
                           borderRadius: BorderRadius.circular(20),
@@ -139,7 +145,8 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
                             const SizedBox(width: 6),
                             Text(
                               '${_questions?.length ?? 0} Câu hỏi',
-                              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(
                                     color: AppColors.primaryGradientEnd,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -156,9 +163,9 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
                   child: Text(
                     'Quản lý và chỉnh sửa danh sách câu hỏi trong khóa học của bạn.',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textSecondary,
-                          height: 1.5,
-                        ),
+                      color: AppColors.textSecondary,
+                      height: 1.5,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -168,7 +175,8 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
                       : ListView.separated(
                           padding: const EdgeInsets.fromLTRB(24, 0, 24, 120),
                           itemCount: _questions!.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 16),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: 16),
                           itemBuilder: (context, index) {
                             final q = _questions![index];
                             return _ManageQuestionCard(
@@ -210,9 +218,9 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
             Text(
               'Hành động này không thể hoàn tác. Tất cả dữ liệu của\nkhóa học này sẽ bị xóa vĩnh viễn.',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             ),
           ],
         ),
@@ -222,8 +230,8 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
 
   Future<void> _removeQuestion(TechnicalQuestion question) async {
     if (_course == null) return;
-    
-    final controller = context.read<TechnicalQuizController>();
+
+    final controller = context.read<TechnicalCourseListController>();
 
     final confirm = await showDialog<bool>(
       context: context,
@@ -257,14 +265,17 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
       });
       AppDialog.showSuccess(context, message: 'Đã xóa câu hỏi khỏi khóa học.');
     } else if (mounted) {
-      AppDialog.showError(context, message: 'Không thể xóa câu hỏi. Vui lòng thử lại.');
+      AppDialog.showError(
+        context,
+        message: 'Không thể xóa câu hỏi. Vui lòng thử lại.',
+      );
     }
   }
 
   Future<void> _deleteCourse() async {
     if (_course == null) return;
 
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalCourseListController>();
 
     final confirm = await showDialog<bool>(
       context: context,
@@ -295,7 +306,10 @@ class _ManageCustomCourseScreenState extends State<ManageCustomCourseScreen> {
         context.pop();
       }
     } else if (mounted) {
-      AppDialog.showError(context, message: 'Không thể xóa khóa học. Vui lòng thử lại.');
+      AppDialog.showError(
+        context,
+        message: 'Không thể xóa khóa học. Vui lòng thử lại.',
+      );
     }
   }
 }
@@ -356,16 +370,16 @@ class _ManageQuestionCard extends StatelessWidget {
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '${question.category} • Câu hỏi',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),

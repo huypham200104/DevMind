@@ -44,11 +44,12 @@ dependencies:
   cloud_functions: ^6.3.2
   file_picker: ^11.0.2
   syncfusion_flutter_pdf: ^27.1.52
+  flutter_animate: ^4.5.2
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/logo_app.png" # Đường dẫn tới ảnh của bạn
+  image_path: "assets/images/logo_app.jpg" # Đường dẫn tới ảnh của bạn
   min_sdk_android: 21 # Dành cho android
 
 dev_dependencies:

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router.dart';
-import '../../../../app/theme/app_colors.dart';
+import '../../../../core/utils/theme_ext.dart';
+import '../../../../app/theme/app_spacing.dart';
 import '../../../ranking/presentation/models/ranking_display_state.dart';
 
 class RankingCard extends StatelessWidget {
@@ -29,14 +30,21 @@ class RankingCard extends StatelessWidget {
       onTap: () => context.goNamed(AppRouteNames.ranking),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: AppColors.primary.withAlpha(20),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.primary.withAlpha(60),
-            width: 1.5,
+          gradient: LinearGradient(
+            colors: [context.colors.primary, context.appColors.primaryGradientEnd],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: context.colors.primary.withAlpha(50),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -45,7 +53,7 @@ class RankingCard extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: Colors.white.withAlpha(40),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Center(
@@ -55,13 +63,7 @@ class RankingCard extends StatelessWidget {
                         children: [
                           Text(
                             '#${displayState.cardRankLabel}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w800,
-                              height: 1.1,
-                              letterSpacing: -0.5,
-                            ),
+                            style: context.rankingBadge,
                           ),
                         ],
                       )
@@ -73,7 +75,7 @@ class RankingCard extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(width: 16),
+            AppSpacing.wGapMD,
 
             // Text info
             Expanded(
@@ -82,30 +84,23 @@ class RankingCard extends StatelessWidget {
                 children: [
                   Text(
                     'Hạng của bạn',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                          letterSpacing: 0,
-                        ),
+                    style: context.rankingSubtitle,
                   ),
-                  const SizedBox(height: 2),
+                  AppSpacing.hGapXXS,
                   Text(
                     displayState.hasRank
                         ? 'Top #${displayState.cardRankLabel} toàn cầu'
                         : displayState.homeTitle,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0,
-                        ),
+                    style: context.rankingTitle,
                   ),
-                  const SizedBox(height: 6),
+                  AppSpacing.hGapXS,
                   Row(
                     children: [
                       _Chip(
                         icon: Icons.star_rounded,
                         label: _formatPoints(points),
                       ),
-                      const SizedBox(width: 8),
+                      AppSpacing.wGapXS,
                       _Chip(
                         icon: Icons.check_circle_rounded,
                         label: '$completedQuizCount bài',
@@ -119,7 +114,7 @@ class RankingCard extends StatelessWidget {
             // Arrow
             Icon(
               Icons.chevron_right_rounded,
-              color: AppColors.primary,
+              color: Colors.white.withAlpha(200),
               size: 24,
             ),
           ],
@@ -148,21 +143,17 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.primary.withAlpha(25),
+        color: Colors.white.withAlpha(40),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColors.primaryGradientEnd, size: 13),
-          const SizedBox(width: 4),
+          Icon(icon, color: Colors.white, size: 13),
+          AppSpacing.wGapXXS,
           Text(
             label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppColors.primaryGradientEnd,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0,
-                ),
+            style: context.rankingChipLabel,
           ),
         ],
       ),

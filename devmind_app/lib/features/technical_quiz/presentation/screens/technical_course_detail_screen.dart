@@ -7,7 +7,7 @@ import '../../../../app/router.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../domain/entities/technical_course.dart';
-import '../controllers/technical_quiz_controller.dart';
+import '../controllers/technical_course_list_controller.dart';
 import '../models/technical_quiz_ui.dart';
 
 class TechnicalCourseDetailScreen extends StatefulWidget {
@@ -43,7 +43,7 @@ class _TechnicalCourseDetailScreenState
 
     _hasScheduledCourseWatch = true;
     _watchedUid = uid;
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalCourseListController>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted || _watchedUid != uid) {
@@ -57,7 +57,7 @@ class _TechnicalCourseDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TechnicalQuizController>();
+    final controller = context.watch<TechnicalCourseListController>();
     final course = _resolveCourse(controller);
     final isLoading = widget.isMine
         ? controller.isLoadingMyCourses
@@ -89,7 +89,7 @@ class _TechnicalCourseDetailScreenState
     );
   }
 
-  TechnicalCourse? _resolveCourse(TechnicalQuizController controller) {
+  TechnicalCourse? _resolveCourse(TechnicalCourseListController controller) {
     if (widget.initialCourse != null) {
       return widget.initialCourse;
     }
@@ -189,11 +189,11 @@ class _DetailContent extends StatelessWidget {
                 child: Text(
                   course.title,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w800,
-                        height: 1.15,
-                        letterSpacing: 0,
-                      ),
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w800,
+                    height: 1.15,
+                    letterSpacing: 0,
+                  ),
                 ),
               ),
             ],
@@ -202,11 +202,11 @@ class _DetailContent extends StatelessWidget {
           Text(
             course.description,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w500,
-                  height: 1.5,
-                  letterSpacing: 0,
-                ),
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+              letterSpacing: 0,
+            ),
           ),
           const SizedBox(height: 28),
           Row(
@@ -297,10 +297,10 @@ class _MetricCard extends StatelessWidget {
           Text(
             value,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0,
-                ),
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0,
+            ),
           ),
           const SizedBox(height: 2),
           Text(
@@ -309,10 +309,10 @@ class _MetricCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.1,
-                ),
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.1,
+            ),
           ),
         ],
       ),

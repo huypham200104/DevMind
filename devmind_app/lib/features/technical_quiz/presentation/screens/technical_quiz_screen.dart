@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
+import '../../../../app/theme/app_spacing.dart';
+import '../../../../core/utils/theme_ext.dart';
 import '../../../../core/widgets/app_dialog.dart';
-import '../../../../core/widgets/app_header.dart';
+import '../../../../core/widgets/glassy_app_bar.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 import '../../domain/entities/technical_course.dart';
-import '../controllers/technical_quiz_controller.dart';
+import '../controllers/technical_course_list_controller.dart';
 import '../models/technical_quiz_ui.dart';
 import '../widgets/all_courses_section.dart';
 import '../widgets/my_courses_section.dart';
@@ -26,7 +29,6 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
   bool _hasScheduledCourseWatch = false;
   String? _watchedCoursesUid;
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -39,7 +41,7 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
 
     _hasScheduledCourseWatch = true;
     _watchedCoursesUid = uid;
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalCourseListController>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted || _watchedCoursesUid != uid) {
@@ -47,10 +49,10 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
       }
 
       // Đợi animation chuyển trang hoàn tất (khoảng 300-350ms)
-      // Việc này giúp tránh hiện tượng giật lag (jank) khi render quá nhiều SVG 
+      // Việc này giúp tránh hiện tượng giật lag (jank) khi render quá nhiều SVG
       // và call Firebase cùng lúc với animation chuyển màn hình.
       await Future.delayed(const Duration(milliseconds: 350));
-      
+
       if (!mounted || _watchedCoursesUid != uid) {
         return;
       }
@@ -60,58 +62,64 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final user = context.watch<AuthController>().currentUser;
-    final controller = context.watch<TechnicalQuizController>();
+    final controller = context.watch<TechnicalCourseListController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: context.colors.surface,
+      appBar: GlassyAppBar(title: 'DevMind AI', onBack: _handleBack),
       bottomNavigationBar: const HomeBottomNavigation(),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: AppHeader(
-                title: 'DevMind AI',
-                onBack: _handleBack,
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(24, 44, 24, 28),
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.xl,
+                  44,
+                  AppSpacing.xl,
+                  AppSpacing.xxl,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TechnicalQuizTabs(
-                      selectedTab: _selectedTab,
-                      onChanged: (tab) => setState(() => _selectedTab = tab),
-                    ),
-                    const SizedBox(height: 26),
+                          selectedTab: _selectedTab,
+                          onChanged: (tab) =>
+                              setState(() => _selectedTab = tab),
+                        )
+                        .animate()
+                        .fade(duration: 400.ms)
+                        .slideY(begin: 0.1, duration: 400.ms),
+                    AppSpacing.hGapXL,
                     AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 180),
-                      child: _selectedTab == TechnicalQuizTab.allCourses
-                          ? AllCoursesSection(
-                              key: const ValueKey('all-courses'),
-                              courses: controller.allCourses,
-                              isLoading: controller.isLoadingAllCourses,
-                              errorMessage: controller.allCoursesErrorMessage,
-                              onStart: _showStartMessage,
-                            )
-                          : MyCoursesSection(
-                              key: const ValueKey('my-courses'),
-                              userId: user?.uid,
-                              courses: controller.myCourses,
-                              isLoading: controller.isLoadingMyCourses,
-                              errorMessage: controller.myCoursesErrorMessage,
-                              onCreate: _navigateToCreateCourse,
-                              onStart: _showStartMessage,
-                              onManage: _manageCourse,
-                            ),
-                    ),
+                          duration: const Duration(milliseconds: 180),
+                          child: _selectedTab == TechnicalQuizTab.allCourses
+                              ? AllCoursesSection(
+                                  key: const ValueKey('all-courses'),
+                                  courses: controller.allCourses,
+                                  isLoading: controller.isLoadingAllCourses,
+                                  errorMessage:
+                                      controller.allCoursesErrorMessage,
+                                  onStart: _showStartMessage,
+                                )
+                              : MyCoursesSection(
+                                  key: const ValueKey('my-courses'),
+                                  userId: user?.uid,
+                                  courses: controller.myCourses,
+                                  isLoading: controller.isLoadingMyCourses,
+                                  errorMessage:
+                                      controller.myCoursesErrorMessage,
+                                  onCreate: _navigateToCreateCourse,
+                                  onStart: _showStartMessage,
+                                  onManage: _manageCourse,
+                                ),
+                        )
+                        .animate()
+                        .fade(delay: 150.ms, duration: 400.ms)
+                        .slideY(begin: 0.1, delay: 150.ms, duration: 400.ms),
                   ],
                 ),
               ),
@@ -121,6 +129,7 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
       ),
     );
   }
+
   void _handleBack() {
     if (context.canPop()) {
       context.pop();
@@ -140,7 +149,7 @@ class _TechnicalQuizScreenState extends State<TechnicalQuizScreen> {
   }
 
   void _navigateToCreateCourse() {
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalCourseListController>();
     if (controller.myCourses.length >= 5) {
       AppDialog.showError(
         context,

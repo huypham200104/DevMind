@@ -50,7 +50,8 @@ class MyCoursesSection extends StatelessWidget {
       return const TechnicalQuizStateCard(
         icon: Icons.menu_book_outlined,
         title: 'Chưa tạo khóa học nào',
-        description: 'Vui lòng nhấn "Tạo khóa học" để xây dựng bộ câu hỏi của riêng bạn.',
+        description:
+            'Vui lòng nhấn "Tạo khóa học" để xây dựng bộ câu hỏi của riêng bạn.',
       );
     }
 

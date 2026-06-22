@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/errors/error_handler.dart';
 import '../../domain/entities/profile_data.dart';
 import '../../domain/repositories/profile_repository.dart';
 
@@ -29,8 +30,8 @@ class ProfileController extends ChangeNotifier {
 
     try {
       _profileData = await _profileRepository.getProfile(uid);
-    } catch (_) {
-      _errorMessage = 'Không thể tải dữ liệu hồ sơ từ Firebase.';
+    } catch (error, stackTrace) {
+      _errorMessage = ErrorHandler.handle(error, stackTrace).message;
       _profileData = null;
     } finally {
       _isLoading = false;

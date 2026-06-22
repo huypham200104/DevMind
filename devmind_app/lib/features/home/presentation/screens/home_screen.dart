@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
+import '../../../../app/theme/app_spacing.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../domain/entities/home_user_profile.dart';
 import '../controllers/home_controller.dart';
@@ -10,7 +12,8 @@ import '../../../ranking/presentation/controllers/ranking_controller.dart';
 import '../widgets/daily_check_in_sheet.dart';
 import '../widgets/home_bottom_navigation.dart';
 import '../widgets/home_error_banner.dart';
-import '../widgets/home_header.dart';
+import '../../../../core/widgets/glassy_app_bar.dart';
+import '../widgets/home_header_actions.dart';
 import '../widgets/quick_action_card.dart';
 import '../widgets/ranking_card.dart';
 import '../widgets/section_header.dart';
@@ -82,40 +85,46 @@ class _HomeScreenState extends State<HomeScreen> {
         );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F7F8),
+      appBar: GlassyAppBar(
+        title: 'DevMind AI',
+        centerTitle: false,
+        titleSpacing: AppSpacing.xl,
+        actions: [
+          HomeHeaderActions(
+            profile: profile,
+            user: user,
+            onCheckInTap: _handleCheckInTap,
+            onAvatarTap: _handleAvatarTap,
+            checkInPoints: homeController.dailyCheckIn.points,
+            shouldPulseCheckIn:
+                !homeController.isLoadingDailyCheckIn &&
+                !homeController.dailyCheckIn.hasCheckedIn(DateTime.now()),
+          ),
+          AppSpacing.wGapXL,
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(22, 20, 22, 24),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.xl, AppSpacing.xl, AppSpacing.xl, AppSpacing.xxl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeHeader(
-                profile: profile,
-                user: user,
-                onCheckInTap: _handleCheckInTap,
-                onAvatarTap: _handleAvatarTap,
-                checkInPoints: homeController.dailyCheckIn.points,
-                shouldPulseCheckIn:
-                    !homeController.isLoadingDailyCheckIn &&
-                    !homeController.dailyCheckIn.hasCheckedIn(DateTime.now()),
-              ),
-              const SizedBox(height: 34),
-              WelcomeSection(profile: profile),
+              WelcomeSection(profile: profile).animate().fade(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
               if (homeController.errorMessage != null) ...[
-                const SizedBox(height: 16),
-                HomeErrorBanner(message: homeController.errorMessage!),
+                AppSpacing.hGapMD,
+                HomeErrorBanner(message: homeController.errorMessage!).animate().fade().slideY(begin: 0.1),
               ],
-              const SizedBox(height: 30),
-              const SectionHeader(title: 'Xếp hạng'),
-              const SizedBox(height: 18),
+              AppSpacing.hGapXXL,
+              const SectionHeader(title: 'Xếp hạng').animate().fade(delay: 100.ms, duration: 400.ms).slideY(begin: 0.1, delay: 100.ms, duration: 400.ms),
+              AppSpacing.hGapMD,
               RankingCard(
                 rank: rankingController.currentRankedUser?.rank ?? profile.globalRank,
                 points: profile.rankingPoints,
                 completedQuizCount: profile.completedQuizCount,
-              ),
-              const SizedBox(height: 26),
-              SectionHeader(title: 'Dịch vụ nhanh'),
-              const SizedBox(height: 14),
+              ).animate().fade(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, delay: 200.ms, duration: 400.ms),
+              AppSpacing.hGapXXL,
+              const SectionHeader(title: 'Dịch vụ nhanh').animate().fade(delay: 300.ms, duration: 400.ms).slideY(begin: 0.1, delay: 300.ms, duration: 400.ms),
+              AppSpacing.hGapMD,
               QuickActionCard(
                 svgAsset: 'assets/icons/lesson.svg',
                 title: 'Ôn tập kỹ thuật',
@@ -123,8 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Luyện tập kiến thức Cơ bản và thuật toán nâng cao với các câu hỏi từ AI.',
                 actionLabel: 'Bắt đầu luyện tập',
                 onTap: () => context.goNamed(AppRouteNames.technicalQuiz),
-              ),
-              const SizedBox(height: 14),
+              ).animate().fade(delay: 400.ms, duration: 400.ms).slideY(begin: 0.1, delay: 400.ms, duration: 400.ms),
+              AppSpacing.hGapMD,
               QuickActionCard(
                 svgAsset: 'assets/icons/cv_scanner.svg',
                 title: 'Quét CV bằng AI',
@@ -132,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Nhận phản hồi tức thì về mức độ phù hợp của CV với mô tả công việc.',
                 actionLabel: 'Tải lên CV',
                 onTap: () => context.goNamed(AppRouteNames.cvScanner),
-              ),
+              ).animate().fade(delay: 500.ms, duration: 400.ms).slideY(begin: 0.1, delay: 500.ms, duration: 400.ms),
             ],
           ),
         ),

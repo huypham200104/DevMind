@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/widgets/glassy_app_bar.dart';
 import '../models/top_up_kind.dart';
-import '../../../../core/widgets/app_header.dart';
 import '../widgets/top_up_option_card.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -27,25 +27,22 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
+      appBar: GlassyAppBar(
+        title: 'Ví của tôi',
+        onBack: _handleBack,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.account_balance_wallet_outlined, size: 28),
+            color: AppColors.primary,
+            tooltip: 'Ví lượt dùng',
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: AppHeader(
-                title: 'DevMind AI',
-                onBack: _handleBack,
-                trailing: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.account_balance_wallet_outlined, size: 28),
-                  color: AppColors.textPrimary,
-                  tooltip: 'Ví lượt dùng',
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(28, 34, 28, 20),

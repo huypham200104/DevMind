@@ -8,7 +8,10 @@ import '../../../../core/widgets/app_dialog.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
 import '../../domain/entities/technical_course.dart';
 import '../../domain/entities/technical_question.dart';
-import '../controllers/technical_quiz_controller.dart';
+import '../controllers/technical_course_list_controller.dart';
+import '../controllers/technical_quiz_credits_controller.dart';
+import '../controllers/technical_quiz_session_controller.dart';
+
 import '../models/technical_quiz_ui.dart';
 
 class TechnicalQuestionScreen extends StatefulWidget {
@@ -29,6 +32,11 @@ class TechnicalQuestionScreen extends StatefulWidget {
 }
 
 class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
+  TechnicalCourseListController? _courseListController;
+  TechnicalQuizSessionController? _quizSessionController;
+  TechnicalQuizCreditsController? _quizCreditsController;
+  AuthController? _authController;
+
   bool _hasScheduledCourseWatch = false;
   String? _watchedUid;
   String? _startedCourseId;
@@ -36,38 +44,100 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
   String? _handledCompletedCourseId;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    _courseListController = context.read<TechnicalCourseListController>();
+    _quizSessionController = context.read<TechnicalQuizSessionController>();
+    _quizCreditsController = context.read<TechnicalQuizCreditsController>();
+    _authController = context.read<AuthController>();
 
-    final uid = context.watch<AuthController>().currentUser?.uid;
-    if (_hasScheduledCourseWatch && _watchedUid == uid) {
-      return;
-    }
-
-    _hasScheduledCourseWatch = true;
-    _watchedUid = uid;
-    final controller = context.read<TechnicalQuizController>();
+    // Đăng ký lắng nghe thay đổi để xử lý logic (side-effects) ngoài hàm build
+    _quizSessionController?.addListener(_onQuizStateChanged);
+    _authController?.addListener(_onAuthStateChanged);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || _watchedUid != uid) {
-        return;
-      }
-
-      controller.watchAllCourses();
-      controller.watchMyCourses(uid);
+      if (!mounted) return;
+      _fetchCourses();
+      _watchCredits();
+      _checkQuizStartAndCompletion();
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    final user = context.watch<AuthController>().currentUser;
-    final controller = context.watch<TechnicalQuizController>();
-    final course = _resolveCourse(controller);
+  void dispose() {
+    _quizSessionController?.removeListener(_onQuizStateChanged);
+    _authController?.removeListener(_onAuthStateChanged);
+    super.dispose();
+  }
 
-    final didScheduleStart = _scheduleStartQuiz(controller, course, user?.uid);
-    if (!didScheduleStart) {
-      _handleQuizCompletion(controller, course);
+  void _onQuizStateChanged() {
+    _checkQuizStartAndCompletion();
+  }
+
+  void _onAuthStateChanged() {
+    _fetchCourses();
+    _watchCredits();
+    _checkQuizStartAndCompletion();
+  }
+
+  void _fetchCourses() {
+    final uid = _authController?.currentUser?.uid;
+    if (_watchedUid != uid || !_hasScheduledCourseWatch) {
+      _hasScheduledCourseWatch = true;
+      _watchedUid = uid;
+      _courseListController?.watchAllCourses();
+      _courseListController?.watchMyCourses(uid);
     }
+  }
+
+  void _watchCredits() {
+    final uid = _authController?.currentUser?.uid;
+    if (uid != null) {
+      _quizCreditsController?.watchExplainCredits(uid);
+    }
+  }
+
+  void _checkQuizStartAndCompletion() {
+    if (!mounted) return;
+
+    final sessionController = _quizSessionController;
+    if (sessionController == null) return;
+
+    final uid = _authController?.currentUser?.uid;
+    final course = _resolveCourse(_courseListController!);
+
+    // 1. Kiểm tra bắt đầu bài quiz
+    if (course != null &&
+        (_startedCourseId != course.id || _startedUid != uid)) {
+      _startedCourseId = course.id;
+      _startedUid = uid;
+      sessionController.startQuiz(course: course, uid: uid);
+    }
+
+    // 2. Kiểm tra hoàn thành bài quiz
+    if (sessionController.isQuizCompleted &&
+        course != null &&
+        _handledCompletedCourseId != course.id) {
+      _handledCompletedCourseId = course.id;
+      final summary = sessionController.resultSummary;
+      context.goNamed(
+        AppRouteNames.technicalQuizResult,
+        pathParameters: {'courseId': course.id},
+        queryParameters: {'scope': course.isMine ? 'mine' : 'all'},
+        extra: summary,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Chỉ watch để vẽ UI, không chứa side-effects
+    context.watch<AuthController>();
+    final courseListController = context.watch<TechnicalCourseListController>();
+    final sessionController = context.watch<TechnicalQuizSessionController>();
+    final creditsController = context.watch<TechnicalQuizCreditsController>();
+
+    final course = _resolveCourse(courseListController);
 
     return PopScope(
       canPop: false,
@@ -82,13 +152,14 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
           child: Column(
             children: [
               _QuestionHeader(
-                explainCredits: controller.explainCredits,
+                explainCredits: creditsController.explainCredits,
                 onBack: () => _confirmExit(course),
               ),
               Expanded(
                 child: _QuestionBody(
                   course: course,
-                  controller: controller,
+                  sessionController: sessionController,
+                  creditsController: creditsController,
                   onExplain: _revealExplanation,
                   onSubmit: _submitAnswer,
                 ),
@@ -100,7 +171,7 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
     );
   }
 
-  TechnicalCourse? _resolveCourse(TechnicalQuizController controller) {
+  TechnicalCourse? _resolveCourse(TechnicalCourseListController controller) {
     if (widget.initialCourse != null) {
       return widget.initialCourse;
     }
@@ -117,61 +188,8 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
     return null;
   }
 
-  bool _scheduleStartQuiz(
-    TechnicalQuizController controller,
-    TechnicalCourse? course,
-    String? uid,
-  ) {
-    if (course == null ||
-        (_startedCourseId == course.id && _startedUid == uid)) {
-      return false;
-    }
-
-    _startedCourseId = course.id;
-    _startedUid = uid;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || _startedCourseId != course.id || _startedUid != uid) {
-        return;
-      }
-
-      controller.startQuiz(course: course, uid: uid);
-    });
-
-    return true;
-  }
-
-  void _handleQuizCompletion(
-    TechnicalQuizController controller,
-    TechnicalCourse? course,
-  ) {
-    if (!controller.isQuizCompleted) {
-      _handledCompletedCourseId = null;
-      return;
-    }
-
-    if (course == null || _handledCompletedCourseId == course.id) {
-      return;
-    }
-
-    _handledCompletedCourseId = course.id;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || _handledCompletedCourseId != course.id) {
-        return;
-      }
-
-      context.goNamed(
-        AppRouteNames.technicalQuizResult,
-        pathParameters: {'courseId': course.id},
-        queryParameters: {'scope': course.isMine ? 'mine' : 'all'},
-        extra: course,
-      );
-    });
-  }
-
   Future<void> _revealExplanation() async {
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalQuizSessionController>();
     if (controller.isQuizCompleted) {
       return;
     }
@@ -184,7 +202,7 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
   }
 
   void _submitAnswer() {
-    final controller = context.read<TechnicalQuizController>();
+    final controller = context.read<TechnicalQuizSessionController>();
     if (controller.isQuizCompleted) {
       return;
     }
@@ -208,7 +226,7 @@ class _TechnicalQuestionScreenState extends State<TechnicalQuestionScreen> {
       return;
     }
 
-    context.read<TechnicalQuizController>().abandonQuiz();
+    context.read<TechnicalQuizSessionController>().abandonQuiz();
 
     if (course == null) {
       context.goNamed(AppRouteNames.technicalQuiz);
@@ -292,13 +310,15 @@ class _QuestionHeader extends StatelessWidget {
 class _QuestionBody extends StatelessWidget {
   const _QuestionBody({
     required this.course,
-    required this.controller,
+    required this.sessionController,
+    required this.creditsController,
     required this.onExplain,
     required this.onSubmit,
   });
 
   final TechnicalCourse? course;
-  final TechnicalQuizController controller;
+  final TechnicalQuizSessionController sessionController;
+  final TechnicalQuizCreditsController creditsController;
   final VoidCallback onExplain;
   final VoidCallback onSubmit;
 
@@ -313,19 +333,19 @@ class _QuestionBody extends StatelessWidget {
       );
     }
 
-    if (controller.isLoadingQuestions) {
+    if (sessionController.isLoadingQuestions) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (controller.questionsErrorMessage != null) {
+    if (sessionController.questionsErrorMessage != null) {
       return _QuizStateMessage(
         icon: Icons.cloud_off_outlined,
         title: 'Không thể tải câu hỏi',
-        description: controller.questionsErrorMessage!,
+        description: sessionController.questionsErrorMessage!,
       );
     }
 
-    final question = controller.currentQuestion;
+    final question = sessionController.currentQuestion;
     if (question == null) {
       return const _QuizStateMessage(
         icon: Icons.quiz_outlined,
@@ -343,37 +363,42 @@ class _QuestionBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _QuestionProgress(
-                  currentQuestion: controller.currentQuestionIndex + 1,
-                  totalQuestions: controller.totalQuestions,
-                  progress: controller.quizProgress,
-                  remainingSeconds: controller.remainingSeconds,
+                  currentQuestion: sessionController.currentQuestionIndex + 1,
+                  totalQuestions: sessionController.totalQuestions,
+                  progress: sessionController.quizProgress,
+                  remainingSecondsNotifier:
+                      sessionController.remainingSecondsNotifier,
                 ),
                 const SizedBox(height: 22),
                 _QuestionCard(
                   question: question,
-                  index: controller.currentQuestionIndex,
+                  index: sessionController.currentQuestionIndex,
                 ),
                 const SizedBox(height: 16),
                 _ExplanationButton(
-                  isVisible: controller.isCurrentExplanationVisible,
-                  isLoading: controller.isConsumingExplainCredit,
-                  hasCredits: controller.explainCredits > 0,
-                  isQuizCompleted: controller.isQuizCompleted,
+                  isVisible: sessionController.isCurrentExplanationVisible,
+                  isLoading: creditsController.isConsumingExplainCredit,
+                  hasCredits: creditsController.explainCredits > 0,
+                  isQuizCompleted: sessionController.isQuizCompleted,
                   onPressed: onExplain,
                 ),
-                if (controller.isCurrentExplanationVisible) ...[
+                if (sessionController.isCurrentExplanationVisible) ...[
                   const SizedBox(height: 14),
                   _ExplanationCard(explanation: question.explanation),
                 ],
                 const SizedBox(height: 20),
-                for (var index = 0; index < question.options.length; index++) ...[
+                for (
+                  var index = 0;
+                  index < question.options.length;
+                  index++
+                ) ...[
                   _AnswerOption(
                     letter: _optionLetter(index),
                     text: question.options[index],
-                    isSelected: controller.selectedAnswerIndex == index,
-                    onTap: controller.isQuizCompleted
+                    isSelected: sessionController.selectedAnswerIndex == index,
+                    onTap: sessionController.isQuizCompleted
                         ? null
-                        : () => controller.selectAnswer(index),
+                        : () => sessionController.selectAnswer(index),
                   ),
                   const SizedBox(height: 12),
                 ],
@@ -393,11 +418,12 @@ class _QuestionBody extends StatelessWidget {
             width: double.infinity,
             height: 62,
             child: FilledButton.icon(
-              onPressed: controller.isQuizCompleted ? null : onSubmit,
+              onPressed: sessionController.isQuizCompleted ? null : onSubmit,
               iconAlignment: IconAlignment.end,
               icon: const Icon(Icons.arrow_forward, size: 22),
               label: Text(
-                controller.currentQuestionIndex >= controller.totalQuestions - 1
+                sessionController.currentQuestionIndex >=
+                        sessionController.totalQuestions - 1
                     ? 'Hoàn thành'
                     : 'Nộp câu trả lời',
               ),
@@ -424,18 +450,17 @@ class _QuestionProgress extends StatelessWidget {
     required this.currentQuestion,
     required this.totalQuestions,
     required this.progress,
-    required this.remainingSeconds,
+    required this.remainingSecondsNotifier,
   });
 
   final int currentQuestion;
   final int totalQuestions;
   final double progress;
-  final int remainingSeconds;
+  final ValueNotifier<int> remainingSecondsNotifier;
 
   @override
   Widget build(BuildContext context) {
     final percent = (progress * 100).round();
-    final timeText = _formatRemainingTime(remainingSeconds);
 
     return Column(
       children: [
@@ -501,15 +526,21 @@ class _QuestionProgress extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                timeText,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: remainingSeconds <= 60
-                      ? AppColors.danger
-                      : AppColors.textPrimary,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 0,
-                ),
+              ValueListenableBuilder<int>(
+                valueListenable: remainingSecondsNotifier,
+                builder: (context, remainingSeconds, _) {
+                  final timeText = _formatRemainingTime(remainingSeconds);
+                  return Text(
+                    timeText,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: remainingSeconds <= 60
+                          ? AppColors.danger
+                          : AppColors.textPrimary,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0,
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -801,7 +832,7 @@ class _QuizStateMessage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: AppColors.primaryGradientEnd, size: 44),
+            Icon(icon, color: AppColors.primaryGradientEnd, size: 46),
             const SizedBox(height: 16),
             Text(
               title,
@@ -834,77 +865,22 @@ class _ExitQuizDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: AppColors.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 46,
-              height: 46,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFECEC),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.warning_amber_rounded,
-                color: AppColors.danger,
-                size: 26,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Thoát bài kiểm tra?',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Tiến độ của bạn sẽ bị xóa hoàn toàn nếu bạn thoát bây giờ.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.textSecondary,
-                height: 1.35,
-                letterSpacing: 0,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(42),
-                      foregroundColor: AppColors.textSecondary,
-                    ),
-                    child: const Text('Hủy'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: FilledButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(42),
-                      backgroundColor: AppColors.danger,
-                      foregroundColor: AppColors.surface,
-                    ),
-                    child: const Text('Thoát'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+    return AlertDialog(
+      title: const Text('Thoát bài kiểm tra?'),
+      content: const Text(
+        'Bạn đang làm bài kiểm tra. Nếu thoát bây giờ, tiến trình làm bài sẽ không được lưu lại.',
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Tiếp tục làm'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+          child: const Text('Thoát'),
+        ),
+      ],
     );
   }
 }

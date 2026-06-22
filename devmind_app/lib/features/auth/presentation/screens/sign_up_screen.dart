@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import '../../../../app/router.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../controllers/auth_controller.dart';
+import '../../../../core/widgets/glassy_app_bar.dart';
 import '../widgets/auth_form_widgets.dart';
-import '../widgets/auth_header.dart';
 import '../widgets/google_auth_button.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -40,18 +40,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.surface,
+      appBar: GlassyAppBar(
+        onBack: () {
+          if (context.canPop()) {
+            context.pop();
+            return;
+          }
+          context.goNamed(AppRouteNames.welcome);
+        },
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            AuthHeader(
-              onBack: () {
-                if (context.canPop()) {
-                  context.pop();
-                  return;
-                }
-                context.goNamed(AppRouteNames.welcome);
-              },
-            ),
             Expanded(
               child: Center(
                 child: SingleChildScrollView(

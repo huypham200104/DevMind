@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../home/presentation/widgets/home_bottom_navigation.dart';
 import '../../domain/entities/technical_course.dart';
-import '../controllers/technical_quiz_controller.dart';
+import '../models/technical_quiz_result_summary.dart';
 
 class TechnicalQuizResultScreen extends StatelessWidget {
   const TechnicalQuizResultScreen({
     super.key,
     required this.courseId,
     required this.isMine,
-    this.initialCourse,
+    this.resultSummary,
   });
 
   final String courseId;
   final bool isMine;
-  final TechnicalCourse? initialCourse;
+  final TechnicalQuizResultSummary? resultSummary;
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<TechnicalQuizController>();
-    final course = _resolveCourse(controller);
-    final results = controller.answerResults;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7F8),
       bottomNavigationBar: const HomeBottomNavigation(),
@@ -36,38 +31,18 @@ class TechnicalQuizResultScreen extends StatelessWidget {
               onBack: () => context.goNamed(AppRouteNames.technicalQuiz),
             ),
             Expanded(
-              child: course == null || results.isEmpty
+              child: resultSummary == null
                   ? const _MissingResultState()
                   : _ResultContent(
-                      course: course,
-                      controller: controller,
-                      results: results,
+                      course: resultSummary!.course,
+                      results: resultSummary!.answerResults,
+                      summary: resultSummary!,
                     ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  TechnicalCourse? _resolveCourse(TechnicalQuizController controller) {
-    if (initialCourse != null) {
-      return initialCourse;
-    }
-
-    final activeCourse = controller.activeQuizCourse;
-    if (activeCourse?.id == courseId) {
-      return activeCourse;
-    }
-
-    final courses = isMine ? controller.myCourses : controller.allCourses;
-    for (final course in courses) {
-      if (course.id == courseId) {
-        return course;
-      }
-    }
-
-    return null;
   }
 }
 
@@ -109,12 +84,12 @@ class _ResultHeader extends StatelessWidget {
 class _ResultContent extends StatelessWidget {
   const _ResultContent({
     required this.course,
-    required this.controller,
+    required this.summary,
     required this.results,
   });
 
   final TechnicalCourse course;
-  final TechnicalQuizController controller;
+  final TechnicalQuizResultSummary summary;
   final List<TechnicalQuizAnswerResult> results;
 
   @override
@@ -126,10 +101,10 @@ class _ResultContent extends StatelessWidget {
         children: [
           _ResultSummary(
             course: course,
-            correctAnswers: controller.correctAnswerCount,
-            totalQuestions: controller.totalQuestions,
-            elapsedSeconds: controller.elapsedSeconds,
-            isExpired: controller.isQuizExpired,
+            correctAnswers: summary.correctAnswers,
+            totalQuestions: summary.totalQuestions,
+            elapsedSeconds: summary.elapsedSeconds,
+            isExpired: summary.isExpired,
           ),
           const SizedBox(height: 22),
           Row(
@@ -137,7 +112,7 @@ class _ResultContent extends StatelessWidget {
               Expanded(
                 child: _ResultMetricCard(
                   icon: Icons.check_circle_outline,
-                  value: controller.correctAnswerCount.toString(),
+                  value: summary.correctAnswers.toString(),
                   label: 'CÂU ĐÚNG',
                   tintColor: const Color(0xFFE5FAF8),
                   iconColor: AppColors.primaryGradientEnd,
@@ -147,7 +122,7 @@ class _ResultContent extends StatelessWidget {
               Expanded(
                 child: _ResultMetricCard(
                   icon: Icons.cancel_outlined,
-                  value: controller.incorrectAnswerCount.toString(),
+                  value: summary.incorrectAnswerCount.toString(),
                   label: 'CÂU SAI',
                   tintColor: const Color(0xFFFFECEC),
                   iconColor: AppColors.danger,
@@ -157,7 +132,7 @@ class _ResultContent extends StatelessWidget {
               Expanded(
                 child: _ResultMetricCard(
                   icon: Icons.stacked_bar_chart_outlined,
-                  value: '${controller.accuracyPercent}%',
+                  value: '${summary.accuracyPercent}%',
                   label: 'CHÍNH XÁC',
                   tintColor: const Color(0xFFE5FAF8),
                   iconColor: AppColors.primaryGradientEnd,

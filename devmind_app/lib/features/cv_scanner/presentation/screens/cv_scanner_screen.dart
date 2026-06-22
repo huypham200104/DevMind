@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/router.dart';
+import '../../../../app/theme/app_spacing.dart';
+import '../../../../core/utils/theme_ext.dart';
 
 import '../../../../core/widgets/app_dialog.dart';
 import '../../../auth/presentation/controllers/auth_controller.dart';
@@ -12,7 +15,7 @@ import '../controllers/cv_scanner_controller.dart';
 import '../widgets/cv_analyze_button.dart';
 import '../widgets/cv_position_field.dart';
 import '../widgets/cv_scan_result_card.dart';
-import '../../../../core/widgets/app_header.dart';
+import '../../../../core/widgets/glassy_app_bar.dart';
 import '../widgets/cv_upload_drop_zone.dart';
 import '../widgets/recent_cv_files_section.dart';
 
@@ -62,54 +65,51 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
     final controller = context.watch<CvScannerController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: context.colors.surface,
+      appBar: GlassyAppBar(
+        title: 'DevMind AI',
+        onBack: _handleBack,
+      ),
       bottomNavigationBar: const HomeBottomNavigation(),
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: AppHeader(
-                title: 'DevMind AI',
-                onBack: _handleBack,
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 controller: _scrollController,
-                padding: const EdgeInsets.fromLTRB(36, 74, 36, 28),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, 74, AppSpacing.xxl, AppSpacing.xxl),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CvPositionField(controller: _positionController),
-                    const SizedBox(height: 56),
+                    CvPositionField(controller: _positionController).animate().fade(duration: 400.ms).slideY(begin: 0.1, duration: 400.ms),
+                    AppSpacing.hGapHuge,
                     CvUploadDropZone(
                       onTap: _handlePickPdf,
                       selectedFileName: controller.selectedFile?.fileName,
                       selectedFileSize: controller.selectedFile?.displaySize,
                       isBusy: controller.isPickingFile,
-                    ),
+                    ).animate().fade(delay: 100.ms, duration: 400.ms).slideY(begin: 0.1, delay: 100.ms, duration: 400.ms),
                     if (controller.activeResult != null) ...[
-                      const SizedBox(height: 36),
+                      AppSpacing.hGapXXL,
                       CvScanResultCard(
                         key: _resultKey,
                         result: controller.activeResult!,
                         onClose: controller.clearResult,
-                      ),
+                      ).animate().fade().slideY(begin: 0.1),
                     ],
-                    const SizedBox(height: 48),
+                    AppSpacing.hGapHuge,
                     RecentCvFilesSection(
                       files: controller.recentUploads,
                       isLoading: controller.isLoading,
                       errorMessage: controller.errorMessage,
                       onFileTap: _handleShowResult,
-                    ),
-                    const SizedBox(height: 36),
+                    ).animate().fade(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, delay: 200.ms, duration: 400.ms),
+                    AppSpacing.hGapXXL,
                     CvAnalyzeButton(
                       onPressed: controller.canScan ? _handleAnalyze : null,
                       isLoading:
                           controller.isScanning || controller.isPickingFile,
-                    ),
+                    ).animate().fade(delay: 300.ms, duration: 400.ms).slideY(begin: 0.1, delay: 300.ms, duration: 400.ms),
                   ],
                 ),
               ),

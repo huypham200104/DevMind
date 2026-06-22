@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../domain/entities/home_user_profile.dart';
 
-class HomeHeader extends StatelessWidget {
-  const HomeHeader({
+class HomeHeaderActions extends StatelessWidget {
+  const HomeHeaderActions({
     super.key,
     required this.profile,
     required this.user,
@@ -26,16 +26,6 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Text(
-            'DevMind AI',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0,
-            ),
-          ),
-        ),
         _CheckInChip(
           onTap: onCheckInTap,
           points: checkInPoints,

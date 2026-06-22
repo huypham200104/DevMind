@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_header.dart';
+import '../../../../core/widgets/glassy_app_bar.dart';
 import '../controllers/auth_controller.dart';
 import '../widgets/auth_form_widgets.dart';
 
@@ -76,20 +76,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F7F7),
+      appBar: GlassyAppBar(
+        title: 'Chỉnh sửa hồ sơ',
+        onBack: () {
+          authController.clearError();
+          context.pop();
+        },
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: AppHeader(
-                title: 'Chỉnh sửa hồ sơ',
-                onBack: () {
-                  authController.clearError();
-                  context.pop();
-                },
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(28, 34, 28, 20),

@@ -17,7 +17,8 @@ import '../features/ranking/domain/repositories/ranking_repository.dart';
 import '../features/ranking/presentation/controllers/ranking_controller.dart';
 import '../features/technical_quiz/data/repositories/firebase_technical_course_repository.dart';
 import '../features/technical_quiz/domain/repositories/technical_course_repository.dart';
-import '../features/technical_quiz/presentation/controllers/technical_quiz_controller.dart';
+import '../features/technical_quiz/presentation/controllers/technical_course_list_controller.dart';
+import '../features/technical_quiz/presentation/controllers/technical_quiz_credits_controller.dart';
 
 class AppProviders extends StatelessWidget {
   const AppProviders({required this.child, super.key});
@@ -49,9 +50,11 @@ class AppProviders extends StatelessWidget {
         Provider<TechnicalCourseRepository>(
           create: (_) => FirebaseTechnicalCourseRepository(),
         ),
-        ChangeNotifierProvider<TechnicalQuizController>(
-          create: (context) =>
-              TechnicalQuizController(context.read(), context.read()),
+        ChangeNotifierProvider<TechnicalCourseListController>(
+          create: (context) => TechnicalCourseListController(context.read()),
+        ),
+        ChangeNotifierProvider<TechnicalQuizCreditsController>(
+          create: (context) => TechnicalQuizCreditsController(context.read()),
         ),
         Provider<CvUploadRepository>(
           create: (_) => FirebaseCvUploadRepository(),
