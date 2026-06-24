@@ -83,5 +83,3 @@ Mọi đóng góp nhằm cải thiện DevMind AI luôn được chào đón. N�
 Dự án được phân phối dưới giấy phép MIT. Xem file `LICENSE` để biết thêm chi tiết.
 
 ---
-*Phát triển bởi [Huy Pham]*
-*Thực hiện tối ưu hệ thống bởi **Antigravity AI***
