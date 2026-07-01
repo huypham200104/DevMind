@@ -87,4 +87,7 @@ Mọi đóng góp nhằm cải thiện DevMind AI luôn được chào đón. N�
 Dự án được phân phối dưới giấy phép MIT. Xem file `LICENSE` để biết thêm chi tiết.
 
 ---
+<<<<<<< HEAD
 *Phát triển bởi [Huy Pham]*
+=======
+>>>>>>> 3e3d30cabd0df0d3b2b184e3e8b7b8c7bdbfe7e2
