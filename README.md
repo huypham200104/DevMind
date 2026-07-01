@@ -2,6 +2,10 @@
 
 DevMind là một ứng dụng di động thông minh được xây dựng bằng **Flutter** và **Firebase**, ứng dụng sức mạnh của Trí tuệ nhân tạo (AI) để hỗ trợ các lập trình viên và ứng viên IT trong việc học tập, đánh giá năng lực và chuẩn bị cho quá trình tìm việc.
 
+## 🎥 Video Demo
+
+[Xem Video Demo Ứng Dụng](https://drive.google.com/file/d/1m7pVKEESQqtJNayxyOiDgDnJh1Ff2XEq/view?usp=drive_link)
+
 ## 🌟 Tính năng nổi bật
 
 * 📄 **Quét và Phân tích CV (AI CV Scanner)**: Cho phép người dùng tải lên file CV (PDF). Trí tuệ nhân tạo sẽ đọc và đưa ra các nhận xét, đánh giá chuyên sâu để cải thiện hồ sơ phù hợp với vị trí ứng tuyển.
@@ -84,4 +88,3 @@ Dự án được phân phối dưới giấy phép MIT. Xem file `LICENSE` đ�
 
 ---
 *Phát triển bởi [Huy Pham]*
-*Thực hiện tối ưu hệ thống bởi **Antigravity AI***
