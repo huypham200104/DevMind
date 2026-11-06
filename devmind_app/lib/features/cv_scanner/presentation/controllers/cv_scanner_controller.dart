@@ -18,6 +18,7 @@ class CvScannerController extends ChangeNotifier {
   bool _isLoading = false;
   bool _isPickingFile = false;
   bool _isScanning = false;
+  bool _isGeneratingQuiz = false;
   String? _errorMessage;
   String? _actionErrorMessage;
   String? _activeUid;
@@ -28,9 +29,10 @@ class CvScannerController extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isPickingFile => _isPickingFile;
   bool get isScanning => _isScanning;
+  bool get isGeneratingQuiz => _isGeneratingQuiz;
   String? get errorMessage => _errorMessage;
   String? get actionErrorMessage => _actionErrorMessage;
-  bool get canScan => !_isPickingFile && !_isScanning;
+  bool get canScan => !_isPickingFile && !_isScanning && !_isGeneratingQuiz;
 
   void watchUploads(String? uid) {
     if (uid == null) {
@@ -150,6 +152,35 @@ class CvScannerController extends ChangeNotifier {
       return false;
     } finally {
       _isScanning = false;
+      notifyListeners();
+    }
+  }
+
+  Future<String?> generateAdaptiveQuiz(CvUpload result) async {
+    if (_isGeneratingQuiz || _isScanning || _isPickingFile) {
+      return null;
+    }
+
+    _isGeneratingQuiz = true;
+    _actionErrorMessage = null;
+    notifyListeners();
+
+    try {
+      final courseId = await _repository.createAdaptiveQuiz(
+        jobTitle: result.jobTitle,
+        weaknesses: result.weaknesses,
+        suggestedKeywords: result.suggestedKeywords,
+      );
+      return courseId;
+    } catch (error, stackTrace) {
+      if (error is CvScannerException && error.message.trim().isNotEmpty) {
+        _actionErrorMessage = error.message.trim();
+      } else {
+        _actionErrorMessage = ErrorHandler.handle(error, stackTrace).message;
+      }
+      return null;
+    } finally {
+      _isGeneratingQuiz = false;
       notifyListeners();
     }
   }
