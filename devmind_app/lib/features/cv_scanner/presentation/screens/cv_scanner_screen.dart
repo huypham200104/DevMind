@@ -95,6 +95,8 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
                         key: _resultKey,
                         result: controller.activeResult!,
                         onClose: controller.clearResult,
+                        onGenerateQuiz: () => _handleGenerateAdaptiveQuiz(controller.activeResult!),
+                        isGeneratingQuiz: controller.isGeneratingQuiz,
                       ).animate().fade().slideY(begin: 0.1),
                     ],
                     AppSpacing.hGapHuge,
@@ -207,6 +209,34 @@ class _CvScannerScreenState extends State<CvScannerScreen> {
     );
     context.goNamed(AppRouteNames.signIn);
     return false;
+  }
+
+  Future<void> _handleGenerateAdaptiveQuiz(CvUpload result) async {
+    if (!_ensureSignedIn()) {
+      return;
+    }
+
+    final controller = context.read<CvScannerController>();
+    final courseId = await controller.generateAdaptiveQuiz(result);
+
+    if (!mounted) {
+      return;
+    }
+
+    final errorMessage = controller.actionErrorMessage;
+    if (errorMessage != null) {
+      _showSnackBar(errorMessage, isError: true);
+      return;
+    }
+
+    if (courseId != null && courseId.isNotEmpty) {
+      _showSnackBar('AI đã khởi tạo thành công bài thi tình huống!');
+      context.pushNamed(
+        AppRouteNames.technicalCourseDetail,
+        pathParameters: {'courseId': courseId},
+        queryParameters: {'scope': 'mine'},
+      );
+    }
   }
 
   void _handleShowResult(CvUpload result) {

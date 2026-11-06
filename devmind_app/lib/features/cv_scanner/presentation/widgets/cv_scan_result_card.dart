@@ -8,10 +8,14 @@ class CvScanResultCard extends StatelessWidget {
     super.key,
     required this.result,
     required this.onClose,
+    this.onGenerateQuiz,
+    this.isGeneratingQuiz = false,
   });
 
   final CvUpload result;
   final VoidCallback onClose;
+  final VoidCallback? onGenerateQuiz;
+  final bool isGeneratingQuiz;
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +130,88 @@ class CvScanResultCard extends StatelessWidget {
               ],
             ),
           ],
+          const SizedBox(height: 24),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFE8F7F4), Color(0xFFF0FAF8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFBBE5DD)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.auto_awesome,
+                      color: AppColors.primaryGradientEnd,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Vòng lặp học tập thích ứng (Adaptive Learning)',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: AppColors.primaryGradientEnd,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'AI sẽ chuyển hóa các điểm yếu trên thành bộ câu hỏi tình huống thực tế để bạn luyện tập khắc phục ngay lập tức.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  height: 46,
+                  child: ElevatedButton.icon(
+                    onPressed: isGeneratingQuiz ? null : onGenerateQuiz,
+                    icon: isGeneratingQuiz
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Icon(Icons.flash_on, size: 20, color: Colors.white),
+                    label: Text(
+                      isGeneratingQuiz
+                          ? 'AI đang soạn bài test...'
+                          : 'Tạo bài test bù lỗ hổng (AI Gap Quiz)',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryGradientEnd,
+                      disabledBackgroundColor: AppColors.primaryGradientEnd.withValues(alpha: 0.6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
