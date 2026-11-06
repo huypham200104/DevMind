@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Duotone Background Flame -->
+  <path d="M12 2C9.5 6 5 9.5 5 14.5C5 18.642 8.134 22 12 22C15.866 22 19 18.642 19 14.5C19 8.5 14.5 5.5 12 2Z" fill="#2ACDC1" fill-opacity="0.2" />
+  <!-- Inner Flame Accent -->
+  <path d="M12 11C10.5 13 9 14.8 9 16.5C9 18.433 10.343 20 12 20C13.657 20 15 18.433 15 16.5C15 14 13.5 12.5 12 11Z" fill="#F59E0B" fill-opacity="0.3" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Main Stroke -->
+  <path d="M12 2C9.5 6 5 9.5 5 14.5C5 18.642 8.134 22 12 22C15.866 22 19 18.642 19 14.5C19 8.5 14.5 5.5 12 2Z" stroke="#008D80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

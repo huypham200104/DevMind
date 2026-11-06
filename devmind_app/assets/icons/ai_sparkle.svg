@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Duotone Core Glow -->
+  <path d="M12 2L14.4 8.6L21 11L14.4 13.4L12 20L9.6 13.4L3 11L9.6 8.6L12 2Z" fill="#2ACDC1" fill-opacity="0.22" stroke="#008D80" stroke-width="2" stroke-linejoin="round" />
+  <!-- Small Sparkle Top-Right -->
+  <path d="M19 2L20 4.5L22.5 5.5L20 6.5L19 9L18 6.5L15.5 5.5L18 4.5L19 2Z" fill="#2ACDC1" stroke="#2ACDC1" stroke-width="1.2" stroke-linejoin="round" />
+  <!-- Small Sparkle Bottom-Left -->
+  <path d="M5 16L5.8 18L7.8 18.8L5.8 19.6L5 21.6L4.2 19.6L2.2 18.8L4.2 18L5 16Z" fill="#14B8A6" stroke="#14B8A6" stroke-width="1" stroke-linejoin="round" />
+</svg>

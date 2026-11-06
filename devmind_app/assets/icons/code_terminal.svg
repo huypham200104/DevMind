@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Duotone Terminal Window Fill -->
+  <rect x="2" y="4" width="20" height="16" rx="3" fill="#2ACDC1" fill-opacity="0.16" />
+  <rect x="2" y="4" width="20" height="16" rx="3" stroke="#008D80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Header Bar -->
+  <path d="M2 9H22" stroke="#008D80" stroke-width="1.5" />
+  <!-- Window Dots -->
+  <circle cx="5" cy="6.5" r="1" fill="#DC2626" />
+  <circle cx="8" cy="6.5" r="1" fill="#F59E0B" />
+  <circle cx="11" cy="6.5" r="1" fill="#16A34A" />
+  <!-- Prompt Symbol >_ -->
+  <path d="M6 13L9 15L6 17" stroke="#008D80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M12 17H16" stroke="#2ACDC1" stroke-width="2" stroke-linecap="round" />
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Duotone Ribbon Fill -->
+  <path d="M5 4C5 2.89543 5.89543 2 7 2H17C18.1046 2 19 2.89543 19 4V21.5L12 17.5L5 21.5V4Z" fill="#2ACDC1" fill-opacity="0.18" stroke="#008D80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- Inner Flag Accent Line -->
+  <path d="M9 7H15" stroke="#2ACDC1" stroke-width="2" stroke-linecap="round" />
+  <path d="M9 11H13" stroke="#2ACDC1" stroke-width="2" stroke-linecap="round" />
+</svg>
