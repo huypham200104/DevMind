@@ -130,6 +130,53 @@ class FirebaseCvUploadRepository implements CvUploadRepository {
     }
   }
 
+  @override
+  Future<String> createAdaptiveQuiz({
+    required String jobTitle,
+    required List<String> weaknesses,
+    required List<String> suggestedKeywords,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        throw const CvScannerException(
+          'Bạn chưa đăng nhập. Vui lòng đăng nhập lại.',
+        );
+      }
+
+      final idToken = await user.getIdToken();
+      if (idToken == null || idToken.isEmpty) {
+        throw const CvScannerException(
+          'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.',
+        );
+      }
+
+      final callable = _functions.httpsCallable('generateAdaptiveQuizFromCv');
+      final response = await callable.call<Map<String, dynamic>>({
+        'jobTitle': jobTitle,
+        'weaknesses': weaknesses,
+        'suggestedKeywords': suggestedKeywords,
+        'idToken': idToken,
+      });
+
+      final data = _asStringMap(response.data);
+      final courseId = data['courseId'] as String?;
+      if (courseId == null || courseId.isEmpty) {
+        throw const CvScannerException('Không thể tạo bài kiểm tra từ AI.');
+      }
+
+      return courseId;
+    } on FirebaseAuthException catch (error) {
+      throw CvScannerException(_friendlyAuthError(error));
+    } on FirebaseFunctionsException catch (error) {
+      throw CvScannerException(_friendlyFunctionsError(error));
+    } on CvScannerException {
+      rethrow;
+    } catch (_) {
+      throw const CvScannerException('Không thể tạo bài kiểm tra lúc này.');
+    }
+  }
+
   String _friendlyAuthError(FirebaseAuthException error) {
     if (error.code == 'network-request-failed') {
       return 'Không thể kết nối Firebase Auth. Kiểm tra Internet rồi thử lại.';

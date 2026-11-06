@@ -9,4 +9,10 @@ abstract class CvUploadRepository {
     required CvFileSelection file,
     required String jobTitle,
   });
+
+  Future<String> createAdaptiveQuiz({
+    required String jobTitle,
+    required List<String> weaknesses,
+    required List<String> suggestedKeywords,
+  });
 }
