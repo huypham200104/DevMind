@@ -426,3 +426,150 @@ function readStringArray(value) {
       .filter((item) => item.length > 0)
       .slice(0, 8);
 }
+
+
+function normalizeAdaptiveQuizResult(value, jobTitle) {
+  const result = value && typeof value === 'object' ? value : {};
+  const cleanTitle = readString(result.title) || `AI Gap Quiz: ${jobTitle || 'Technical Skills'}`;
+  const cleanDescription =
+      readString(result.description) ||
+      `Bộ câu hỏi tình huống thực tế bù lỗ hổng kỹ năng cho vị trí ${jobTitle || 'Lập trình viên'}.`;
+
+  const rawQuestions = Array.isArray(result.questions) ? result.questions : [];
+  const questions = [];
+
+  for (let index = 0; index < rawQuestions.length; index++) {
+    const q = rawQuestions[index];
+    if (!q || typeof q !== 'object') continue;
+
+    const rawOptions = Array.isArray(q.options) ? q.options : [];
+    const options = rawOptions
+        .map((opt) => String(opt || '').trim())
+        .filter((opt) => opt.length > 0);
+
+    while (options.length < 4) {
+      options.push(`Phương án ${String.fromCharCode(65 + options.length)}`);
+    }
+    const finalOptions = options.slice(0, 4);
+
+    let answerIndex = Number.parseInt(q.correctAnswerIndex, 10);
+    if (!Number.isFinite(answerIndex) || answerIndex < 0 || answerIndex > 3) {
+      answerIndex = 0;
+    }
+
+    questions.push({
+      id: readString(q.id) || `adaptive_q_${index + 1}`,
+      question: readString(q.question) || `Tình huống kỹ thuật số ${index + 1} cho vị trí ${jobTitle || 'IT'}:`,
+      options: finalOptions,
+      correctAnswerIndex: answerIndex,
+      explanation:
+          readString(q.explanation) ||
+          'Phân tích chuyên sâu từ DevMind AI: Phương án này đáp ứng đúng nguyên lý thiết kế và tối ưu hiệu năng.',
+      category: readString(q.category) || jobTitle || 'Technical',
+    });
+  }
+
+  if (questions.length === 0) {
+    questions.push({
+      id: 'adaptive_q_1',
+      question: `Trong quá trình phát triển ứng dụng cho vị trí ${jobTitle || 'Developer'}, cách tiếp cận nào tối ưu nhất khi xử lý bất đồng bộ?`,
+      options: [
+        'Sử dụng cơ chế luồng/stream và hủy đăng ký (dispose) khi không còn sử dụng',
+        'Tạo vòng lặp vô tận kiểm tra trạng thái',
+        'Bỏ qua xử lý lỗi và ngoại lệ mạng',
+        'Khởi tạo lại toàn bộ state và widget tree liên tục',
+      ],
+      correctAnswerIndex: 0,
+      explanation: 'Luôn quản lý chặt chẽ vòng đời của Stream/Future để tránh rò rỉ bộ nhớ (memory leak).',
+      category: jobTitle || 'Core Engineering',
+    });
+  }
+
+  return {
+    title: cleanTitle,
+    description: cleanDescription,
+    questions,
+  };
+}
+
+exports.generateAdaptiveQuizFromCv = onCall({ secrets: [groqApiKey] }, async (request) => {
+  const auth = await resolveCallableAuth(request);
+  const uid = auth.uid;
+  const data = request.data || {};
+
+  const jobTitle = typeof data.jobTitle === 'string' ? data.jobTitle.trim() : '';
+  const weaknesses = readStringArray(data.weaknesses);
+  const suggestedKeywords = readStringArray(data.suggestedKeywords);
+  const questionCount = Math.max(3, Math.min(10, readPositiveInt(data.questionCount) || 5));
+
+  if (!jobTitle) {
+    throw new HttpsError('invalid-argument', 'Thiếu vị trí ứng tuyển để sinh bài test.');
+  }
+
+  const apiKey = groqApiKey.value();
+  if (!apiKey) {
+    throw new HttpsError('failed-precondition', 'Thiếu GROQ_API_KEY.');
+  }
+
+  const prompt = `Bạn là Lead Technical Interviewer phỏng vấn vị trí "${jobTitle}".
+Ứng viên vừa quét CV và được hệ thống phát hiện các điểm yếu (weaknesses) sau:
+${weaknesses.length > 0 ? weaknesses.map((w, i) => `${i + 1}. ${w}`).join('\n') : '1. Cần củng cố kiến trúc phần mềm, xử lý ngoại lệ và tối ưu hiệu năng.'}
+Từ khóa gợi ý: ${suggestedKeywords.join(', ') || 'Best Practices, Design Patterns, Memory Management'}.
+
+NHIỆM VỤ: Hãy sinh ra chính xác ${questionCount} câu hỏi trắc nghiệm kỹ thuật để kiểm tra và bù đắp các điểm yếu trên.
+YÊU CẦU BẮT BUỘC:
+1. Ít nhất 70% câu hỏi PHẢI là tình huống thực tế (Scenario-based) hoặc có đoạn mã ngắn (Code Snippet) để tìm bug / tối ưu.
+2. 4 lựa chọn (options) phải có tính phân loại cao, các phương án sai phải phản ánh đúng lỗi sai kinh điển.
+3. Phần explanation phải giải thích cặn kẽ tại sao đáp án đúng lại tối ưu và tại sao các phương án khác sai.
+4. BẮT BUỘC chỉ trả về 1 chuỗi JSON hợp lệ, KHÔNG bọc trong markdown block, KHÔNG có text bên ngoài.
+
+Cấu trúc JSON:
+{
+  "title": "AI Gap Quiz: ${jobTitle}",
+  "description": "Bài kiểm tra tình huống thực chiến bù lỗ hổng kiến thức do DevMind AI tạo riêng.",
+  "questions": [
+    {
+      "id": "q_1",
+      "question": "Mô tả tình huống hoặc đoạn code...",
+      "options": ["Phương án A", "Phương án B", "Phương án C", "Phương án D"],
+      "correctAnswerIndex": 0,
+      "explanation": "Giải thích chi tiết...",
+      "category": "Tên chủ đề kỹ năng bị hổng"
+    }
+  ]
+}`;
+
+  try {
+    const aiResponse = await callGroqApi(apiKey, prompt);
+    const parsedJson = parseJsonResponse(aiResponse);
+    const normalizedQuiz = normalizeAdaptiveQuizResult(parsedJson, jobTitle);
+
+    const db = admin.firestore();
+    const courseRef = await db.collection('technical_courses').add({
+      title: normalizedQuiz.title,
+      description: normalizedQuiz.description,
+      category: 'ai_adaptive',
+      createdBy: uid,
+      questionCount: normalizedQuiz.questions.length,
+      questions: normalizedQuiz.questions,
+      source: 'cv_adaptive',
+      jobTitle,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    return {
+      success: true,
+      courseId: courseRef.id,
+      title: normalizedQuiz.title,
+      questionCount: normalizedQuiz.questions.length,
+    };
+  } catch (error) {
+    console.error('Lỗi khi sinh câu hỏi Adaptive Quiz:', error);
+    if (error instanceof HttpsError) {
+      throw error;
+    }
+    throw new HttpsError('internal', 'Lỗi AI sinh bài kiểm tra: ' + error.message);
+  }
+});
+
+exports.normalizeAdaptiveQuizResult = normalizeAdaptiveQuizResult;
