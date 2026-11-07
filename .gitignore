@@ -117,3 +117,7 @@ coverage/
 !/design.md
 docs/**/*.md
 DevMind_AI_Feature_Description.md
+
+
+# --- Screenshots ---
+screenshots/
