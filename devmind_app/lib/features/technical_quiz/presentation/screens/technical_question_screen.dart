@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -622,7 +623,11 @@ class _ExplanationButton extends StatelessWidget {
                 height: 18,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-            : const Icon(Icons.psychology_alt_outlined, size: 22),
+            : SvgPicture.asset(
+                'assets/icons/ai_sparkle.svg',
+                width: 20,
+                height: 20,
+              ),
         label: Text(
           isVisible
               ? 'Đã hiển thị giải thích'

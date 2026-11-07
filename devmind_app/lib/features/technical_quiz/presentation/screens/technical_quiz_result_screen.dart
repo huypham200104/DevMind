@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -111,7 +112,7 @@ class _ResultContent extends StatelessWidget {
             children: [
               Expanded(
                 child: _ResultMetricCard(
-                  icon: Icons.check_circle_outline,
+                  svgAsset: 'assets/icons/check_correct.svg',
                   value: summary.correctAnswers.toString(),
                   label: 'CÂU ĐÚNG',
                   tintColor: const Color(0xFFE5FAF8),
@@ -121,7 +122,7 @@ class _ResultContent extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _ResultMetricCard(
-                  icon: Icons.cancel_outlined,
+                  svgAsset: 'assets/icons/cross_incorrect.svg',
                   value: summary.incorrectAnswerCount.toString(),
                   label: 'CÂU SAI',
                   tintColor: const Color(0xFFFFECEC),
@@ -131,7 +132,7 @@ class _ResultContent extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _ResultMetricCard(
-                  icon: Icons.stacked_bar_chart_outlined,
+                  svgAsset: 'assets/icons/accuracy_chart.svg',
                   value: '${summary.accuracyPercent}%',
                   label: 'CHÍNH XÁC',
                   tintColor: const Color(0xFFE5FAF8),
@@ -223,6 +224,12 @@ class _ResultSummary extends StatelessWidget {
       ),
       child: Column(
         children: [
+          SvgPicture.asset(
+            'assets/icons/trophy_cup.svg',
+            width: 56,
+            height: 56,
+          ),
+          const SizedBox(height: 14),
           Text(
             isExpired ? 'Hết thời gian!' : 'Hoàn thành bài kiểm tra!',
             textAlign: TextAlign.center,
@@ -305,14 +312,16 @@ class _ResultSummary extends StatelessWidget {
 
 class _ResultMetricCard extends StatelessWidget {
   const _ResultMetricCard({
-    required this.icon,
+    this.icon,
+    this.svgAsset,
     required this.value,
     required this.label,
     required this.tintColor,
     required this.iconColor,
-  });
+  }) : assert(icon != null || svgAsset != null);
 
-  final IconData icon;
+  final IconData? icon;
+  final String? svgAsset;
   final String value;
   final String label;
   final Color tintColor;
@@ -338,10 +347,14 @@ class _ResultMetricCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 34,
-            height: 34,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(color: tintColor, shape: BoxShape.circle),
-            child: Icon(icon, color: iconColor, size: 20),
+            child: Center(
+              child: svgAsset != null
+                  ? SvgPicture.asset(svgAsset!, width: 22, height: 22)
+                  : Icon(icon, color: iconColor, size: 20),
+            ),
           ),
           const SizedBox(height: 12),
           Text(
@@ -405,14 +418,14 @@ class _QuestionReviewTile extends StatelessWidget {
                   : const Color(0xFFFFECEC),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              result.isCorrect
-                  ? Icons.check_circle_outline
-                  : Icons.cancel_outlined,
-              color: result.isCorrect
-                  ? AppColors.primaryGradientEnd
-                  : AppColors.danger,
-              size: 22,
+            child: Center(
+              child: SvgPicture.asset(
+                result.isCorrect
+                    ? 'assets/icons/check_correct.svg'
+                    : 'assets/icons/cross_incorrect.svg',
+                width: 22,
+                height: 22,
+              ),
             ),
           ),
           const SizedBox(width: 14),
